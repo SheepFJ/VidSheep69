@@ -39,7 +39,7 @@ const html = `<!DOCTYPE html>
 
 </body>
 
-<script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/main04.js"></script>
+
 <script>
     const mainContainer = document.getElementById("main-container");
     mainContainer.innerHTML = \`
@@ -138,6 +138,7 @@ const html = `<!DOCTYPE html>
         </div>
     \`;
 </script>
+<script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/main04.js"></script>
 </html>`
 
 $done({ status: "HTTP/1.1 200 OK", headers: { "Content-Type": "text/html" }, body: html });
