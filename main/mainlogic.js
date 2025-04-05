@@ -7,7 +7,7 @@ const html = `<!DOCTYPE html>
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
     <title>VidSheep</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/main01.css">
 </head>
 <style>
     body::before {
