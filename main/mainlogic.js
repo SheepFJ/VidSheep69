@@ -120,7 +120,7 @@ const html = `<!DOCTYPE html>
 <script>
     const username = "${username}";
 </script>   
-<script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/main06.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/main07.js"></script>
 </html>`
 
 $done({ status: "HTTP/1.1 200 OK", headers: { "Content-Type": "text/html" }, body: html });
