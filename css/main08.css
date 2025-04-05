@@ -1,15 +1,12 @@
 html,
 body {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
     height: 100%;
     width: 100%;
     overflow: hidden;
-    position: fixed;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
+    padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px));
 }
 
 body::before {
@@ -48,23 +45,24 @@ body::after {
 /* 底部导航栏 */
 #bottom-nav {
     position: fixed;
-    bottom: -1px;
-    /* 略微下移以遮挡边缘 */
+    bottom: -35px;
     left: 0;
     width: 100%;
-    height: calc(45px + env(safe-area-inset-bottom));
-    /* 高度包含安全区域 */
+    height: calc(45px + env(safe-area-inset-bottom, 0px));
+    /* 适配 iPhone X 及以上 */
     background: rgba(30, 30, 30, 0.4);
+    /* 可调透明度 */
     display: flex;
     justify-content: space-around;
-    align-items: flex-start;
-    /* 将内容对齐到顶部 */
-    padding-top: 10px;
-    /* 给按钮添加上部间距 */
+    align-items: center;
     border-top: 1px solid #333;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    /* 确保导航栏不留白 */
     backdrop-filter: blur(2px);
+    /* 适当调整模糊效果 */
     -webkit-backdrop-filter: blur(10px);
     z-index: 1000;
+    /* 确保底部栏在其他元素之上 */
 }
 
 /* 底部栏按钮 */
