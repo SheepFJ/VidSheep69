@@ -7,7 +7,8 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
     <title>VidSheep</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/main.css">
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/main.css"> -->
+    <link rel="stylesheet" href="../css/main.css">
 </head>
 <style>
     body::before {
@@ -17,10 +18,15 @@
 </style>
 
 <body>
+
+
+
+
+    <!-- 底部导航 -->
     <div id="bottom-nav">
-        <div>搜索</div>
-        <div>最近</div>
-        <div>我的</div>
+        <div class="nav-button active" id="searchBtn" onclick="showSearch()">搜索</div>
+        <div class="nav-button" id="listBtn" onclick="showList()">最近</div>
+        <div class="nav-button" id="profileBtn" onclick="showProfile()">我的</div>
     </div>
 </body>
 

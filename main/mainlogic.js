@@ -17,10 +17,15 @@ const html = `<!DOCTYPE html>
 </style>
 
 <body>
+
+
+
+
+    <!-- 底部导航 -->
     <div id="bottom-nav">
-        <div>搜索</div>
-        <div>最近</div>
-        <div>我的</div>
+        <div class="nav-button active" id="searchBtn" onclick="showSearch()">搜索</div>
+        <div class="nav-button" id="listBtn" onclick="showList()">最近</div>
+        <div class="nav-button" id="profileBtn" onclick="showProfile()">我的</div>
     </div>
 </body>
 
