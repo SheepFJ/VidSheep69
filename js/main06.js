@@ -7,11 +7,11 @@
 
 
 
-// 我的页面
+// 我的页面--关于--历史版本
 const mainContainer = document.getElementById("main-container");
 mainContainer.innerHTML = `
 <div class="user-container">
-        <h1 class="user-title">SHEEP</h1>
+        <h1 class="user-title">\${username}</h1>
         <!-- 可折叠列表 -->
         <div class="user-collapsible-container">
             <!-- 关于我们 -->
