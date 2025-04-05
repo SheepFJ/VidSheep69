@@ -9,7 +9,7 @@ GitHub：https://github.com/SheepFJ/QuantumultX
 ============ Quantumult X ============
 
 [rewrite_local]
-^https:\/\/api\.sheep\.com\/sheep\/videoPolymerization\/ url script-response-body https://raw.githubusercontent.com/SheepFJ/VidSheep69/refs/heads/main/main/main.js
+^https:\/\/api\.sheep\.com\/sheep\/videoPolymerization\/ url script-response-body https://raw.githubusercontent.com/SheepFJ/VidSheep69/refs/heads/main/main/mainlogic.js
 [mitm]
 hostname = api.sheep.com
 
