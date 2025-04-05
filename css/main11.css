@@ -6,6 +6,7 @@ body {
     width: 100%;
     overflow: hidden;
     padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px));
+    color: aliceblue;
 }
 
 body::before {
@@ -75,13 +76,32 @@ body::after {
     transition: all 0.3s;
 }
 
-.nav-button.active {
+.nav-button.nav-active {
     color: #f39c12;
     font-weight: bold;
     border-bottom: 2px solid #f39c12;
 }
 
+/* 隐藏滚动条但保留滚动功能 */
+#main-container {
+    height: 100%;
+    width: 100%;
+    overflow-y: scroll;
+    /* 允许垂直滚动 */
+    -webkit-overflow-scrolling: touch;
+    /* 平滑滚动效果 */
+    padding: 20px;
+    box-sizing: border-box;
+    padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+    padding-top: calc(20px + env(safe-area-inset-top, 0px));
+    scrollbar-width: none;
+    /* Firefox */
+}
 
+/* 隐藏 WebKit 浏览器的滚动条 */
+#main-container::-webkit-scrollbar {
+    display: none;
+}
 
 
 /* 等待动画加载 */
