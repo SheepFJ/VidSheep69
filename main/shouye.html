@@ -8,7 +8,7 @@
         content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
     <title>VidSheep</title>
     <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/main.css"> -->
-    <link rel="stylesheet" href="../css/main02.css">
+    <link rel="stylesheet" href="../css/main03.css">
 </head>
 <style>
     body::before {
@@ -24,8 +24,8 @@
 <body>
 
 
-
-
+    <!-- 等待动画加载 -->
+    <div id="loading-results"></div>
     <!-- 底部导航 -->
     <footer>
         <div id="bottom-nav">
@@ -37,6 +37,24 @@
 
 </body>
 
-<script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/main.js"></script>
+<script>
+
+    // 等待动画加载
+    function loadAnimation(loadingResults) {
+        loadingResults.innerHTML = `
+        <div class="loading-all">
+            <div class="loading-animation"></div>
+            <div class="loading-text">加载中...</div>
+        </div>
+    `;
+    }
+
+
+    function showSearch() {
+        var loadingResults = document.getElementById("loading-results");
+        loadAnimation(loadingResults);
+    }
+
+</script>
 
 </html>

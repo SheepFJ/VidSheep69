@@ -1,6 +1,6 @@
 // 等待动画加载
-function loadAnimation(results) {
-    results.innerHTML = `
+function loadAnimation(loadingResults) {
+    loadingResults.innerHTML = `
         <div class="loading-all">
             <div class="loading-animation"></div>
             <div class="loading-text">加载中...</div>
@@ -10,6 +10,6 @@ function loadAnimation(results) {
 
 
 function showSearch() {
-    var results = document.getElementById("results");
-    loadAnimation(results);
+    var loadingResults = document.getElementById("loading-results");
+    loadAnimation(loadingResults);
 }
