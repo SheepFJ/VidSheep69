@@ -1,0 +1,17 @@
+{
+    "backgroundimage":"链接地址",
+    "username":"用户名称",
+    "statusbarcolor":"red",
+    "statusbartransparency":"0.8",
+    "theme": true 
+}
+
+if(theme==true){
+   
+}
+
+if(theme==false){
+    backgroundimage
+}
+
+

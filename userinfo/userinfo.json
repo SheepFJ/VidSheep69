@@ -1,0 +1,6 @@
+{
+    "backgroundimage": "链接地址:https://www.baidu.com",
+    "username": "用户名称:Sheep",
+    "statusbarcolor": "导航栏颜色与透明度:rgba(0,0,0,0.8)",
+    "theme": "主题:true 表示运用image等主题，false表示运用默认主题"
+}
