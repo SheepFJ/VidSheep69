@@ -20,7 +20,7 @@ const html = `<!DOCTYPE html>
 
 
 
-
+    <div id="results"></div>
     <!-- 底部导航 -->
     <div id="bottom-nav">
         <div class="nav-button active" id="searchBtn" onclick="showSearch()">搜索</div>
