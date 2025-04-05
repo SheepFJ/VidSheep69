@@ -1,6 +1,5 @@
 html,
 body {
-    box-sizing: border-box;
     margin: 0;
     padding: 0;
     height: 100%;
@@ -87,11 +86,14 @@ body::after {
 
 /* 等待动画加载 */
 #loading-results {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 15px;
-    margin-top: 20px;
+    width: 100%;
 }
 
 .loading-all {
