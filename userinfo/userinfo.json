@@ -1,5 +1,7 @@
 {
     "backgroundimage": "https://mfiles.alphacoders.com/853/853922.jpg",
+    "imageauto": "true",
+    "usersettingsimage": "true",
     "username": "小羊",
     "statusbarcolor": "rgba(0,0,0,0.8)",
     "theme": "true"

@@ -2,34 +2,59 @@
 const isLoon = typeof $persistentStore !== "undefined";
 const isQuanX = typeof $prefs !== "undefined";
 const isSurge = typeof $httpClient !== "undefined" && typeof $prefs === "undefined";
+const isShadowrocket = typeof $rocket !== "undefined";
 
 // 统一存储方法
 const storage = {
     get: key => {
-        if (isLoon || isSurge) return $persistentStore.read(key);
-        return $prefs.valueForKey(key);
+        if (isLoon || isSurge || isShadowrocket) return $persistentStore.read(key);
+        if (isQuanX) return $prefs.valueForKey(key);
+        return null;
     },
     set: (key, value) => {
-        if (isLoon || isSurge) return $persistentStore.write(value, key);
-        return $prefs.setValueForKey(value, key);
+        if (isLoon || isSurge || isShadowrocket) return $persistentStore.write(value, key);
+        if (isQuanX) return $prefs.setValueForKey(value, key);
+        return false;
+    }
+};
+
+// 统一通知方法
+const notify = (title, subtitle, message) => {
+    if (isLoon || isSurge || isShadowrocket) {
+        $notification.post(title, subtitle, message);
+    } else if (isQuanX) {
+        $notify(title, subtitle, message);
     }
 };
 
 // 统一 HTTP 请求方法
 function fetchWithCallback(options, callback) {
-    if (isLoon || isSurge) {
+    if (isLoon || isSurge || isShadowrocket) {
         const httpMethod = options.method === "POST" ? $httpClient.post : $httpClient.get;
         httpMethod(options, (error, response, body) => {
-            callback(error, response, body);
+            if (error) {
+                notify("请求失败", "", JSON.stringify(error));
+                callback(error, response, body);
+            } else {
+                callback(null, response, body);
+            }
         });
-    } else {
-        // QuanX 或其他环境
+    } else if (isQuanX) {
+        // QuanX 环境
         const method = options.method || "GET";
-        const fetchOptions = { method, url: options.url, headers: options.headers || {}, body: options.body || null };
+        const fetchOptions = {
+            method,
+            url: options.url,
+            headers: options.headers || {},
+            body: options.body || null
+        };
 
         $task.fetch(fetchOptions).then(response => {
             callback(null, response, response.body);
-        }).catch(error => callback(error, null, null));
+        }).catch(error => {
+            notify("请求失败", "", JSON.stringify(error));
+            callback(error, null, null);
+        });
     }
 }
 
@@ -42,7 +67,7 @@ const defaultUserData = {
 };
 
 // 获取用户数据
-let userData = storage.get("userdata");
+let userData = storage.get("sheep_userdata");
 if (!userData) {
     // 如果不存在，存储默认数据
     storage.set("userdata", JSON.stringify(defaultUserData));

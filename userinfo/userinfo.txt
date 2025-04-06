@@ -1,5 +1,7 @@
 {
     "backgroundimage":"链接地址",
+    "imageauto": "true",    // 是否自动更换背景图片 
+    "usersettingsimage": "true", // 如果用户设置了
     "username":"用户名称",
     "statusbarcolor":"red",
     "statusbartransparency":"0.8",
