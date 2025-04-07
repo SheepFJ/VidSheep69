@@ -29,8 +29,15 @@ const notify = (title, subtitle, message) => {
 // 统一 HTTP 请求方法
 function fetchWithCallback(options, callback) {
     if (isLoon || isSurge) {
-        const httpMethod = options.method === "POST" ? $httpClient.post : $httpClient.get;
-        httpMethod(options, (error, response, body) => {
+        const method = options.method || "GET";
+        const requestOptions = {
+            url: options.url,
+            headers: options.headers,
+            body: options.body // 如果有 POST 的 body
+        };
+
+        const httpMethod = method === "POST" ? $httpClient.post : $httpClient.get;
+        httpMethod(requestOptions, (error, response, body) => {
             if (error) {
                 notify("请求失败", "", JSON.stringify(error));
                 callback(error, response, body);
@@ -39,7 +46,6 @@ function fetchWithCallback(options, callback) {
             }
         });
     } else if (isQuanX) {
-        // QuanX 环境
         $task.fetch(options).then(response => {
             callback(null, response, response.body);
         }).catch(error => {
