@@ -172,10 +172,8 @@ function finishScript() {
     </html>`;
 
     $done({ 
-        response: {
-            status: 200,
-            headers: { "Content-Type": "text/html" },
-            body: html
-        }
+        status: "HTTP/1.1 200 OK", 
+        headers: { "Content-Type": "text/html" }, 
+        body: html 
     });
 }
