@@ -92,6 +92,7 @@ if (!userData) {
     }
 }
 
+// 开启自动更新壁纸
 if(userData.imageauto === "true"){
     userData.usersettingsimage = "false";
     
@@ -102,18 +103,13 @@ if(userData.imageauto === "true"){
         headers: {
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
             'Accept-Encoding': 'gzip, deflate, br',
-            'Cookie': 'PHPSESSID=gssrca2807mddn3ks5vhuraqvr',
             'Connection': 'keep-alive',
-            'Sec-Fetch-Mode': 'navigate',
             'Host': 'api.52vmy.cn',
-            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Mobile/15E148 Safari/604.1',
-            'Sec-Fetch-Site': 'same-origin',
-            'Referer': 'https://api.52vmy.cn/doc/wl/word/bing/tu.html',
-            'Sec-Fetch-Dest': 'document',
-            'Accept-Language': 'zh-CN,zh-Hans;q=0.9'
+            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Mobile/15E148 Safari/604.1'
         }
     };
 
+    // 使用统一的请求方法
     fetchWithCallback(wallpaperRequest, (error, response, data) => {
         if (error) {
             notify("壁纸更新失败", "", JSON.stringify(error));
@@ -123,11 +119,8 @@ if(userData.imageauto === "true"){
         try {
             const obj = JSON.parse(data);
             const imageUrl = obj?.data?.phone_url;
-
             if (imageUrl) {
-                // 更新用户数据中的背景图片URL
                 userData.backgroundimage = imageUrl;
-                // 保存更新后的用户数据
                 storage.set("sheep_userdata", JSON.stringify(userData));
                 notify("壁纸更新成功", "", "背景图片已更新");
             } else {
