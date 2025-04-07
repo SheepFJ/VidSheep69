@@ -20,10 +20,13 @@ const storage = {
 
 // 统一通知方法
 const notify = (title, subtitle, message) => {
-    if (isLoon || isSurge || isShadowrocket) {
+    if (isLoon || isSurge) {
         $notification.post(title, subtitle, message);
     } else if (isQuanX) {
         $notify(title, subtitle, message);
+    } else if (isShadowrocket) {
+        // Shadowrocket环境下不发送通知，避免影响响应
+        console.log(`[通知] ${title}: ${message}`);
     }
 };
 
@@ -92,8 +95,7 @@ if (userData.imageauto === "true") {
             'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Mobile/15E148 Safari/604.1'
         }
     };
-    notify("壁纸更新成功", "", "背景图片已更新");
-
+    
     // 使用回调方式处理异步
     fetchWithCallback(wallpaperRequest, (error, response, body) => {
         if (error) {
@@ -170,8 +172,10 @@ function finishScript() {
     </html>`;
 
     $done({ 
-        status: "HTTP/1.1 200 OK", 
-        headers: { "Content-Type": "text/html" }, 
-        body: html 
+        response: {
+            status: 200,
+            headers: { "Content-Type": "text/html" },
+            body: html
+        }
     });
 }
