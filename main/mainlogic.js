@@ -88,13 +88,6 @@ if (userData.imageauto === "true") {
     
     // 使用回调方式处理异步
     fetchWithCallback(wallpaperRequest, (error, response, body) => {
-        if (error) {
-            console.log("请求错误：", error);
-            notify("壁纸更新失败", "", JSON.stringify(error));
-            finishScript();
-            return;
-        }
-
         try {
             const responseData = typeof body === 'string' ? JSON.parse(body) : body;
             const imageUrl = responseData?.data?.phone_url;
@@ -102,7 +95,7 @@ if (userData.imageauto === "true") {
             if (imageUrl) {
                 userData.backgroundimage = imageUrl;
                 storage.set("sheep_userdata", JSON.stringify(userData));
-                notify("壁纸更新成功", "", "背景图片已更新");
+                notify("壁纸更新成功", "", imageUrl);
             } else {
                 notify("壁纸更新失败", "", "未找到图片地址");
             }
