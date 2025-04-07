@@ -30,17 +30,16 @@ const notify = (title, subtitle, message) => {
 // 统一 HTTP 请求方法
 function fetchWithCallback(options, callback) {
     if (isLoon || isSurge || isShadowrocket) {
-        const httpMethod = options.method === "POST" ? $httpClient.post : $httpClient.get;
-        httpMethod(options, (error, response, body) => {
+        // 使用Shadowrocket兼容的方式
+        $httpClient.get(options, function(error, response, data) {
             if (error) {
                 notify("请求失败", "", JSON.stringify(error));
-                callback(error, response, body);
+                callback(error, response, data);
             } else {
-                callback(null, response, body);
+                callback(null, response, data);
             }
         });
     } else if (isQuanX) {
-        // QuanX 环境
         $task.fetch(options).then(response => {
             callback(null, response, response.body);
         }).catch(error => {
@@ -88,35 +87,41 @@ if (userData.imageauto === "true") {
         url: "https://api.52vmy.cn/api/wl/word/bing/tu",
         method: "GET",
         headers: {
-            'Accept': 'application/json',
-            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Mobile/15E148 Safari/604.1'
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Cookie': 'PHPSESSID=gssrca2807mddn3ks5vhuraqvr',
+            'Connection': 'keep-alive',
+            'Sec-Fetch-Mode': 'navigate',
+            'Host': 'api.52vmy.cn',
+            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Mobile/15E148 Safari/604.1',
+            'Sec-Fetch-Site': 'same-origin',
+            'Referer': 'https://api.52vmy.cn/doc/wl/word/bing/tu.html',
+            'Sec-Fetch-Dest': 'document',
+            'Accept-Language': 'zh-CN,zh-Hans;q=0.9'
         }
     };
-    notify("进入到95处", "", "背景图片已更新");
 
     // 使用回调方式处理异步
-    fetchWithCallback(wallpaperRequest, (error, response, body) => {
+    fetchWithCallback(wallpaperRequest, (error, response, data) => {
         if (error) {
-            console.log("请求错误：", error);
-            notify("壁纸更新失败", "", JSON.stringify(error));
+            notify("请求失败", "", JSON.stringify(error));
             finishScript();
             return;
         }
 
         try {
-            const responseData = typeof body === 'string' ? JSON.parse(body) : body;
-            const imageUrl = responseData?.data?.phone_url;
-            
+            const obj = JSON.parse(data);
+            const imageUrl = obj?.data?.phone_url;
+
             if (imageUrl) {
                 userData.backgroundimage = imageUrl;
                 storage.set("sheep_userdata", JSON.stringify(userData));
                 notify("壁纸更新成功", "", "背景图片已更新");
             } else {
-                notify("壁纸更新失败", "", "未找到图片地址");
+                notify("解析失败", "", "未找到 data.phone_url");
             }
         } catch (e) {
-            console.log("解析错误：", e);
-            notify("壁纸更新失败", "", "数据解析错误：" + e.message);
+            notify("错误", "JSON 解析失败", e.message);
         }
         finishScript();
     });
@@ -170,8 +175,10 @@ function finishScript() {
     </html>`;
 
     $done({ 
-        status: "HTTP/1.1 200 OK", 
-        headers: { "Content-Type": "text/html" }, 
-        body: html 
+        response: {
+            status: 200,
+            headers: { "Content-Type": "text/html" },
+            body: html
+        }
     });
 }
