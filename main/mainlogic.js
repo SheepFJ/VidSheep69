@@ -41,15 +41,7 @@ function fetchWithCallback(options, callback) {
         });
     } else if (isQuanX) {
         // QuanX 环境
-        const method = options.method || "GET";
-        const fetchOptions = {
-            method,
-            url: options.url,
-            headers: options.headers || {},
-            body: options.body || null
-        };
-
-        $task.fetch(fetchOptions).then(response => {
+        $task.fetch(options).then(response => {
             callback(null, response, response.body);
         }).catch(error => {
             notify("请求失败", "", JSON.stringify(error));
@@ -66,95 +58,119 @@ const defaultUserData = {
     "usersettingsimage": "false", //是否用户设置背景
     "statusbarcolor": "rgba(0,0,0,0.8)",
     "theme": "true",
-    "initial" : "true"
+    "initial": "true"
 };
 
-// 获取用户数据
+// 获取用户数据，初始化信息
 let userData = storage.get("sheep_userdata");
 if (!userData) {
-    // 如果不存在，存储默认数据
     storage.set("sheep_userdata", JSON.stringify(defaultUserData));
     userData = defaultUserData;
 } else {
-    // 如果存在，解析JSON数据
     try {
         userData = JSON.parse(userData);
-        // 如多userData.initial为true表示存在key但是未初始化
         if (userData.initial === "true" || !userData.initial) {
             userData = defaultUserData;
             userData.initial = "false";
             storage.set("sheep_userdata", JSON.stringify(userData));
         }
     } catch (e) {
-        // 如果JSON解析失败，使用默认数据
         storage.set("sheep_userdata", JSON.stringify(defaultUserData));
         userData = defaultUserData;
     }
 }
 
-// 获取背景图片和用户名
-const backgroundImage = userData.backgroundimage;
-const username = userData.username;
+// 如果开启了自动更新壁纸
+if (userData.imageauto === "true") {
+    userData.usersettingsimage = "false";
+    
+    const wallpaperRequest = {
+        url: "https://api.52vmy.cn/api/wl/word/bing/tu",
+        method: "GET",
+        headers: {
+            'Accept': 'application/json',
+            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Mobile/15E148 Safari/604.1'
+        }
+    };
 
-// 路由处理
-const url = $request.url;
+    // 使用回调方式处理异步
+    fetchWithCallback(wallpaperRequest, (error, response, body) => {
+        if (error) {
+            console.log("请求错误：", error);
+            notify("壁纸更新失败", "", JSON.stringify(error));
+            finishScript();
+            return;
+        }
 
-//处理user信息
-// if (url.includes('/videoPolymerization/videoword/userinfo/')) {
-//     const match = url.match(/\/videoPolymerization\/(userinfo)\/([^\/\?]+)/);
-//     if (match[2] == "userdata") {
-//         console.log(11);
-//     }
+        try {
+            const responseData = typeof body === 'string' ? JSON.parse(body) : body;
+            const imageUrl = responseData?.data?.phone_url;
+            
+            if (imageUrl) {
+                userData.backgroundimage = imageUrl;
+                storage.set("sheep_userdata", JSON.stringify(userData));
+                notify("壁纸更新成功", "", "背景图片已更新");
+            } else {
+                notify("壁纸更新失败", "", "未找到图片地址");
+            }
+        } catch (e) {
+            console.log("解析错误：", e);
+            notify("壁纸更新失败", "", "数据解析错误：" + e.message);
+        }
+        finishScript();
+    });
+} else {
+    finishScript();
+}
 
-// }
+// 完成脚本的函数
+function finishScript() {
+    const backgroundImage = userData.backgroundimage;
+    const username = userData.username;
+    const url = $request.url;
 
-
-
-const html = `<!DOCTYPE html>
-<html lang="zh-CN">
-
-<head>
-    <meta charset="UTF-8">
-    <!-- 全屏显示 -->
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-    <title>VidSheep</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/main11.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/user01.css">
-</head>
-<style>
-    body::before {
-        background-image: url(${backgroundImage});
-
+    if (url.includes('/videoPolymerization/videoword/userinfo/')) {
+        const match = url.match(/\/videoPolymerization\/(userinfo)\/([^\/\?]+)/);
+        if (match[2] == "userdata") {
+            console.log(11);
+        }
     }
-</style>
 
-<body>
+    const html = `<!DOCTYPE html>
+    <html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+        <title>VidSheep</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/main11.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/user01.css">
+    </head>
+    <style>
+        body::before {
+            background-image: url(${backgroundImage});
+        }
+    </style>
+    <body>
+        <div id="main-container"></div>
+        <div id="loading-results"></div>
+        <footer>
+            <div id="bottom-nav">
+                <div class="nav-button" id="searchBtn" onclick="showSearch()">搜索</div>
+                <div class="nav-button" id="listBtn">最近</div>
+                <div class="nav-button" id="listBtn" onclick="showList()">收藏</div>
+                <div class="nav-button nav-active" id="profileBtn" onclick="showProfile()">我的</div>
+            </div>
+        </footer>
+    </body>
+    <script>
+        const username = "${username}";
+    </script>   
+    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/main08.js"></script>
+    </html>`;
 
-    <!-- 动态加载区域 -->
-    <div id="main-container">
-
-        
-    </div>
-
-    <!-- 等待动画加载 -->
-    <div id="loading-results"></div>
-    <!-- 底部导航 -->
-    <footer>
-        <div id="bottom-nav">
-            <div class="nav-button" id="searchBtn" onclick="showSearch()">搜索</div>
-            <div class="nav-button" id="listBtn">最近</div>
-            <div class="nav-button" id="listBtn" onclick="showList()">收藏</div>
-            <div class="nav-button nav-active" id="profileBtn" onclick="showProfile()">我的</div>
-        </div>
-    </footer>
-
-</body>
-
-<script>
-    const username = "${username}";
-</script>   
-<script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/main08.js"></script>
-</html>`
-
-$done({ status: "HTTP/1.1 200 OK", headers: { "Content-Type": "text/html" }, body: html });
+    $done({ 
+        status: "HTTP/1.1 200 OK", 
+        headers: { "Content-Type": "text/html" }, 
+        body: html 
+    });
+}
