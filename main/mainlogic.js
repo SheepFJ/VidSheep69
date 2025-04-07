@@ -61,24 +61,33 @@ function fetchWithCallback(options, callback) {
 // 处理用户信息,初始化页面
 const defaultUserData = {
     "backgroundimage": "https://mfiles.alphacoders.com/853/853922.jpg",
-    "username": "小羊羔子",
+    "username": "小羊羔子1009",
+    "imageauto": "true", //是否自动更换背景
+    "usersettingsimage": "false", //是否用户设置背景
     "statusbarcolor": "rgba(0,0,0,0.8)",
-    "theme": "true"
+    "theme": "true",
+    "initial" : "true"
 };
 
 // 获取用户数据
 let userData = storage.get("sheep_userdata");
 if (!userData) {
     // 如果不存在，存储默认数据
-    storage.set("userdata", JSON.stringify(defaultUserData));
+    storage.set("sheep_userdata", JSON.stringify(defaultUserData));
     userData = defaultUserData;
 } else {
     // 如果存在，解析JSON数据
     try {
         userData = JSON.parse(userData);
+        // 如多userData.initial为true表示存在key但是未初始化
+        if (userData.initial === "true" || !userData.initial) {
+            userData = defaultUserData;
+            userData.initial = "false";
+            storage.set("sheep_userdata", JSON.stringify(userData));
+        }
     } catch (e) {
         // 如果JSON解析失败，使用默认数据
-        storage.set("userdata", JSON.stringify(defaultUserData));
+        storage.set("sheep_userdata", JSON.stringify(defaultUserData));
         userData = defaultUserData;
     }
 }
