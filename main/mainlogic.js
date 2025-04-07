@@ -69,7 +69,7 @@ const defaultUserData = {
     "initial" : "true"
 };
 
-// 获取用户数据，初始化信息
+// 获取用户数据
 let userData = storage.get("sheep_userdata");
 if (!userData) {
     // 如果不存在，存储默认数据
@@ -92,53 +92,6 @@ if (!userData) {
     }
 }
 
-if(userData.imageauto === "true"){
-    userData.usersettingsimage = "false";
-    
-    // 自动更换壁纸，发送请求获取每日一图
-    const wallpaperRequest = {
-        url: "https://api.52vmy.cn/api/wl/word/bing/tu",
-        method: "GET",
-        headers: {
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-            'Accept-Encoding': 'gzip, deflate, br',
-            'Cookie': 'PHPSESSID=gssrca2807mddn3ks5vhuraqvr',
-            'Connection': 'keep-alive',
-            'Sec-Fetch-Mode': 'navigate',
-            'Host': 'api.52vmy.cn',
-            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Mobile/15E148 Safari/604.1',
-            'Sec-Fetch-Site': 'same-origin',
-            'Referer': 'https://api.52vmy.cn/doc/wl/word/bing/tu.html',
-            'Sec-Fetch-Dest': 'document',
-            'Accept-Language': 'zh-CN,zh-Hans;q=0.9'
-        }
-    };
-
-    fetchWithCallback(wallpaperRequest, (error, response, data) => {
-        if (error) {
-            notify("壁纸更新失败", "", JSON.stringify(error));
-            return;
-        }
-
-        try {
-            const obj = JSON.parse(data);
-            const imageUrl = obj?.data?.phone_url;
-
-            if (imageUrl) {
-                // 更新用户数据中的背景图片URL
-                userData.backgroundimage = imageUrl;
-                // 保存更新后的用户数据
-                storage.set("sheep_userdata", JSON.stringify(userData));
-                notify("壁纸更新成功", "", "背景图片已更新");
-            } else {
-                notify("壁纸更新失败", "", "未找到图片地址");
-            }
-        } catch (e) {
-            notify("壁纸更新失败", "", "数据解析错误：" + e.message);
-        }
-    });
-}
-
 // 获取背景图片和用户名
 const backgroundImage = userData.backgroundimage;
 const username = userData.username;
@@ -147,13 +100,13 @@ const username = userData.username;
 const url = $request.url;
 
 //处理user信息
-if (url.includes('/videoPolymerization/videoword/userinfo/')) {
-    const match = url.match(/\/videoPolymerization\/(userinfo)\/([^\/\?]+)/);
-    if (match[2] == "userdata") {
-        console.log(11);
-    }
+// if (url.includes('/videoPolymerization/videoword/userinfo/')) {
+//     const match = url.match(/\/videoPolymerization\/(userinfo)\/([^\/\?]+)/);
+//     if (match[2] == "userdata") {
+//         console.log(11);
+//     }
 
-}
+// }
 
 
 
