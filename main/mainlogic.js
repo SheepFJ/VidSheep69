@@ -58,145 +58,139 @@ const defaultUserData = {
     "usersettingsimage": "false", //是否用户设置背景
     "statusbarcolor": "rgba(0,0,0,0.8)",
     "theme": "true",
-    "initial" : "true"
+    "initial": "true"
 };
 
-// 获取用户数据，初始化信息
-let userData = storage.get("sheep_userdata");
-if (!userData) {
-    // 如果不存在，存储默认数据
-    storage.set("sheep_userdata", JSON.stringify(defaultUserData));
-    userData = defaultUserData;
-} else {
-    // 如果存在，解析JSON数据
-    try {
-        userData = JSON.parse(userData);
-        // 如多userData.initial为true表示存在key但是未初始化
-        if (userData.initial === "true" || !userData.initial) {
-            userData = defaultUserData;
-            userData.initial = "false";
-            storage.set("sheep_userdata", JSON.stringify(userData));
-        }
-    } catch (e) {
-        // 如果JSON解析失败，使用默认数据
+// 主函数，使用 Promise 处理异步
+async function main() {
+    // 获取用户数据，初始化信息
+    let userData = storage.get("sheep_userdata");
+    if (!userData) {
         storage.set("sheep_userdata", JSON.stringify(defaultUserData));
         userData = defaultUserData;
-    }
-}
-
-// 开启自动更新壁纸
-if(userData.imageauto === "true"){
-    userData.usersettingsimage = "false";
-    
-    // 自动更换壁纸，发送请求获取每日一图
-    const wallpaperRequest = {
-        url: "https://api.52vmy.cn/api/wl/word/bing/tu",
-        method: "GET",
-        headers: {
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-            'Accept-Encoding': 'gzip, deflate, br',
-            'Connection': 'keep-alive',
-            'Host': 'api.52vmy.cn',
-            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Mobile/15E148 Safari/604.1'
-        }
-    };
-
-    // 使用统一的请求方法
-    fetchWithCallback(wallpaperRequest, (error, response, body) => {
-        console.log("开始处理响应");
-        if (error) {
-            console.log("请求错误：", error);
-            notify("壁纸更新失败", "", JSON.stringify(error));
-            return;
-        }
-
-        console.log("收到响应体：", typeof body, body);
-        
+    } else {
         try {
-            // 如果body是字符串，则解析它
-            const responseData = typeof body === 'string' ? JSON.parse(body) : body;
-            console.log("解析后数据：", JSON.stringify(responseData));
-            
-            const imageUrl = responseData?.data?.phone_url;
-            console.log("获取到的图片URL：", imageUrl);
-            
-            if (imageUrl) {
-                userData.backgroundimage = imageUrl;
+            userData = JSON.parse(userData);
+            if (userData.initial === "true" || !userData.initial) {
+                userData = defaultUserData;
+                userData.initial = "false";
                 storage.set("sheep_userdata", JSON.stringify(userData));
-                notify("壁纸更新成功", "", "背景图片已更新");
-            } else {
-                notify("壁纸更新失败", "", "未找到图片地址");
             }
         } catch (e) {
-            console.log("解析错误：", e);
-            notify("壁纸更新失败", "", "数据解析错误：" + e.message);
+            storage.set("sheep_userdata", JSON.stringify(defaultUserData));
+            userData = defaultUserData;
         }
+    }
+
+    // 如果开启了自动更新壁纸，等待更新完成
+    if (userData.imageauto === "true") {
+        userData.usersettingsimage = "false";
+        
+        // 包装请求为 Promise
+        await new Promise((resolve) => {
+            const wallpaperRequest = {
+                url: "https://api.52vmy.cn/api/wl/word/bing/tu",
+                method: "GET",
+                headers: {
+                    'Accept': 'application/json',
+                    'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Mobile/15E148 Safari/604.1'
+                }
+            };
+
+            fetchWithCallback(wallpaperRequest, (error, response, body) => {
+                console.log("开始处理响应");
+                if (error) {
+                    console.log("请求错误：", error);
+                    notify("壁纸更新失败", "", JSON.stringify(error));
+                    resolve(); // 即使失败也要继续
+                    return;
+                }
+
+                console.log("收到响应体：", typeof body, body);
+                
+                try {
+                    const responseData = typeof body === 'string' ? JSON.parse(body) : body;
+                    console.log("解析后数据：", JSON.stringify(responseData));
+                    
+                    const imageUrl = responseData?.data?.phone_url;
+                    console.log("获取到的图片URL：", imageUrl);
+                    
+                    if (imageUrl) {
+                        userData.backgroundimage = imageUrl;
+                        storage.set("sheep_userdata", JSON.stringify(userData));
+                        notify("壁纸更新成功", "", "背景图片已更新");
+                    } else {
+                        notify("壁纸更新失败", "", "未找到图片地址");
+                    }
+                } catch (e) {
+                    console.log("解析错误：", e);
+                    notify("壁纸更新失败", "", "数据解析错误：" + e.message);
+                }
+                resolve(); // 完成处理
+            });
+        });
+    }
+
+    // 获取最终的背景图片和用户名
+    const backgroundImage = userData.backgroundimage;
+    const username = userData.username;
+
+    // 路由处理
+    const url = $request.url;
+
+    //处理user信息
+    if (url.includes('/videoPolymerization/videoword/userinfo/')) {
+        const match = url.match(/\/videoPolymerization\/(userinfo)\/([^\/\?]+)/);
+        if (match[2] == "userdata") {
+            console.log(11);
+        }
+    }
+
+    const html = `<!DOCTYPE html>
+    <html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+        <title>VidSheep</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/main11.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/user01.css">
+    </head>
+    <style>
+        body::before {
+            background-image: url(${backgroundImage});
+        }
+    </style>
+    <body>
+        <div id="main-container"></div>
+        <div id="loading-results"></div>
+        <footer>
+            <div id="bottom-nav">
+                <div class="nav-button" id="searchBtn" onclick="showSearch()">搜索</div>
+                <div class="nav-button" id="listBtn">最近</div>
+                <div class="nav-button" id="listBtn" onclick="showList()">收藏</div>
+                <div class="nav-button nav-active" id="profileBtn" onclick="showProfile()">我的</div>
+            </div>
+        </footer>
+    </body>
+    <script>
+        const username = "${username}";
+    </script>   
+    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/main08.js"></script>
+    </html>`;
+
+    $done({ 
+        status: "HTTP/1.1 200 OK", 
+        headers: { "Content-Type": "text/html" }, 
+        body: html 
     });
 }
 
-// 获取背景图片和用户名
-const backgroundImage = userData.backgroundimage;
-const username = userData.username;
-
-// 路由处理
-const url = $request.url;
-
-//处理user信息
-if (url.includes('/videoPolymerization/videoword/userinfo/')) {
-    const match = url.match(/\/videoPolymerization\/(userinfo)\/([^\/\?]+)/);
-    if (match[2] == "userdata") {
-        console.log(11);
-    }
-
-}
-
-
-
-const html = `<!DOCTYPE html>
-<html lang="zh-CN">
-
-<head>
-    <meta charset="UTF-8">
-    <!-- 全屏显示 -->
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-    <title>VidSheep</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/main11.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/user01.css">
-</head>
-<style>
-    body::before {
-        background-image: url(${backgroundImage});
-
-    }
-</style>
-
-<body>
-
-    <!-- 动态加载区域 -->
-    <div id="main-container">
-
-        
-    </div>
-
-    <!-- 等待动画加载 -->
-    <div id="loading-results"></div>
-    <!-- 底部导航 -->
-    <footer>
-        <div id="bottom-nav">
-            <div class="nav-button" id="searchBtn" onclick="showSearch()">搜索</div>
-            <div class="nav-button" id="listBtn">最近</div>
-            <div class="nav-button" id="listBtn" onclick="showList()">收藏</div>
-            <div class="nav-button nav-active" id="profileBtn" onclick="showProfile()">我的</div>
-        </div>
-    </footer>
-
-</body>
-
-<script>
-    const username = "${username}";
-</script>   
-<script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/main08.js"></script>
-</html>`
-
-$done({ status: "HTTP/1.1 200 OK", headers: { "Content-Type": "text/html" }, body: html });
+// 执行主函数
+main().catch(error => {
+    console.log("脚本执行错误：", error);
+    $done({
+        status: "HTTP/1.1 500 Internal Server Error",
+        headers: { "Content-Type": "text/html" },
+        body: "Error: " + error.message
+    });
+});
