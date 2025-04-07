@@ -30,8 +30,7 @@ const notify = (title, subtitle, message) => {
 // 统一 HTTP 请求方法
 function fetchWithCallback(options, callback) {
     if (isLoon || isSurge || isShadowrocket) {
-        const httpMethod = options.method === "POST" ? $httpClient.post : $httpClient.get;
-        httpMethod(options, (error, response, body) => {
+        $httpClient.get(options, (error, response, body) => {
             if (error) {
                 notify("请求失败", "", JSON.stringify(error));
                 callback(error, response, body);
@@ -40,7 +39,6 @@ function fetchWithCallback(options, callback) {
             }
         });
     } else if (isQuanX) {
-        // QuanX 环境
         $task.fetch(options).then(response => {
             callback(null, response, response.body);
         }).catch(error => {
@@ -86,7 +84,6 @@ if (userData.imageauto === "true") {
     
     const wallpaperRequest = {
         url: "https://api.52vmy.cn/api/wl/word/bing/tu",
-        method: "GET",
         headers: {
             'Accept': 'application/json',
             'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Mobile/15E148 Safari/604.1'
@@ -169,8 +166,10 @@ function finishScript() {
     </html>`;
 
     $done({ 
-        status: "HTTP/1.1 200 OK", 
-        headers: { "Content-Type": "text/html" }, 
-        body: html 
+        response: {
+            status: 200,
+            headers: { "Content-Type": "text/html" },
+            body: html
+        }
     });
 }
