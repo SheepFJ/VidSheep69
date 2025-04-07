@@ -44,11 +44,23 @@ function fetchWithCallback(options, callback) {
     }
 }
 
+// 获取时间
+function getTime() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+notify("时间", "", getTime());
+
 // 处理用户信息,初始化页面
 const defaultUserData = {
     "backgroundimage": "https://mfiles.alphacoders.com/853/853922.jpg",
     "username": "小羊羔子1009",
     "imageauto": "true", //是否自动更换背景
+    "time_up":"2025-04-07 10:00:00",
     "usersettingsimage": "false", //是否用户设置背景
     "statusbarcolor": "rgba(0,0,0,0.8)",
     "theme": "true",
@@ -79,7 +91,7 @@ if (userData.imageauto === "true") {
     userData.usersettingsimage = "false";
     
     const wallpaperRequest = {
-        url: "https://api.52vmy.cn/api/img/tu/mo",
+        url: "https://api.52vmy.cn/api/wl/word/bing/tu",
         headers: {
             'Accept': 'application/json',
             'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Mobile/15E148 Safari/604.1'
@@ -90,7 +102,7 @@ if (userData.imageauto === "true") {
     fetchWithCallback(wallpaperRequest, (error, response, body) => {
         try {
             const responseData = typeof body === 'string' ? JSON.parse(body) : body;
-            const imageUrl = responseData?.url;
+            const imageUrl = responseData?.data?.phone_url;
             
             if (imageUrl) {
                 userData.backgroundimage = imageUrl;
