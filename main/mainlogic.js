@@ -41,15 +41,7 @@ function fetchWithCallback(options, callback) {
         });
     } else if (isQuanX) {
         // QuanX 环境
-        const method = options.method || "GET";
-        const fetchOptions = {
-            method,
-            url: options.url,
-            headers: options.headers || {},
-            body: options.body || null
-        };
-
-        $task.fetch(fetchOptions).then(response => {
+        $task.fetch(options).then(response => {
             callback(null, response, response.body);
         }).catch(error => {
             notify("请求失败", "", JSON.stringify(error));
@@ -111,16 +103,22 @@ if(userData.imageauto === "true"){
 
     // 使用统一的请求方法
     fetchWithCallback(wallpaperRequest, (error, response, body) => {
+        console.log("开始处理响应");
         if (error) {
+            console.log("请求错误：", error);
             notify("壁纸更新失败", "", JSON.stringify(error));
             return;
         }
 
+        console.log("收到响应体：", typeof body, body);
+        
         try {
-            console.log("响应内容：", body);
-            const responseData = JSON.parse(body);
+            // 如果body是字符串，则解析它
+            const responseData = typeof body === 'string' ? JSON.parse(body) : body;
             console.log("解析后数据：", JSON.stringify(responseData));
+            
             const imageUrl = responseData?.data?.phone_url;
+            console.log("获取到的图片URL：", imageUrl);
             
             if (imageUrl) {
                 userData.backgroundimage = imageUrl;
@@ -130,8 +128,8 @@ if(userData.imageauto === "true"){
                 notify("壁纸更新失败", "", "未找到图片地址");
             }
         } catch (e) {
+            console.log("解析错误：", e);
             notify("壁纸更新失败", "", "数据解析错误：" + e.message);
-            console.log("错误详情：", e.message);
         }
     });
 }
