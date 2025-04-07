@@ -1,18 +1,17 @@
 // 通用工具函数和环境检测
 const isLoon = typeof $persistentStore !== "undefined";
 const isQuanX = typeof $prefs !== "undefined";
-const isSurge = typeof $httpClient !== "undefined" && typeof $prefs === "undefined";
-const isShadowrocket = typeof $rocket !== "undefined";
+const isSurge = !isLoon && !isQuanX; // 其他环境按Surge处理
 
 // 统一存储方法
 const storage = {
     get: key => {
-        if (isLoon || isSurge || isShadowrocket) return $persistentStore.read(key);
+        if (isLoon || isSurge) return $persistentStore.read(key);
         if (isQuanX) return $prefs.valueForKey(key);
         return null;
     },
     set: (key, value) => {
-        if (isLoon || isSurge || isShadowrocket) return $persistentStore.write(value, key);
+        if (isLoon || isSurge) return $persistentStore.write(value, key);
         if (isQuanX) return $prefs.setValueForKey(value, key);
         return false;
     }
@@ -24,15 +23,12 @@ const notify = (title, subtitle, message) => {
         $notification.post(title, subtitle, message);
     } else if (isQuanX) {
         $notify(title, subtitle, message);
-    } else if (isShadowrocket) {
-        // Shadowrocket环境下不发送通知，避免影响响应
-        console.log(`[通知] ${title}: ${message}`);
     }
 };
 
 // 统一 HTTP 请求方法
 function fetchWithCallback(options, callback) {
-    if (isLoon || isSurge || isShadowrocket) {
+    if (isLoon || isSurge) {
         const httpMethod = options.method === "POST" ? $httpClient.post : $httpClient.get;
         httpMethod(options, (error, response, body) => {
             if (error) {
