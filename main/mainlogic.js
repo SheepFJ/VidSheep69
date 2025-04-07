@@ -117,7 +117,9 @@ if(userData.imageauto === "true"){
         }
 
         try {
+            console.log("响应内容：", body);
             const responseData = JSON.parse(body);
+            console.log("解析后数据：", JSON.stringify(responseData));
             const imageUrl = responseData?.data?.phone_url;
             
             if (imageUrl) {
@@ -129,6 +131,7 @@ if(userData.imageauto === "true"){
             }
         } catch (e) {
             notify("壁纸更新失败", "", "数据解析错误：" + e.message);
+            console.log("错误详情：", e.message);
         }
     });
 }
