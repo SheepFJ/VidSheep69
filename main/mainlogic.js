@@ -110,15 +110,16 @@ if(userData.imageauto === "true"){
     };
 
     // 使用统一的请求方法
-    fetchWithCallback(wallpaperRequest, (error, response, data) => {
+    fetchWithCallback(wallpaperRequest, (error, response, body) => {
         if (error) {
             notify("壁纸更新失败", "", JSON.stringify(error));
             return;
         }
 
         try {
-            const obj = JSON.parse(data);
-            const imageUrl = obj?.data?.phone_url;
+            const responseData = JSON.parse(body);
+            const imageUrl = responseData?.data?.phone_url;
+            
             if (imageUrl) {
                 userData.backgroundimage = imageUrl;
                 storage.set("sheep_userdata", JSON.stringify(userData));
