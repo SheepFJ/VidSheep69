@@ -29,22 +29,11 @@ const notify = (title, subtitle, message) => {
 // 统一 HTTP 请求方法
 function fetchWithCallback(options, callback) {
     if (isLoon || isSurge) {
-        const method = options.method || "GET";
-        const requestOptions = {
-            url: options.url,
-            headers: options.headers,
-            body: options.body // 如果有 POST 的 body
-        };
-
-        const httpMethod = method === "POST" ? $httpClient.post : $httpClient.get;
-        httpMethod(requestOptions, (error, response, body) => {
-            if (error) {
-                notify("请求失败", "", JSON.stringify(error));
-                callback(error, response, body);
-            } else {
-                callback(null, response, body);
-            }
-        });
+        if (options.method === "POST") {
+            $httpClient.post(options, callback);
+        } else {
+            $httpClient.get(options, callback);
+        }
     } else if (isQuanX) {
         $task.fetch(options).then(response => {
             callback(null, response, response.body);
@@ -91,7 +80,6 @@ if (userData.imageauto === "true") {
     
     const wallpaperRequest = {
         url: "https://api.52vmy.cn/api/wl/word/bing/tu",
-        method: "GET",
         headers: {
             'Accept': 'application/json',
             'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Mobile/15E148 Safari/604.1'
