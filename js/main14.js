@@ -105,6 +105,7 @@ initUserEvents();
 }
 
 function disCover(){
+    const mainContainer = document.getElementById("main-container");
     mainContainer.innerHTML = `
 <div class="user-container">
     <div class="username-container">
