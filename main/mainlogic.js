@@ -62,6 +62,9 @@ const TimestampUtil = {
     }
   };
 
+// 获取当前时间戳
+const now = TimestampUtil.getCurrent();
+
 
 // 处理用户信息,初始化页面
 const defaultUserData = {
@@ -97,8 +100,8 @@ if (!userData) {
 }
 
 // 如果开启了自动更新壁纸且时间戳有效
-if (userData.imageauto === "true" && TimestampUtil.isValid(userData.currentTimestamp, userData.oldTimestamp)) {
-    const now = TimestampUtil.getCurrent();
+if (userData.imageauto === "true" && TimestampUtil.isValid(now, userData.oldTimestamp)) {
+    
     userData.currentTimestamp = now;
     userData.oldTimestamp = TimestampUtil.addMinutes(now, 1440);
     storage.set("sheep_userdata", JSON.stringify(userData));
@@ -131,6 +134,8 @@ if (userData.imageauto === "true" && TimestampUtil.isValid(userData.currentTimes
         finishScript();
     });
 } else {
+    console.log("跳过更新：当前时间 " + new Date(now).toLocaleString() + 
+                "，下次更新时间 " + new Date(userData.oldTimestamp).toLocaleString());
     finishScript();
 }
 
