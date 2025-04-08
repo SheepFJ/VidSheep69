@@ -44,16 +44,24 @@ function fetchWithCallback(options, callback) {
     }
 }
 
-// 获取时间
-function getTime() {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-}
+//时间戳函数
+const TimestampUtil = {
+    // 获取当前时间戳
+    getCurrent: function () {
+      return new Date().getTime();
+    },
+  
+    // 获取当前时间戳加 n 分钟后的时间戳
+    addMinutes: function (timestamp, minutes) {
+      return timestamp + minutes * 60 * 1000;
+    },
+  
+    // 比较时间戳，如果当前时间大于旧时间戳，返回 true 确认修改壁纸
+    isValid: function (currentTimestamp, oldTimestamp) {
+      return currentTimestamp >= oldTimestamp;
+    }
+  };
 
-notify("时间", "", getTime());
 
 // 处理用户信息,初始化页面
 const defaultUserData = {
@@ -64,7 +72,9 @@ const defaultUserData = {
     "usersettingsimage": "false", //是否用户设置背景
     "statusbarcolor": "rgba(0,0,0,0.8)",
     "theme": "true",
-    "initial": "true"
+    "initial": "true",
+    "currentTimestamp":TimestampUtil.getCurrent,
+    "oldTimestamp":0
 };
 
 // 获取用户数据，初始化信息
@@ -87,8 +97,10 @@ if (!userData) {
 }
 
 // 如果开启了自动更新壁纸
-if (userData.imageauto === "true") {
+if (userData.imageauto === "true" && TimestampUtil.isValid(userData.currentTimestamp,userData.oldTimestamp) ) {
+
     userData.usersettingsimage = "false";
+    userData.oldTimestamp=userData.addMinutes(TimestampUtil.getCurrent(),1440)
     
     const wallpaperRequest = {
         url: "https://api.52vmy.cn/api/wl/word/bing/tu",
