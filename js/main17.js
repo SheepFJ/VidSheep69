@@ -1,5 +1,90 @@
-//默认先展示user页面
-showProfile();
+// 打开关闭我的页面关于对话栏
+window.toggleCollapsible = function (element) {
+    // 关闭其他折叠项
+    document.querySelectorAll('.user-collapsible-header.user-active').forEach(header => {
+        if (header !== element) {
+            header.classList.remove('user-active');
+            header.nextElementSibling.style.maxHeight = "0";
+        }
+    });
+
+    // 切换当前折叠项
+    element.classList.toggle('user-active');
+    const content = element.nextElementSibling;
+    content.style.maxHeight = element.classList.contains('user-active') ? content.scrollHeight + "px" : "0";
+};
+
+// 封装一个自执行函数
+const initUserEvents = (function () {
+    return function () {
+        // 绑定折叠面板事件
+        document.querySelectorAll('.user-collapsible-header').forEach(header => {
+            header.addEventListener('click', () => toggleCollapsible(header));
+        });
+
+        // 绑定修改用户名事件
+        const xiuGaiBtn = document.querySelector('.xiuGaiUserName');
+        if (xiuGaiBtn) {
+            xiuGaiBtn.addEventListener('click', function () {
+                const popUpWindow = document.getElementById('PopUpWindow');
+                popUpWindow.innerHTML = `
+                    <div class="popup-overlay">
+                        <div class="popup-content">
+                            <h3 class="popup-title">修改用户名</h3>
+                            <input type="text" id="newUsername" class="popup-input" value="${username}" placeholder="请输入新的用户名">
+                            <div class="popup-buttons">
+                                <button class="popup-button cancel-button" onclick="closeUsernamePopup()">取消</button>
+                                <button class="popup-button confirm-button" onclick="confirmUsernameEdit()">确认</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                popUpWindow.style.display = 'block';
+            });
+        }
+
+        // 绑定弹窗外部点击关闭事件
+        const popUpWindow = document.getElementById('PopUpWindow');
+        if (popUpWindow) {
+            popUpWindow.addEventListener('click', function (event) {
+                if (event.target.classList.contains('popup-overlay')) {
+                    closeUsernamePopup();
+                }
+            });
+        }
+    };
+})();
+
+// 关闭名称修改弹窗
+function closeUsernamePopup() {
+    const popUpWindow = document.getElementById('PopUpWindow');
+    popUpWindow.style.display = 'none';
+}
+
+// 确认修改名称
+function confirmUsernameEdit() {
+    const newUsername = document.getElementById('newUsername').value.trim();
+    if (!newUsername) {
+        alert('用户名不能为空！');
+        return;
+    }
+
+    // 发送请求修改用户名
+    fetch(`https://api.sheep.com/sheep/videoPolymerization/userinfo/username/${encodeURIComponent(newUsername)}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data && data.username) {
+                document.querySelector('.user-title').textContent = data.username;
+                closeUsernamePopup();
+            } else {
+                alert('修改失败，请稍后重试！');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('修改失败，请稍后重试！');
+        });
+}
 
 function showProfile() {
     // 我的页面--关于--历史版本
@@ -207,16 +292,25 @@ mainContainer.innerHTML = `
     </div>
 </div>
 `;
-    // initUserEvents();
+    initUserEvents();
 }
 
+
+// 等待动画加载
+function loadAnimation(loadingResults) {
+    loadingResults.innerHTML = `
+     <div class="loading-all">
+         <div class="loading-animation"></div>
+         <div class="loading-text">加载中...</div>
+     </div>
+ `;
+}
 
 // 搜素事件
 function showSearch() {
     var loadingResults = document.getElementById("loading-results");
     loadAnimation(loadingResults);
 }
-
 
 // 选中样式应用
 const navButtons = document.querySelectorAll('#bottom-nav .nav-button');
@@ -229,109 +323,6 @@ for (let i = 0; i < navButtons.length; i++) {
     });
 }
 
-
-
-
-
-// 封装一个自执行函数
-const initUserEvents = (function () {
-    return function () {
-        // 绑定折叠面板事件
-        document.querySelectorAll('.user-collapsible-header').forEach(header => {
-            header.addEventListener('click', () => toggleCollapsible(header));
-        });
-
-        // 绑定修改用户名事件
-        const xiuGaiBtn = document.querySelector('.xiuGaiUserName');
-        if (xiuGaiBtn) {
-            xiuGaiBtn.addEventListener('click', function () {
-                const popUpWindow = document.getElementById('PopUpWindow');
-                popUpWindow.innerHTML = `
-                    <div class="popup-overlay">
-                        <div class="popup-content">
-                            <h3 class="popup-title">修改用户名</h3>
-                            <input type="text" id="newUsername" class="popup-input" value="${username}" placeholder="请输入新的用户名">
-                            <div class="popup-buttons">
-                                <button class="popup-button cancel-button" onclick="closeUsernamePopup()">取消</button>
-                                <button class="popup-button confirm-button" onclick="confirmUsernameEdit()">确认</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                popUpWindow.style.display = 'block';
-            });
-        }
-
-        // 绑定弹窗外部点击关闭事件
-        const popUpWindow = document.getElementById('PopUpWindow');
-        if (popUpWindow) {
-            popUpWindow.addEventListener('click', function (event) {
-                if (event.target.classList.contains('popup-overlay')) {
-                    closeUsernamePopup();
-                }
-            });
-        }
-    };
-})();
-
-
-// 打开关闭我的页面关于对话栏
-window.toggleCollapsible = function (element) {
-    // 关闭其他折叠项
-    document.querySelectorAll('.user-collapsible-header.user-active').forEach(header => {
-        if (header !== element) {
-            header.classList.remove('user-active');
-            header.nextElementSibling.style.maxHeight = "0";
-        }
-    });
-
-    // 切换当前折叠项
-    element.classList.toggle('user-active');
-    const content = element.nextElementSibling;
-    content.style.maxHeight = element.classList.contains('user-active') ? content.scrollHeight + "px" : "0";
-};
-
-// 等待动画加载
-function loadAnimation(loadingResults) {
-    loadingResults.innerHTML = `
-     <div class="loading-all">
-         <div class="loading-animation"></div>
-         <div class="loading-text">加载中...</div>
-     </div>
- `;
-}
-
-// 关闭名称修改弹窗
-function closeUsernamePopup() {
-    const popUpWindow = document.getElementById('PopUpWindow');
-    popUpWindow.style.display = 'none';
-}
-
-// 确认修改名称
-function confirmUsernameEdit() {
-    const newUsername = document.getElementById('newUsername').value.trim();
-    if (!newUsername) {
-        alert('用户名不能为空！');
-        return;
-    }
-
-    // 发送请求修改用户名
-    fetch(`https://api.sheep.com/sheep/videoPolymerization/userinfo/username/${encodeURIComponent(newUsername)}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data && data.username) {
-                document.querySelector('.user-title').textContent = data.username;
-                closeUsernamePopup();
-            } else {
-                alert('修改失败，请稍后重试！');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('修改失败，请稍后重试！');
-        });
-}
-
-// 初始化事件绑定
-initUserEvents();
+// 所有函数都定义完成后，最后执行showProfile
+showProfile();
 
