@@ -126,21 +126,50 @@ function handleSearchRequest() {
         }
     }, (error, response, body) => {
         if (error) {
+            notify("请求失败", "", JSON.stringify(error));
             $done({ body: JSON.stringify({ error: "网络错误", detail: error }) });
             return;
         }
 
-
         try {
-            notify("解析成功", "", "解析成功");
             const json = JSON.parse(body);
-            // 存储数据
-            storage.set("sheep_vod_data", JSON.stringify(json.list || []));
+            // 存储视频数据
+            storeVodData(json.list || []);
+            notify("数据解析成功", "", `共找到 ${json.list ? json.list.length : 0} 个结果`);
             $done({ body: JSON.stringify({ success: "数据已存储", list: json.list }) });
         } catch (e) {
+            notify("解析失败", "", e.message);
             $done({ body: JSON.stringify({ error: "解析失败" }) });
         }
-
-
     });
+}
+
+// 存储视频数据到本地
+function storeVodData(vodList) {
+    for (let i = 0; i < vodList.length; i++) {
+        let vod = vodList[i];
+
+        let vodName = vod.vod_name; // 标题
+        let vodPic = vod.vod_pic; // 图片地址
+        let vodContent = vod.vod_content; // 简介
+        let vodPlayUrl = vod.vod_play_url; // 播放地址
+
+        // 解析播放地址
+        let episodes = [];
+        let playParts = vodPlayUrl.split("#");  // 根据#符号分隔
+
+        for (let j = 0; j < playParts.length; j++) {
+            let episodeDetails = playParts[j].split("$");
+            let episodeTitle = episodeDetails[0];
+            let episodeUrl = episodeDetails[1] || "";
+            episodes.push(`${episodeTitle}: ${episodeUrl}`);
+        }
+
+        // 拼接存储格式
+        let storeValue = [vodName, vodPic, vodContent, ...episodes].join(",");
+
+        // 存储到本地
+        let key = `sheep_vod_info_${i}`; // 例如：sheep_vod_info_0, sheep_vod_info_1 ...
+        storage.set(key, storeValue);
+    }
 }
