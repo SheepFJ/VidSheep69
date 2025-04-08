@@ -73,7 +73,7 @@ const defaultUserData = {
     "statusbarcolor": "rgba(0,0,0,0.8)",
     "theme": "true",
     "initial": "true",
-    "currentTimestamp":TimestampUtil.getCurrent(),
+    "currentTimestamp":0,
     "oldTimestamp":0
 };
 
@@ -99,7 +99,9 @@ if (!userData) {
 // 如果开启了自动更新壁纸
 if (userData.imageauto === "true" && TimestampUtil.isValid(userData.currentTimestamp,userData.oldTimestamp) ) {
 
-    userData.oldTimestamp=userData.addMinutes(TimestampUtil.getCurrent(),1440)
+    userData.oldTimestamp=TimestampUtil.addMinutes(TimestampUtil.getCurrent(),1440)
+    userData.currentTimestamp=TimestampUtil.getCurrent()
+    storage.set("sheep_userdata", JSON.stringify(userData));
     
     const wallpaperRequest = {
         url: "https://api.52vmy.cn/api/wl/word/bing/tu",
