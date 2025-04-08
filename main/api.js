@@ -58,8 +58,8 @@ if (url.includes('/userinfo/')) {
             // url编码转换
             const username = decodeURIComponent(match[1]);
             userData.username = username;
-            storage.set("sheep_userdata", JSON.stringify(userData));
-            notify("更新成功", "用户名", username);
+            // userData是对象
+            storage.set("sheep_userdata", userData);
         }
         // 以json格式响应
         $done({
