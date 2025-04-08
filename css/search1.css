@@ -69,3 +69,43 @@
     margin-top: 20px;
     display: inline-block;
 }
+
+
+
+
+/* 搜索结果样式 */
+.movie-container {
+    width: calc(33.33% - 30px);
+    /* 确保每行显示三个 */
+    text-align: center;
+    padding: 10px;
+    transition: all 0.3s;
+    margin-bottom: 5px;
+}
+
+.movie-container:hover {
+    transform: translateY(-5px);
+}
+
+.movie-container img {
+    width: 100px;
+    height: 150px;
+    cursor: pointer;
+    display: block;
+    margin: 0 auto 10px;
+    transition: all 0.3s;
+    object-fit: cover;
+}
+
+.movie-container img:hover {
+    transform: scale(1.05);
+}
+
+.movie-container p {
+    font-size: 14px;
+    margin: 8px 0;
+    color: #ddd;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

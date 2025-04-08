@@ -1,5 +1,5 @@
 // 使用事件委托处理所有用户交互
-document.getElementById('main-container').addEventListener('click', function(event) {
+document.getElementById('main-container').addEventListener('click', function (event) {
     const target = event.target;
 
     // 处理折叠面板点击
@@ -27,13 +27,13 @@ document.getElementById('main-container').addEventListener('click', function(eve
     }
 
 
-if(target.closest('.search-button')){
-    search();
-}
+    if (target.closest('.search-button')) {
+        search();
+    }
 });
 
 // 处理弹窗相关的事件委托
-document.getElementById('PopUpWindow').addEventListener('click', function(event) {
+document.getElementById('PopUpWindow').addEventListener('click', function (event) {
     const target = event.target;
 
     // 处理点击弹窗外部关闭
@@ -204,8 +204,8 @@ function showProfile() {
 
 //发现
 function disCover() {
-const mainContainer = document.getElementById("main-container");
-mainContainer.innerHTML = `
+    const mainContainer = document.getElementById("main-container");
+    mainContainer.innerHTML = `
 <div class="user-container">
     <div class="username-container">
         <h1 class="user-title">${username}</h1>
@@ -370,6 +370,12 @@ function search() {
 
                 var title = document.createElement("p");
                 title.textContent = vod.vod_name;
+                title.style.whiteSpace = "normal"; // 允许文字换行
+                title.style.textAlign = "center"; // 文字居中对齐
+                title.style.height = "40px"; // 固定高度,显示两行
+                title.style.overflow = "hidden"; // 超出隐藏
+                title.style.display = "-webkit-box";
+                title.style.webkitLineClamp = "2"; // 最多显示两行
 
                 container.appendChild(img);
                 container.appendChild(title);
@@ -386,7 +392,7 @@ function search() {
 }
 
 // 最近
-function showList(){
+function showList() {
     var loadingResults = document.getElementById("loading-results");
     loadAnimation(loadingResults);
 }
