@@ -73,7 +73,7 @@ const defaultUserData = {
     "statusbarcolor": "rgba(0,0,0,0.8)",
     "theme": "true",
     "initial": "true",
-    "currentTimestamp":TimestampUtil.getCurrent,
+    "currentTimestamp":TimestampUtil.getCurrent(),
     "oldTimestamp":0
 };
 
@@ -99,7 +99,6 @@ if (!userData) {
 // 如果开启了自动更新壁纸
 if (userData.imageauto === "true" && TimestampUtil.isValid(userData.currentTimestamp,userData.oldTimestamp) ) {
 
-    userData.usersettingsimage = "false";
     userData.oldTimestamp=userData.addMinutes(TimestampUtil.getCurrent(),1440)
     
     const wallpaperRequest = {
