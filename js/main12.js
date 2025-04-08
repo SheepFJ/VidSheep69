@@ -105,6 +105,30 @@ mainContainer.innerHTML = `
     </div>
 </div>
 `;
+
+// 在innerHTML设置后重新绑定事件
+// 绑定折叠面板事件
+document.querySelectorAll('.user-collapsible-header').forEach(header => {
+    header.addEventListener('click', () => toggleCollapsible(header));
+});
+
+// 绑定修改用户名事件
+document.querySelector('.xiuGaiUserName').addEventListener('click', function() {
+    const popUpWindow = document.getElementById('PopUpWindow');
+    popUpWindow.innerHTML = `
+        <div class="popup-overlay">
+            <div class="popup-content">
+                <h3 class="popup-title">修改用户名</h3>
+                <input type="text" id="newUsername" class="popup-input" value="${username}" placeholder="请输入新的用户名">
+                <div class="popup-buttons">
+                    <button class="popup-button cancel-button" onclick="closeUsernamePopup()">取消</button>
+                    <button class="popup-button confirm-button" onclick="confirmUsernameEdit()">确认</button>
+                </div>
+            </div>
+        </div>
+    `;
+    popUpWindow.style.display = 'block';
+});
 }
 
 
@@ -156,27 +180,11 @@ window.toggleCollapsible = function (element) {
     content.style.maxHeight = element.classList.contains('user-active') ? content.scrollHeight + "px" : "0";
 };
 
-// DOM加载完成后添加事件监听
-document.querySelectorAll('.user-collapsible-header').forEach(header => {
-    header.addEventListener('click', () => toggleCollapsible(header));
-});
-
-// 添加修改用户名相关的函数
-document.querySelector('.xiuGaiUserName').addEventListener('click', function() {
-    const popUpWindow = document.getElementById('PopUpWindow');
-    popUpWindow.innerHTML = `
-        <div class="popup-overlay">
-            <div class="popup-content">
-                <h3 class="popup-title">修改用户名</h3>
-                <input type="text" id="newUsername" class="popup-input" value="${username}" placeholder="请输入新的用户名">
-                <div class="popup-buttons">
-                    <button class="popup-button cancel-button" onclick="closeUsernamePopup()">取消</button>
-                    <button class="popup-button confirm-button" onclick="confirmUsernameEdit()">确认</button>
-                </div>
-            </div>
-        </div>
-    `;
-    popUpWindow.style.display = 'block';
+// 点击弹窗外部关闭
+document.getElementById('PopUpWindow').addEventListener('click', function(event) {
+    if (event.target.classList.contains('popup-overlay')) {
+        closeUsernamePopup();
+    }
 });
 
 function closeUsernamePopup() {
@@ -207,10 +215,3 @@ function confirmUsernameEdit() {
             alert('修改失败，请稍后重试！');
         });
 }
-
-// 点击弹窗外部关闭
-document.getElementById('PopUpWindow').addEventListener('click', function(event) {
-    if (event.target.classList.contains('popup-overlay')) {
-        closeUsernamePopup();
-    }
-});
