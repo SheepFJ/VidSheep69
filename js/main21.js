@@ -328,6 +328,7 @@ function showSearch() {
         <button onclick="search()" class="search-button">搜索</button>
     </div>
     <div id="loading-results"></div>
+    <div id="search-imglist"></div>
 `;
 }
 
@@ -359,7 +360,7 @@ function search() {
             }
 
             data.list.forEach((vod, index) => {
-                var container = document.createElement("div");
+                var container = document.querySelector("#search-imglist");
                 container.className = "movie-container";
                 container.style.width = "calc(33.33% - 30px)"; // 确保每行显示三个
 
