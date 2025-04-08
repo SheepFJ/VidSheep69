@@ -365,7 +365,7 @@ function search() {
 
                 var img = document.createElement("img");
                 img.src = vod.vod_pic;
-                img.onerror = function () { this.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgMTAwIDE1MCIgZmlsbD0iIzMzMyI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxNTAiIGZpbGw9IiMyMjIiLz48dGV4dCB4PSI1MCIgeT0iNzUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2FhYSI+无图片</dGV4dD48L3N2Zz4='; };
+                img.onerror = function () { this.src = 'https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/img/no-image.png'; };
                 img.onclick = function () { loadVideoInfo(index); };
 
                 var title = document.createElement("p");

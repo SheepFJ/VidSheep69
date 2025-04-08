@@ -130,17 +130,17 @@ function handleSearchRequest() {
             return;
         }
 
-        if (response.status === 200) {
-            try {
-                const json = JSON.parse(body);
-                // 存储数据
-                storage.set("sheep_vod_data", JSON.stringify(json.list || []));
-                $done({ body: JSON.stringify({ success: "数据已存储", list: json.list }) });
-            } catch (e) {
-                $done({ body: JSON.stringify({ error: "解析失败" }) });
-            }
-        } else {
-            $done({ body: JSON.stringify({ error: "API 请求失败" }) });
+
+        try {
+            notify("解析成功", "", "解析成功");
+            const json = JSON.parse(body);
+            // 存储数据
+            storage.set("sheep_vod_data", JSON.stringify(json.list || []));
+            $done({ body: JSON.stringify({ success: "数据已存储", list: json.list }) });
+        } catch (e) {
+            $done({ body: JSON.stringify({ error: "解析失败" }) });
         }
+
+
     });
 }
