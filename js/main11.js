@@ -4,7 +4,7 @@
 
 
 
-function showProfile(){
+
 // 我的页面--关于--历史版本
 const mainContainer = document.getElementById("main-container");
 mainContainer.innerHTML = `
@@ -105,7 +105,7 @@ mainContainer.innerHTML = `
     </div>
 </div>
 `;
-}
+
 
 
 
