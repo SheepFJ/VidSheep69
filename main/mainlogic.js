@@ -149,87 +149,14 @@ function finishScript() {
         <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
         <title>VidSheep</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/main11.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/user01.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/user02.css">
         <link rel="stylesheet" href="https://at.alicdn.com/t/c/font_4885201_pselrfia07l.css">
     </head>
     <style>
         body::before {
             background-image: url(${backgroundImage});
         }
-        .username-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        .xiuGaiUserName {
-            cursor: pointer;
-            color: #f39c12;
-            font-size: 28px;
-        }
-        #PopUpWindow {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1000;
-        }
-        .popup-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .popup-content {
-            background: rgba(30, 30, 30, 0.9);
-            padding: 20px;
-            border-radius: 10px;
-            width: 80%;
-            max-width: 300px;
-        }
-        .popup-title {
-            color: #f39c12;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-        .popup-input {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 15px;
-            background: rgba(50, 50, 50, 0.8);
-            border: 1px solid #f39c12;
-            border-radius: 5px;
-            color: #fff;
-            box-sizing: border-box;
-        }
-        .popup-buttons {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-        }
-        .popup-button {
-            flex: 1;
-            padding: 8px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .cancel-button {
-            background: #666;
-            color: #fff;
-        }
-        .confirm-button {
-            background: #f39c12;
-            color: #fff;
-        }
+        
     </style>
     <body>
         <div id="main-container"></div>
