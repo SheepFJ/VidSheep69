@@ -150,93 +150,16 @@ function finishScript() {
         <title>VidSheep</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/main11.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/user01.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-        <style>
-            body::before {
-                background-image: url(${backgroundImage});
-            }
-            .username-container {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 10px;
-            }
-            .edit-icon {
-                cursor: pointer;
-                color: #f39c12;
-                font-size: 0.8em;
-            }
-            .modal {
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(0, 0, 0, 0.5);
-                z-index: 1000;
-            }
-            .modal-content {
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background: rgba(30, 30, 30, 0.9);
-                padding: 20px;
-                border-radius: 10px;
-                width: 80%;
-                max-width: 300px;
-            }
-            .modal-title {
-                color: #f39c12;
-                margin-bottom: 15px;
-                text-align: center;
-            }
-            .modal input {
-                width: 100%;
-                padding: 8px;
-                margin-bottom: 15px;
-                background: rgba(50, 50, 50, 0.8);
-                border: 1px solid #f39c12;
-                border-radius: 5px;
-                color: #fff;
-            }
-            .modal-buttons {
-                display: flex;
-                justify-content: space-between;
-                gap: 10px;
-            }
-            .modal-button {
-                flex: 1;
-                padding: 8px;
-                border: none;
-                border-radius: 5px;
-                cursor: pointer;
-                font-weight: bold;
-            }
-            .cancel-button {
-                background: #666;
-                color: #fff;
-            }
-            .confirm-button {
-                background: #f39c12;
-                color: #fff;
-            }
-        </style>
+        <link rel="stylesheet" href="https://at.alicdn.com/t/c/font_4885201_pselrfia07l.css">
     </head>
+    <style>
+        body::before {
+            background-image: url(${backgroundImage});
+        }
+    </style>
     <body>
         <div id="main-container"></div>
         <div id="loading-results"></div>
-        <div id="editUsernameModal" class="modal">
-            <div class="modal-content">
-                <h3 class="modal-title">修改用户名</h3>
-                <input type="text" id="newUsername" placeholder="请输入新的用户名">
-                <div class="modal-buttons">
-                    <button class="modal-button cancel-button" onclick="closeModal()">取消</button>
-                    <button class="modal-button confirm-button" onclick="confirmEdit()">确认</button>
-                </div>
-            </div>
-        </div>
         <footer>
             <div id="bottom-nav">
                 <div class="nav-button" id="searchBtn" onclick="showSearch()">搜索</div>
