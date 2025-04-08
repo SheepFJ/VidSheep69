@@ -63,7 +63,7 @@ const TimestampUtil = {
   };
 
 // 获取当前时间戳
-const now = TimestampUtil.getCurrent();
+const nowtime = TimestampUtil.getCurrent();
 
 
 // 处理用户信息,初始化页面
@@ -75,7 +75,7 @@ const defaultUserData = {
     "usersettingsimage": "false", //是否用户设置背景
     "statusbarcolor": "rgba(0,0,0,0.8)",
     "theme": "true",
-    "initial": "true",
+    "initial": "false",
     "currentTimestamp":0,
     "oldTimestamp":0
 };
@@ -100,10 +100,10 @@ if (!userData) {
 }
 
 // 如果开启了自动更新壁纸且时间戳有效
-if (userData.imageauto === "true" && TimestampUtil.isValid(now, userData.oldTimestamp)) {
+if (userData.imageauto === "true" && TimestampUtil.isValid(nowtime, userData.oldTimestamp)) {
     
-    userData.currentTimestamp = now;
-    userData.oldTimestamp = TimestampUtil.addMinutes(now, 1440);
+    userData.currentTimestamp = nowtime;
+    userData.oldTimestamp = TimestampUtil.addMinutes(nowtime, 1440);
     storage.set("sheep_userdata", JSON.stringify(userData));
 
     const wallpaperRequest = {
@@ -134,8 +134,6 @@ if (userData.imageauto === "true" && TimestampUtil.isValid(now, userData.oldTime
         finishScript();
     });
 } else {
-    console.log("跳过更新：当前时间 " + new Date(now).toLocaleString() + 
-                "，下次更新时间 " + new Date(userData.oldTimestamp).toLocaleString());
     finishScript();
 }
 
