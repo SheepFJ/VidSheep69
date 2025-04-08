@@ -166,7 +166,7 @@ function finishScript() {
             <div id="bottom-nav">
                 <div class="nav-button" id="searchBtn" onclick="showSearch()">搜索</div>
                 <div class="nav-button" id="listBtn" onclick="showList()">最近</div>
-                <div class="nav-button" id="listBtn" onclick="disCover()">发现</div>
+                <div class="nav-button" id="disCover" onclick="disCover()">发现</div>
                 <div class="nav-button nav-active" id="profileBtn" onclick="showProfile()">我的</div>
             </div>
         </footer>
