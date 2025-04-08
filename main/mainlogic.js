@@ -44,7 +44,7 @@ function fetchWithCallback(options, callback) {
     }
 }
 
-//时间戳函数
+//时间戳函数getCurrent,addMinutes,isValid
 const TimestampUtil = {
     // 获取当前时间戳
     getCurrent: function () {
@@ -96,13 +96,13 @@ if (!userData) {
     }
 }
 
-// 如果开启了自动更新壁纸
-if (userData.imageauto === "true" && TimestampUtil.isValid(userData.currentTimestamp,userData.oldTimestamp) ) {
-
-    userData.oldTimestamp=TimestampUtil.addMinutes(TimestampUtil.getCurrent(),1440)
-    userData.currentTimestamp=TimestampUtil.getCurrent()
+// 如果开启了自动更新壁纸且时间戳有效
+if (userData.imageauto === "true" && TimestampUtil.isValid(userData.currentTimestamp, userData.oldTimestamp)) {
+    const now = TimestampUtil.getCurrent();
+    userData.currentTimestamp = now;
+    userData.oldTimestamp = TimestampUtil.addMinutes(now, 1440);
     storage.set("sheep_userdata", JSON.stringify(userData));
-    
+
     const wallpaperRequest = {
         url: "https://api.52vmy.cn/api/wl/word/bing/tu",
         headers: {
