@@ -1,9 +1,10 @@
-// 发送请求渲染页面
+//默认先展示user页面
+showProfile();
 
-function showProfile(){
-// 我的页面--关于--历史版本
-const mainContainer = document.getElementById("main-container");
-mainContainer.innerHTML = `
+function showProfile() {
+    // 我的页面--关于--历史版本
+    const mainContainer = document.getElementById("main-container");
+    mainContainer.innerHTML = `
 <div class="user-container">
     <div class="username-container">
         <h1 class="user-title">${username}</h1>
@@ -101,12 +102,14 @@ mainContainer.innerHTML = `
     </div>
 </div>
 `;
-initUserEvents();
+    initUserEvents();
 }
 
-function disCover(){
-    const mainContainer = document.getElementById("main-container");
-    mainContainer.innerHTML = `
+
+//发现
+function disCover() {
+const mainContainer = document.getElementById("main-container");
+mainContainer.innerHTML = `
 <div class="user-container">
     <div class="username-container">
         <h1 class="user-title">${username}</h1>
@@ -204,7 +207,14 @@ function disCover(){
     </div>
 </div>
 `;
-initUserEvents();
+    // initUserEvents();
+}
+
+
+// 搜素事件
+function showSearch() {
+    var loadingResults = document.getElementById("loading-results");
+    loadAnimation(loadingResults);
 }
 
 
@@ -224,8 +234,8 @@ for (let i = 0; i < navButtons.length; i++) {
 
 
 // 封装一个自执行函数
-const initUserEvents = (function() {
-    return function() {
+const initUserEvents = (function () {
+    return function () {
         // 绑定折叠面板事件
         document.querySelectorAll('.user-collapsible-header').forEach(header => {
             header.addEventListener('click', () => toggleCollapsible(header));
@@ -234,7 +244,7 @@ const initUserEvents = (function() {
         // 绑定修改用户名事件
         const xiuGaiBtn = document.querySelector('.xiuGaiUserName');
         if (xiuGaiBtn) {
-            xiuGaiBtn.addEventListener('click', function() {
+            xiuGaiBtn.addEventListener('click', function () {
                 const popUpWindow = document.getElementById('PopUpWindow');
                 popUpWindow.innerHTML = `
                     <div class="popup-overlay">
@@ -255,7 +265,7 @@ const initUserEvents = (function() {
         // 绑定弹窗外部点击关闭事件
         const popUpWindow = document.getElementById('PopUpWindow');
         if (popUpWindow) {
-            popUpWindow.addEventListener('click', function(event) {
+            popUpWindow.addEventListener('click', function (event) {
                 if (event.target.classList.contains('popup-overlay')) {
                     closeUsernamePopup();
                 }
@@ -264,7 +274,8 @@ const initUserEvents = (function() {
     };
 })();
 
-// 打开关闭user对话栏
+
+// 打开关闭我的页面关于对话栏
 window.toggleCollapsible = function (element) {
     // 关闭其他折叠项
     document.querySelectorAll('.user-collapsible-header.user-active').forEach(header => {
@@ -290,17 +301,13 @@ function loadAnimation(loadingResults) {
  `;
 }
 
-// 搜素事件
-function showSearch() {
-    var loadingResults = document.getElementById("loading-results");
-    loadAnimation(loadingResults);
-}
-
+// 关闭名称修改弹窗
 function closeUsernamePopup() {
     const popUpWindow = document.getElementById('PopUpWindow');
     popUpWindow.style.display = 'none';
 }
 
+// 确认修改名称
 function confirmUsernameEdit() {
     const newUsername = document.getElementById('newUsername').value.trim();
     if (!newUsername) {
