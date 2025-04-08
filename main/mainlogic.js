@@ -150,6 +150,7 @@ function finishScript() {
         <title>VidSheep</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/main11.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/user02.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/search.css">
         <link rel="stylesheet" href="https://at.alicdn.com/t/c/font_4885201_pselrfia07l.css">
     </head>
     <style>
@@ -170,7 +171,7 @@ function finishScript() {
 
         <div id="PopUpWindow"></div>
 
-        
+
         <footer>
             <div id="bottom-nav">
                 <div class="nav-button" id="searchBtn" onclick="showSearch()">搜索</div>
@@ -183,7 +184,7 @@ function finishScript() {
     <script>
         const username = "${username}";
     </script>   
-    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/main17.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/main18.js"></script>
     </html>`;
 
     $done({ 

@@ -73,15 +73,74 @@ if (url.includes('/userinfo/')) {
             body: JSON.stringify(userData)
         });
     }
-    // 这里可以添加其他 userinfo 相关的处理逻辑
-    // 比如处理 /userinfo/avatar/ 等
-    if (url.includes('/avatar/')) {
-        const match = url.match(/\/videoPolymerization\/userinfo\/avatar\/([^\/\?]+)/);
-        if (match && match[1]) {
-            userData.avatar = match[1];
-            storage.set("sheep_userdata", JSON.stringify(userData));
-        }
-    }
 }
 
 
+if (url.includes('/videoword/')) {
+    handleSearchRequest();
+}
+
+function handleSearchRequest() {
+    const urlMatch = $request.url.match(/sheep\/videoPolymerization\/videoword\/([^\/]+)\/\?wd=(.*)/);
+    if (!urlMatch) {
+        $done({ body: JSON.stringify({ error: "无效的请求格式" }) });
+        return;
+    }
+
+    const source = urlMatch[1];
+    const wd = decodeURIComponent(urlMatch[2]);
+
+    // 定义不同 source 对应的 API 地址
+    const apiSources = {
+        "1": "https://caiji.moduapi.cc/api.php/provide/vod?ac=detail&wd=",
+        "2": "https://cj.lziapi.com/api.php/provide/vod/from/lzm3u8/?ac=detail&wd="
+    };
+
+    // 获取对应 API 地址
+    const baseUrl = apiSources[source];
+    if (!baseUrl) {
+        $done({ body: JSON.stringify({ error: "不支持的 source" }) });
+        return;
+    }
+
+    // 构建完整请求 URL
+    const requestUrl = baseUrl + encodeURIComponent(wd);
+
+    // 使用封装的 fetchWithCallback 方法发送请求
+    fetchWithCallback({
+        url: requestUrl,
+        method: "GET",
+        headers: {
+            "Sec-Fetch-Dest": "empty",
+            "Connection": "keep-alive",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Priority": "u=3, i",
+            "Sec-Fetch-Site": "cross-site",
+            "Origin": "https://movies.disney.com",
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Safari/605.1.15",
+            "Sec-Fetch-Mode": "cors",
+            "Referer": "https://movies.disney.com/",
+            "Host": new URL(requestUrl).host,
+            "Accept-Language": "zh-CN,zh-Hans;q=0.9",
+            "Accept": "*/*"
+        }
+    }, (error, response, body) => {
+        if (error) {
+            $done({ body: JSON.stringify({ error: "网络错误", detail: error }) });
+            return;
+        }
+
+        if (response.status === 200) {
+            try {
+                const json = JSON.parse(body);
+                // 存储数据
+                storage.set("sheep_vod_data", JSON.stringify(json.list || []));
+                $done({ body: JSON.stringify({ success: "数据已存储", list: json.list }) });
+            } catch (e) {
+                $done({ body: JSON.stringify({ error: "解析失败" }) });
+            }
+        } else {
+            $done({ body: JSON.stringify({ error: "API 请求失败" }) });
+        }
+    });
+}
