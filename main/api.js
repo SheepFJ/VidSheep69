@@ -55,10 +55,16 @@ if (url.includes('/userinfo/')) {
     if (url.includes('/username/')) {
         const match = url.match(/\/videoPolymerization\/userinfo\/username\/([^\/\?]+)/);
         if (match && match[1]) {
-            userData.username = match[1];
+            // url编码转换
+            const username = decodeURIComponent(match[1]);
+            userData.username = username;
             storage.set("sheep_userdata", JSON.stringify(userData));
-            notify("更新成功", "用户名", match[1]);
+            notify("更新成功", "用户名", username);
         }
+        // 以json格式响应
+        $done({
+            body: JSON.stringify(userData)
+        });
     }
     // 这里可以添加其他 userinfo 相关的处理逻辑
     // 比如处理 /userinfo/avatar/ 等
