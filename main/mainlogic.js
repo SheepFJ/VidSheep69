@@ -140,15 +140,7 @@ if (userData.imageauto === "true" && TimestampUtil.isValid(nowtime, userData.old
 // 完成脚本的函数
 function finishScript() {
     const backgroundImage = userData.backgroundimage;
-    const username = userData.username;
-    const url = $request.url;
-
-    if (url.includes('/videoPolymerization/videoword/userinfo/')) {
-        const match = url.match(/\/videoPolymerization\/(userinfo)\/([^\/\?]+)/);
-        if (match[2] == "userdata") {
-            console.log(11);
-        }
-    }
+    const username = userData.username;   
 
     const html = `<!DOCTYPE html>
     <html lang="zh-CN">
