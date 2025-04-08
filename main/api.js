@@ -45,10 +45,18 @@ function fetchWithCallback(options, callback) {
 }
 
 
-let userData = storage.get("sheep_userdata");
+// 获取本地存储的 userData，确保是对象
+let rawData = storage.get("sheep_userdata");
+let userData = {};
+
+// 尝试解析 JSON，如果失败就使用空对象
+try {
+    userData = rawData ? JSON.parse(rawData) : {};
+} catch (e) {
+    userData = {};
+}
+
 const url = $request.url;
-
-
 // 处理 userinfo 相关请求
 if (url.includes('/userinfo/')) {
     // 处理 username 相关请求
@@ -58,8 +66,7 @@ if (url.includes('/userinfo/')) {
             // url编码转换
             const username = decodeURIComponent(match[1]);
             userData.username = username;
-            // userData是对象
-            storage.set("sheep_userdata", userData);
+            storage.set("sheep_userdata", JSON.stringify(userData));
         }
         // 以json格式响应
         $done({
