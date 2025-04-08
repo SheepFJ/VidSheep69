@@ -318,20 +318,16 @@ function loadAnimation(loadingResults) {
 // 搜素事件
 function showSearch() {
     document.getElementById("main-container").innerHTML = `
-    <div class="search-container">
-        <h1 class="search-title">影视搜索</h1>
-        <div class="search-form">
-            <input class="search-input" type="text" id="searchInput" placeholder="输入影视名称">
-            <select class="search-select" id="sourceSelect">
-                <option value="1">源1</option>
-                <option value="2">源2</option>
-            </select>
-            <button onclick="search()" class="search-button">搜索</button>
-        </div>
-        <div class="results-container">
-            <div id="loading-results"></div>
-        </div>
+    <h1 class="search-title">影视搜索</h1>
+    <div class="search-form">
+        <input class="search-input" type="text" id="searchInput" placeholder="输入影视名称">
+        <select class="search-select" id="sourceSelect">
+            <option value="1">源1</option>
+            <option value="2">源2</option>
+        </select>
+        <button onclick="search()" class="search-button">搜索</button>
     </div>
+    <div id="loading-results"></div>
 `;
 }
 
@@ -380,6 +376,7 @@ function search() {
                 title.style.overflow = "hidden"; // 超出隐藏
                 title.style.display = "-webkit-box";
                 title.style.webkitLineClamp = "2"; // 最多显示两行
+                title.style.webkitBoxOrient = "vertical";
 
                 container.appendChild(img);
                 container.appendChild(title);
