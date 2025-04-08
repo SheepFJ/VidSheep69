@@ -333,6 +333,7 @@ function showSearch() {
 
 // 搜索
 function search() {
+    //获取搜索源与搜索内容
     var wd = encodeURIComponent(document.getElementById("searchInput").value);
     var source = document.getElementById("sourceSelect").value;
 
@@ -342,7 +343,7 @@ function search() {
     }
 
     // 显示加载提示
-    var results = document.getElementById("results");
+    var results = document.getElementById("loading-results");
     loadAnimation(results);
 
     var apiUrl = "https://api.sheep.com/sheep/videoPolymerization/videoword/" + source + "/?wd=" + wd;
