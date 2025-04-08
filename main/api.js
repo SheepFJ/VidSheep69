@@ -57,6 +57,7 @@ if (url.includes('/userinfo/')) {
         if (match && match[1]) {
             userData.username = match[1];
             storage.set("sheep_userdata", JSON.stringify(userData));
+            notify("更新成功", "用户名", match[1]);
         }
     }
     // 这里可以添加其他 userinfo 相关的处理逻辑
