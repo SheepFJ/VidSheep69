@@ -165,8 +165,8 @@ function finishScript() {
         <footer>
             <div id="bottom-nav">
                 <div class="nav-button" id="searchBtn" onclick="showSearch()">搜索</div>
-                <div class="nav-button" id="listBtn">最近</div>
-                <div class="nav-button" id="listBtn" onclick="showList()">收藏</div>
+                <div class="nav-button" id="listBtn" onclick="showList()">最近</div>
+                <div class="nav-button" id="listBtn" onclick="disCover()">发现</div>
                 <div class="nav-button nav-active" id="profileBtn" onclick="showProfile()">我的</div>
             </div>
         </footer>
@@ -174,7 +174,7 @@ function finishScript() {
     <script>
         const username = "${username}";
     </script>   
-    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/main12.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/main14.js"></script>
     </html>`;
 
     $done({ 
