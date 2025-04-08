@@ -159,9 +159,18 @@ function finishScript() {
         
     </style>
     <body>
-        <div id="main-container"></div>
+        <div id="main-container">
+
+
+        </div>
+
+
         <div id="loading-results"></div>
+
+
         <div id="PopUpWindow"></div>
+
+        
         <footer>
             <div id="bottom-nav">
                 <div class="nav-button" id="searchBtn" onclick="showSearch()">搜索</div>
