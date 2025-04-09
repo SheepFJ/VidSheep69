@@ -1,6 +1,6 @@
 /* 搜索结果容器 */
 .search-results-container {
-    width: 100%;
+    width: 90%;
     padding: 10px;
     box-sizing: border-box;
 }
@@ -13,22 +13,6 @@
     width: 100%;
 }
 
-/* 两个元素的行样式 */
-.two-items-row {
-    justify-content: space-evenly;
-    padding: 0 10%;
-}
-
-/* 单个元素的行样式 */
-.one-item-row {
-    justify-content: center;
-}
-
-.one-item-row .movie-item {
-    width: 60%;
-    max-width: 250px;
-}
-
 /* 电影项目样式 */
 .movie-item {
     width: 32%;
@@ -38,7 +22,6 @@
     transition: transform 0.3s ease;
     cursor: pointer;
     position: relative;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .movie-item:hover {
@@ -69,14 +52,6 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     background: rgba(0, 0, 0, 0.7);
-}
-
-/* 搜索结果区域样式，确保可以滚动 */
-#search-imglist {
-    width: 100%;
-    overflow-y: auto;
-    max-height: calc(100vh - 150px); /* 留出顶部搜索栏和底部导航的高度 */
-    padding-bottom: 60px; /* 为底部导航留出空间 */
 }
 
 /* 无结果提示 */
@@ -197,14 +172,6 @@
         margin-bottom: 10px;
     }
 
-    .two-items-row {
-        padding: 0 5%;
-    }
-
-    .one-item-row .movie-item {
-        width: 70%;
-    }
-
     .movie-title {
         font-size: 12px;
         min-height: 32px;
@@ -231,14 +198,6 @@
         margin-bottom: 8px;
     }
 
-    .two-items-row {
-        padding: 0 3%;
-    }
-
-    .one-item-row .movie-item {
-        width: 80%;
-    }
-
     .movie-title {
         font-size: 12px;
         padding: 4px;
@@ -253,10 +212,4 @@
         grid-template-columns: repeat(3, 1fr);
         gap: 6px;
     }
-}
-
-/* 加载动画容器 */
-#loading-results {
-    text-align: center;
-    padding: 20px 0;
 }

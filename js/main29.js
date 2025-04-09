@@ -257,7 +257,6 @@ function search() {
         .then(response => {
             loadingResults.innerHTML = "";
             const searchImgList = document.getElementById("search-imglist");
-            searchImgList.innerHTML = ""; // 清空之前的搜索结果
 
             if (!response.success || response.total === 0) {
                 searchImgList.innerHTML = '<div class="no-results">未找到相关影视，尝试切换源~</div>';
@@ -268,34 +267,26 @@ function search() {
             const mainContainer = document.createElement('div');
             mainContainer.className = 'search-results-container';
 
-            // 获取数据条目数量
-            const entriesCount = Object.keys(response.data).length;
-            
-            // 遍历存储的数据
+            // 用于临时存储三个一组的电影项
             let rowDiv = null;
             let count = 0;
-            let itemsPerRow = entriesCount === 1 ? 1 : (entriesCount === 2 ? 2 : 3); // 根据总数决定每行显示数量
 
+            // 遍历存储的数据
             Object.entries(response.data).forEach(([key, value]) => {
                 // 解析存储的数据
                 const [vodName, vodPic, vodContent, ...episodes] = value.split(',');
                 
-                // 每组创建一个新的行div
-                if (count % itemsPerRow === 0) {
+                // 每三个项目创建一个新的行div
+                if (count % 3 === 0) {
                     rowDiv = document.createElement('div');
                     rowDiv.className = 'movie-row';
-                    if (itemsPerRow === 2) {
-                        rowDiv.classList.add('two-items-row'); // 添加特殊类用于两个元素的情况
-                    } else if (itemsPerRow === 1) {
-                        rowDiv.classList.add('one-item-row'); // 添加特殊类用于一个元素的情况
-                    }
                     mainContainer.appendChild(rowDiv);
                 }
                 
                 // 创建单个电影容器
                 const movieDiv = document.createElement('div');
                 movieDiv.className = 'movie-item';
-                
+
                 // 创建图片
                 const img = document.createElement('img');
                 img.src = vodPic;
@@ -324,14 +315,13 @@ function search() {
                 count++;
             });
 
-            // 将主容器添加到search-imglist
+            // 将主容器添加到search-imglist div中
+            searchImgList.innerHTML = '';
             searchImgList.appendChild(mainContainer);
         })
         .catch(err => {
             console.error("请求失败", err);
-            const searchImgList = document.getElementById("search-imglist");
             searchImgList.innerHTML = '<div class="no-results">搜索失败，请稍后重试</div>';
-            loadingResults.innerHTML = "";
         });
 }
 
