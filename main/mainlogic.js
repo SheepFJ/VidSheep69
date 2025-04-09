@@ -148,10 +148,10 @@ function finishScript() {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
         <title>VidSheep</title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/main11.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/main12.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/user02.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/search3.css">
-        <link rel="stylesheet" href="https://at.alicdn.com/t/c/font_4885201_pselrfia07l.css">
+        <link rel="stylesheet" href="https://at.alicdn.com/t/c/font_4885201_uujsdzmia5h.css">
     </head>
     <style>
         body::before {
@@ -174,10 +174,22 @@ function finishScript() {
 
         <footer>
             <div id="bottom-nav">
-                <div class="nav-button" id="searchBtn" onclick="showSearch()">搜索</div>
-                <div class="nav-button" id="listBtn" onclick="showList()">最近</div>
-                <div class="nav-button" id="disCover" onclick="disCover()">发现</div>
-                <div class="nav-button nav-active" id="profileBtn" onclick="showProfile()">我的</div>
+                <div class="nav-button" id="searchBtn" onclick="showSearch()">
+                    <i class="iconfont icon-sousuo"></i>
+                    <span>搜索</span>
+                </div>
+                <div class="nav-button" id="listBtn" onclick="showList()">
+                    <i class="iconfont icon-zuijin"></i>
+                    <span>最近</span>
+                </div>
+                <div class="nav-button" id="disCover" onclick="disCover()">
+                    <i class="iconfont icon-faxian"></i>
+                    <span>发现</span>
+                </div>
+                <div class="nav-button nav-active" id="profileBtn" onclick="showProfile()">
+                    <i class="iconfont icon-wode"></i>
+                    <span>我的</span>
+                </div>
             </div>
         </footer>
     </body>

@@ -68,18 +68,29 @@ body::after {
 /* 底部栏按钮 */
 .nav-button {
     flex: 1;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     color: #aaa;
-    font-size: 16px;
-    padding: 0 0 -10px 0;
+    font-size: 12px;
+    padding: 5px 0;
     cursor: pointer;
     transition: all 0.3s;
+}
+
+.nav-button i {
+    font-size: 20px;
+    margin-bottom: 2px;
 }
 
 .nav-button.nav-active {
     color: #f39c12;
     font-weight: bold;
-    border-bottom: 2px solid #f39c12;
+}
+
+.nav-button.nav-active i {
+    color: #f39c12;
 }
 
 /* 隐藏滚动条但保留滚动功能 */
