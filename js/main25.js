@@ -286,7 +286,7 @@ function search() {
                 img.src = vodPic;
                 img.alt = vodName;
                 img.onerror = function() { 
-                    this.src = 'https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/img/no-image.png';
+                    this.src = 'https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/img/no-image.jpg';
                 };
                 img.loading = 'lazy'; // 启用懒加载
                 

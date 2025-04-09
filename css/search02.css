@@ -1,10 +1,13 @@
 /* 搜索结果容器 */
 .search-results-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-template-columns: repeat(3, 1fr); /* 修改为固定3列 */
     gap: 15px;
     padding: 15px;
     margin-top: 10px;
+    max-width: 1200px; /* 添加最大宽度 */
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* 电影项目样式 */
@@ -150,7 +153,8 @@
 /* 响应式布局 */
 @media (max-width: 768px) {
     .search-results-container {
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        grid-template-columns: repeat(2, 1fr); /* 平板端显示2列 */
+        gap: 10px;
     }
 
     .video-info {
@@ -164,19 +168,21 @@
     }
 
     .episodes-grid {
-        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        grid-template-columns: repeat(3, 1fr); /* 剧集列表也保持3列 */
     }
 }
 
 @media (max-width: 480px) {
     .search-results-container {
-        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-        gap: 10px;
+        grid-template-columns: repeat(2, 1fr); /* 手机端保持2列 */
+        gap: 8px;
+        padding: 10px;
     }
 
     .movie-title {
         font-size: 12px;
         height: 32px;
+        padding: 4px;
     }
 
     .video-header h2 {
@@ -184,6 +190,7 @@
     }
 
     .episodes-grid {
-        grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+        grid-template-columns: repeat(2, 1fr); /* 手机端剧集列表改为2列 */
+        gap: 8px;
     }
 } 
