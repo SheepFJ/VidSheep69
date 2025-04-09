@@ -75,12 +75,10 @@
 
 /* 搜索结果样式 */
 .movie-container {
-    width: calc(33.33% - 30px);
-    /* 确保每行显示三个 */
-    text-align: center;
-    padding: 10px;
+    width: calc(33.33% - 10px);
+    margin-bottom: 15px;
+    position: relative;
     transition: all 0.3s;
-    margin-bottom: 5px;
 }
 
 .movie-container:hover {
@@ -88,73 +86,12 @@
 }
 
 .movie-container img {
-    width: 100px;
-    height: 150px;
-    cursor: pointer;
-    display: block;
-    margin: 0 auto 10px;
-    transition: all 0.3s;
-    object-fit: cover;
-}
-
-.movie-container img:hover {
-    transform: scale(1.05);
-}
-
-.movie-container p {
-    font-size: 14px;
-    margin: 8px 0;
-    color: #ddd;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-#search-imglist {
-    width: 100%;
-    background: rgba(40, 40, 40, 0.6);
-    padding: 15px;
-    margin-top: 10px;
-}
-
-/* 搜索结果容器相关样式 */
-#search-imgplay {
-    width: 100%;
-    background: rgba(40, 40, 40, 0.6);
-    padding: 15px;
-    margin-top: 10px;
-    border-radius: 8px;
-}
-
-/* 结果网格布局 */
-.results-grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    width: 100%;
-}
-
-/* 改进的电影容器样式 */
-.movie-item {
-    width: calc(33.33% - 10px);
-    margin-bottom: 15px;
-    position: relative;
-    overflow: hidden;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-}
-
-.movie-item:hover {
-    transform: translateY(-5px);
-}
-
-.movie-item img {
     width: 100%;
     aspect-ratio: 2/3;
     object-fit: cover;
     border-radius: 8px;
     display: block;
+    cursor: pointer;
 }
 
 .movie-title {
@@ -162,7 +99,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.5);
     color: #fff;
     padding: 8px;
     font-size: 13px;
@@ -176,7 +113,7 @@
     border-bottom-right-radius: 8px;
 }
 
-/* 视频详情页面样式 */
+/* 视频详情页样式 */
 .video-detail {
     padding: 15px;
     color: #fff;
@@ -271,36 +208,30 @@
 }
 
 .episode-item:hover {
-    background: #f39c12;
+    background-color: #f39c12;
 }
 
-/* 响应式布局 */
-@media (max-width: 768px) {
-    .movie-item {
-        width: calc(50% - 10px);
-    }
-    
-    .video-info {
-        flex-direction: column;
-    }
-    
-    .video-poster {
-        width: 100%;
-        max-width: 300px;
-        margin: 0 auto;
-    }
-    
-    .episodes-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+/* 无结果提示样式 */
+.no-results {
+    text-align: center;
+    padding: 30px;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    margin: 20px;
 }
 
-@media (max-width: 480px) {
-    .movie-item {
-        width: 100%;
-    }
-    
-    .episodes-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+#search-imglist {
+    width: 100%;
+    background: rgba(40, 40, 40, 0.6);
+    padding: 15px;
+    margin-top: 10px;
+}
+
+/* 搜索结果网格布局 */
+.results-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
 }

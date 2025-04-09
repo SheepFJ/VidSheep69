@@ -299,7 +299,7 @@ function search() {
                 
                 // 创建电影容器
                 var container = document.createElement("div");
-                container.className = "movie-item";
+                container.className = "movie-container";
                 
                 // 创建图片
                 var img = document.createElement("img");
@@ -333,66 +333,189 @@ function search() {
         });
 }
 
-// 视频详情页面
-function showVideoDetail(vodName, vodPic, vodContent, episodes) {
-    const mainContainer = document.getElementById("main-container");
+// 显示视频详情页面
+function showVideoDetail(title, image, description, episodes) {
+    // 保存当前电影信息到本地存储
+    const movieData = {
+        title: title,
+        image: image,
+        description: description,
+        episodes: episodes
+    };
     
-    // 清空搜索结果
-    document.getElementById("search-imgplay").innerHTML = "";
-    document.getElementById("loading-results").innerHTML = "";
+    localStorage.setItem('currentMovie', JSON.stringify(movieData));
     
-    // 创建视频详情页面
-    mainContainer.innerHTML = `
-        <div class="video-detail">
-            <div class="video-header">
-                <button onclick="showSearch()" class="back-button">
-                    <i class="iconfont icon-fanhui"></i>
-                </button>
-                <h2>${vodName}</h2>
-            </div>
-            <div class="video-info">
-                <div class="video-poster">
-                    <img src="${vodPic}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgMTAwIDE1MCIgZmlsbD0iIzMzMyI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxNTAiIGZpbGw9IiMyMjIiLz48dGV4dCB4PSI1MCIgeT0iNzUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2FhYSI+无图片</dGV4dD48L3N2Zz4=';" alt="${vodName}">
-                </div>
-                <div class="video-content">
-                    <h3>简介</h3>
-                    <p>${vodContent || '暂无简介'}</p>
-                </div>
-            </div>
-            <div class="episodes-list">
-                <h3>剧集列表</h3>
-                <div class="episodes-grid">
-                    ${episodes.map(episode => {
-                        const parts = episode.split(': ');
-                        const title = parts[0];
-                        const url = parts[1] || '';
-                        return `
-                            <div class="episode-item" onclick="playVideo('${url}', '${title}')">
-                                ${title}
-                            </div>
-                        `;
-                    }).join('')}
-                </div>
-            </div>
-        </div>
-    `;
+    // 清空先前的内容
+    const mainContainer = document.getElementById('main-container');
+    const searchImgList = document.getElementById('search-imglist');
+    const searchImgPlay = document.getElementById('search-imgplay');
+    const loadingResults = document.getElementById('loading-results');
+    
+    if (mainContainer) mainContainer.innerHTML = '';
+    if (searchImgList) searchImgList.innerHTML = '';
+    if (searchImgPlay) searchImgPlay.innerHTML = '';
+    if (loadingResults) loadingResults.innerHTML = '';
+    
+    // 创建视频详情页
+    const detailPage = document.createElement('div');
+    detailPage.className = 'video-detail';
+    
+    // 创建返回按钮
+    const backButton = document.createElement('button');
+    backButton.className = 'back-button';
+    backButton.textContent = '返回搜索';
+    backButton.addEventListener('click', function() {
+        showSearch();
+    });
+    
+    // 创建头部区域
+    const header = document.createElement('div');
+    header.className = 'video-header';
+    
+    // 创建影片图片
+    const movieImage = document.createElement('img');
+    movieImage.className = 'video-image';
+    movieImage.src = image;
+    movieImage.onerror = function() { 
+        this.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgMTAwIDE1MCIgZmlsbD0iIzMzMyI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxNTAiIGZpbGw9IiMyMjIiLz48dGV4dCB4PSI1MCIgeT0iNzUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2FhYSI+无图片</dGV4dD48L3N2Zz4='; 
+    };
+    
+    // 创建影片信息
+    const movieInfo = document.createElement('div');
+    movieInfo.className = 'video-info';
+    
+    // 添加标题
+    const movieTitle = document.createElement('h1');
+    movieTitle.className = 'video-title';
+    movieTitle.textContent = title;
+    
+    // 添加描述
+    const movieDescription = document.createElement('p');
+    movieDescription.className = 'video-description';
+    movieDescription.textContent = description || '暂无简介';
+    
+    // 添加信息到头部
+    movieInfo.appendChild(movieTitle);
+    movieInfo.appendChild(movieDescription);
+    header.appendChild(movieImage);
+    header.appendChild(movieInfo);
+    
+    // 创建剧集列表
+    const episodesContainer = document.createElement('div');
+    episodesContainer.className = 'episodes-container';
+    
+    const episodesTitle = document.createElement('h2');
+    episodesTitle.className = 'episodes-title';
+    episodesTitle.textContent = '选集';
+    
+    const episodesList = document.createElement('div');
+    episodesList.className = 'episodes-list';
+    
+    // 添加剧集
+    if (episodes && episodes.length > 0) {
+        episodes.forEach((episode, index) => {
+            // 解析剧集信息
+            const parts = episode.split('$');
+            const episodeName = parts[0];
+            const episodeUrl = parts[1];
+            
+            if (!episodeUrl) return;
+            
+            const episodeItem = document.createElement('div');
+            episodeItem.className = 'episode-item';
+            episodeItem.textContent = episodeName || `第${index + 1}集`;
+            
+            // 添加点击播放功能
+            episodeItem.addEventListener('click', function() {
+                playVideo(episodeUrl, title, episodeName);
+            });
+            
+            episodesList.appendChild(episodeItem);
+        });
+    } else {
+        const noEpisodes = document.createElement('p');
+        noEpisodes.className = 'no-episodes';
+        noEpisodes.textContent = '暂无可播放剧集';
+        episodesList.appendChild(noEpisodes);
+    }
+    
+    episodesContainer.appendChild(episodesTitle);
+    episodesContainer.appendChild(episodesList);
+    
+    // 组装页面
+    detailPage.appendChild(backButton);
+    detailPage.appendChild(header);
+    detailPage.appendChild(episodesContainer);
+    
+    // 添加到主容器
+    if (searchImgPlay) {
+        searchImgPlay.appendChild(detailPage);
+    } else if (mainContainer) {
+        mainContainer.appendChild(detailPage);
+    }
 }
 
 // 播放视频
-function playVideo(url, title) {
-    // 实现视频播放逻辑
-    console.log('播放视频:', title, url);
+function playVideo(url, title, episodeName) {
+    // 清空内容
+    const mainContainer = document.getElementById('main-container');
+    const searchImgList = document.getElementById('search-imglist');
+    const searchImgPlay = document.getElementById('search-imgplay');
+    const loadingResults = document.getElementById('loading-results');
     
-    if (url) {
-        if (url.startsWith('http')) {
-            window.open(url, '_blank');
+    if (mainContainer) mainContainer.innerHTML = '';
+    if (searchImgList) searchImgList.innerHTML = '';
+    if (searchImgPlay) searchImgPlay.innerHTML = '';
+    if (loadingResults) loadingResults.innerHTML = '';
+
+    // 创建播放器容器
+    const playerContainer = document.createElement('div');
+    playerContainer.className = 'player-container';
+    
+    // 创建返回按钮
+    const backButton = document.createElement('button');
+    backButton.className = 'back-button';
+    backButton.textContent = '返回详情';
+    
+    // 获取保存的电影信息
+    const savedMovieData = localStorage.getItem('currentMovie');
+    
+    backButton.addEventListener('click', function() {
+        if (savedMovieData) {
+            const movieData = JSON.parse(savedMovieData);
+            showVideoDetail(movieData.title, movieData.image, movieData.description, movieData.episodes);
         } else {
-            alert(`正在播放: ${title}\n视频地址: ${url}`);
+            showSearch();
         }
-    } else {
-        alert('无法播放，视频地址不存在');
+    });
+    
+    // 创建标题
+    const videoTitle = document.createElement('h1');
+    videoTitle.className = 'video-player-title';
+    videoTitle.textContent = `${title} - ${episodeName || ''}`;
+    
+    // 创建视频播放器
+    const videoPlayer = document.createElement('iframe');
+    videoPlayer.className = 'video-player-iframe';
+    videoPlayer.src = url;
+    videoPlayer.allowFullscreen = true;
+    
+    // 组装播放器界面
+    const playerHeader = document.createElement('div');
+    playerHeader.className = 'player-header';
+    playerHeader.appendChild(backButton);
+    playerHeader.appendChild(videoTitle);
+    
+    playerContainer.appendChild(playerHeader);
+    playerContainer.appendChild(videoPlayer);
+    
+    // 添加到容器
+    if (searchImgPlay) {
+        searchImgPlay.appendChild(playerContainer);
+    } else if (mainContainer) {
+        mainContainer.appendChild(playerContainer);
     }
-} 
+}
 
 // 最近
 function showList() {
