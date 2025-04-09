@@ -264,51 +264,61 @@ function search() {
                 return;
             }
 
-            // 创建搜索结果容器
-            const resultsContainer = document.createElement('div');
-            resultsContainer.className = 'search-results-container';
+            // 创建主容器
+            const mainContainer = document.createElement('div');
+            mainContainer.className = 'search-results-container';
 
-            // 遍历存储的数据
+            // 用于临时存储三个一组的电影项
+            let rowDiv = null;
+            let count = 0;
+
+            // 遍历视频数据
             Object.entries(response.data).forEach(([key, value]) => {
-                // 解析存储的数据
-                const [vodName, vodPic, vodContent, ...episodes] = value.split(',');
-                
-                // 创建电影容器
-                const movieContainer = document.createElement('div');
-                movieContainer.className = 'movie-item';
-                
-                // 创建图片容器
-                const imgContainer = document.createElement('div');
-                imgContainer.className = 'movie-img-container';
-                
-                // 创建图片元素
+                // 每三个项目创建一个新的行div
+                if (count % 3 === 0) {
+                    rowDiv = document.createElement('div');
+                    rowDiv.className = 'movie-row';
+                    mainContainer.appendChild(rowDiv);
+                }
+
+                // 创建单个电影容器
+                const movieDiv = document.createElement('div');
+                movieDiv.className = 'movie-item';
+
+                // 创建图片
                 const img = document.createElement('img');
-                img.src = vodPic;
-                img.alt = vodName;
-                img.onerror = function() { 
+                img.src = value.vod_pic;
+                img.alt = value.vod_name;
+                img.onerror = function() {
                     this.src = 'https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/img/no-image.jpg';
                 };
-                img.loading = 'lazy'; // 启用懒加载
-                
-                // 创建标题元素
-                const title = document.createElement('div');
-                title.className = 'movie-title';
-                title.textContent = vodName;
+                img.loading = 'lazy';
+
+                // 创建标题
+                const titleSpan = document.createElement('span');
+                titleSpan.className = 'movie-title';
+                titleSpan.textContent = value.vod_name;
+
+                // 组装电影项
+                movieDiv.appendChild(img);
+                movieDiv.appendChild(titleSpan);
 
                 // 添加点击事件
-                movieContainer.addEventListener('click', () => {
-                    showVideoDetail(vodName, vodPic, vodContent, episodes);
+                movieDiv.addEventListener('click', () => {
+                    const episodes = value.vod_play_url.split('#').map(item => {
+                        const [title, url] = item.split('$');
+                        return `${title}: ${url}`;
+                    });
+                    showVideoDetail(value.vod_name, value.vod_pic, value.vod_content, episodes);
                 });
 
-                // 组装元素
-                imgContainer.appendChild(img);
-                movieContainer.appendChild(imgContainer);
-                movieContainer.appendChild(title);
-                resultsContainer.appendChild(movieContainer);
+                // 将电影项添加到行div中
+                rowDiv.appendChild(movieDiv);
+                count++;
             });
 
-            // 将结果添加到页面
-            searchImgList.appendChild(resultsContainer);
+            // 将主容器添加到页面
+            searchImgList.appendChild(mainContainer);
         })
         .catch(err => {
             console.error("请求失败", err);
