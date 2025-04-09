@@ -133,10 +133,15 @@ function handleSearchRequest() {
 
         try {
             const json = JSON.parse(body);
-            // 存储视频数据
-            storeVodData(json.list || []);
+            // 存储视频数据并获取存储的数据对象
+            const storedData = storeVodData(json.list || []);
             notify("数据解析成功", "", `共找到 ${json.list ? json.list.length : 0} 个结果`);
-            $done({ body: JSON.stringify({ success: "数据已存储", list: json.list }) });
+            // 返回存储的数据对象
+            $done({ body: JSON.stringify({ 
+                success: "数据已存储", 
+                total: json.list ? json.list.length : 0,
+                data: storedData 
+            }) });
         } catch (e) {
             notify("解析失败", "", e.message);
             $done({ body: JSON.stringify({ error: "解析失败" }) });
@@ -144,8 +149,10 @@ function handleSearchRequest() {
     });
 }
 
-// 存储视频数据到本地
+// 存储视频数据到本地并返回存储的数据对象
 function storeVodData(vodList) {
+    let storedData = {};  // 用于存储所有视频数据的对象
+
     for (let i = 0; i < vodList.length; i++) {
         let vod = vodList[i];
 
@@ -171,5 +178,10 @@ function storeVodData(vodList) {
         // 存储到本地
         let key = `sheep_vod_info_${i}`; // 例如：sheep_vod_info_0, sheep_vod_info_1 ...
         storage.set(key, storeValue);
+        
+        // 添加到返回对象
+        storedData[key] = storeValue;
     }
+
+    return storedData;  // 返回存储的数据对象
 }

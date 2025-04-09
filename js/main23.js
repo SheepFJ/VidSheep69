@@ -205,104 +205,7 @@ function showProfile() {
 //发现
 function disCover() {
     const mainContainer = document.getElementById("main-container");
-    mainContainer.innerHTML = `
-<div class="user-container">
-    <div class="username-container">
-        <h1 class="user-title">${username}</h1>
-        <i class="iconfont icon-xiugai xiuGaiUserName"></i>
-    </div>
-    <!-- 可折叠列表 -->
-    <div class="user-collapsible-container">
-        <!-- 关于我们 -->
-        <div class="user-collapsible-item">
-            <div class="user-collapsible-header">
-                <span>关于发现发现</span>
-                <span class="arrow">▼</span>
-            </div>
-            <div class="user-collapsible-content">
-                <div class="user-content">
-                    <h3 style="color: #f39c12; margin-top: 10px;">版本信息</h3>
-                    <p>当前版本:<a href=" https://t.me/sheep_007xiaoyang/43"
-                            style="color: #3498db; text-decoration: none;" target="_blank">v1.0.0</a> </p>
-                    <p>更新日期: 2025-03-31</p>
-                    <p>更新内容:</p>
-                    <ul style="padding-left: 20px;">
-                        <li>优化了页面布局</li>
-                        <li>兼容Loon</li>
-                    </ul>
-
-                    <h3 style="color: #f39c12; margin-top: 20px;">关注/反馈</h3>
-                    <p>GitHub: <a href="https://github.com/SheepFJ/QuantumultX"
-                            style="color: #3498db; text-decoration: none;" target="_blank">SheepFJ</a></p>
-                    <p>TG群组: <a href="https://t.me/sheep_007_xiaoyang"
-                            style="color: #3498db; text-decoration: none;" target="_blank">Sheep交流反馈</a></p>
-
-
-                </div>
-            </div>
-        </div>
-
-        <!-- 设置 -->
-        <div class="user-collapsible-item">
-            <div class="user-collapsible-header">
-                <span>设置</span>
-                <span class="arrow">▼</span>
-            </div>
-            <div class="user-collapsible-content">
-                <div class="user-content">
-                    <p>装修中...</p>
-                    <!-- 这里可以添加设置选项 -->
-                </div>
-            </div>
-        </div>
-
-        <!-- 收藏 -->
-        <div class="user-collapsible-item">
-            <div class="user-collapsible-header">
-                <span>我的收藏</span>
-                <span class="arrow">▼</span>
-            </div>
-            <div class="user-collapsible-content">
-                <div class="user-content">
-                    <p>装修中...</p>
-                    <!-- 这里可以添加收藏列表 -->
-                </div>
-            </div>
-        </div>
-
-        <!-- 免责声明 -->
-        <div class="user-collapsible-item">
-            <div class="user-collapsible-header">
-                <span>声明</span>
-                <span class="arrow">▼</span>
-            </div>
-            <div class="user-collapsible-content">
-                <div class="user-content">
-                    <p>本工具仅供学习交流使用，请勿用于非法用途。所有内容均来自互联网，与开发者无关。</p>
-                </div>
-            </div>
-        </div>
-        <!-- 历史版本 -->
-        <div class="user-collapsible-item">
-            <div class="user-collapsible-header">
-                <span>历史版本</span>
-                <span class="arrow">▼</span>
-            </div>
-            <div class="user-collapsible-content">
-                <div>
-                    <h3 style="color: #f39c12; margin-top: 10px;">v1.0.0</h3>
-                    <p>更新时间: 2025-03-31</p>
-                    <p>更新内容:</p>
-                    <ul style="padding-left: 20px;">
-                        <li>优化了页面布局</li>
-                        <li>兼容Loon</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-`;
+    mainContainer.innerHTML = `hello world`;
 }
 
 // 等待动画加载
@@ -354,43 +257,96 @@ function search() {
         .then(data => {
             results.innerHTML = "";
 
-            if (!data.list || data.list.length === 0) {
+            if (!data.success || data.total === 0) {
                 results.innerHTML = '<div class="no-results">未找到相关影视，尝试切换源~</div>';
                 return;
             }
 
-            data.list.forEach((vod, index) => {
-                var container = document.querySelector("#search-imglist");
-                container.className = "movie-container";
-                container.style.width = "calc(33.33% - 30px)"; // 确保每行显示三个
+            // 创建搜索结果容器
+            const searchResults = document.createElement('div');
+            searchResults.className = 'search-results-grid';
+            results.appendChild(searchResults);
 
-                var img = document.createElement("img");
-                img.src = vod.vod_pic;
-                img.onerror = function () { this.src = 'https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/img/no-image.png'; };
-                img.onclick = function () { loadVideoInfo(index); };
+            // 遍历存储的数据
+            Object.entries(data.data).forEach(([key, value]) => {
+                // 解析存储的数据
+                const [vodName, vodPic, vodContent, ...episodes] = value.split(',');
+                
+                // 创建电影容器
+                const movieContainer = document.createElement('div');
+                movieContainer.className = 'movie-container';
+                
+                // 创建图片元素
+                const img = document.createElement('img');
+                img.src = vodPic;
+                img.onerror = function() { 
+                    this.src = 'https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/img/no-image.png';
+                };
+                img.onclick = function() {
+                    loadVideoInfo(key, {
+                        vodName,
+                        vodPic,
+                        vodContent,
+                        episodes
+                    });
+                };
 
-                var title = document.createElement("p");
-                title.textContent = vod.vod_name;
-                title.style.whiteSpace = "normal"; // 允许文字换行
-                title.style.textAlign = "center"; // 文字居中对齐
-                title.style.height = "40px"; // 固定高度,显示两行
-                title.style.overflow = "hidden"; // 超出隐藏
-                title.style.display = "-webkit-box";
-                title.style.webkitLineClamp = "2"; // 最多显示两行
-                title.style.webkitBoxOrient = "vertical";
+                // 创建标题元素
+                const title = document.createElement('p');
+                title.textContent = vodName;
+                title.className = 'movie-title';
 
-                container.appendChild(img);
-                container.appendChild(title);
-                results.appendChild(container);
-
-                // **存储到本地，便于匹配点击事件**
-                localStorage.setItem("sheep_vod_info_" + index, JSON.stringify(vod));
+                // 添加到容器
+                movieContainer.appendChild(img);
+                movieContainer.appendChild(title);
+                searchResults.appendChild(movieContainer);
             });
         })
         .catch(err => {
             console.error("请求失败", err);
             results.innerHTML = '<div class="no-results">搜索失败，请稍后重试</div>';
         });
+}
+
+// 加载视频详情
+function loadVideoInfo(key, videoData) {
+    const mainContainer = document.getElementById("main-container");
+    mainContainer.innerHTML = `
+        <div class="video-detail-container">
+            <div class="video-header">
+                <button onclick="showSearch()" class="back-button">
+                    <i class="iconfont icon-fanhui"></i>
+                </button>
+                <h2>${videoData.vodName}</h2>
+            </div>
+            <div class="video-info">
+                <img src="${videoData.vodPic}" onerror="this.src='https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/img/no-image.png'">
+                <div class="video-description">
+                    <h3>简介</h3>
+                    <p>${videoData.vodContent}</p>
+                </div>
+            </div>
+            <div class="episodes-container">
+                <h3>剧集列表</h3>
+                <div class="episodes-grid">
+                    ${videoData.episodes.map((episode, index) => {
+                        const [title, url] = episode.split(': ');
+                        return `
+                            <div class="episode-item" onclick="playVideo('${url}')">
+                                ${title}
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// 播放视频
+function playVideo(url) {
+    // 实现视频播放逻辑
+    console.log('播放视频:', url);
 }
 
 // 最近
