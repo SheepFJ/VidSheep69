@@ -1,7 +1,7 @@
 /* 搜索结果容器 */
 .search-results-container {
     width: 100%;
-    max-width: 100%;
+    max-width: 100vw;
     padding: 0;
     box-sizing: border-box;
     margin: 0 auto;
@@ -19,7 +19,8 @@
 
 /* 电影项目样式 */
 .movie-item {
-    width: 32%;
+    width: 31%;
+    margin: 0 1%;
     background: rgba(40, 40, 40, 0.6);
     border-radius: 8px;
     overflow: hidden;
@@ -171,12 +172,17 @@
     .search-results-container {
         padding: 0;
         width: 100%;
-        max-width: 100%;
+        max-width: 100vw;
     }
 
     .movie-row {
         margin-bottom: 8px;
-        padding: 0 3px;
+        padding: 0 5px;
+    }
+
+    .movie-item {
+        width: 30%;
+        margin: 0 1.5%;
     }
 
     .movie-title {
@@ -200,17 +206,17 @@
     .search-results-container {
         padding: 0;
         width: 100%;
-        max-width: 100%;
+        max-width: 100vw;
     }
 
     .movie-row {
         margin-bottom: 6px;
-        padding: 0 2px;
+        padding: 0 4px;
     }
 
     .movie-item {
-        width: 32%;
-        margin: 0 1px;
+        width: 30%;
+        margin: 0 1.5%;
     }
 
     .movie-title {

@@ -101,6 +101,10 @@ function confirmUsernameEdit() {
 
 // 我的页面--关于--历史版本
 function showProfile() {
+    // 清空搜索结果和加载显示
+    document.getElementById("search-imglist").innerHTML = "";
+    document.getElementById("loading-results").innerHTML = "";
+    
     const mainContainer = document.getElementById("main-container");
     mainContainer.innerHTML = `
 <div class="user-container">
@@ -204,6 +208,10 @@ function showProfile() {
 
 //发现
 function disCover() {
+    // 清空搜索结果和加载显示
+    document.getElementById("search-imglist").innerHTML = "";
+    document.getElementById("loading-results").innerHTML = "";
+    
     const mainContainer = document.getElementById("main-container");
     mainContainer.innerHTML = `hello world`;
 }
@@ -221,20 +229,20 @@ function loadAnimation(loadingResults) {
 // 搜素事件
 function showSearch() {
     document.getElementById("main-container").innerHTML = `
-    <div style="width: 100%; padding: 0 10px; box-sizing: border-box;">
-        <h1 class="search-title">影视搜索</h1>
-        <div class="search-form" style="display: flex; width: 100%; margin-bottom: 15px;">
-            <input class="search-input" type="text" id="searchInput" placeholder="输入影视名称" style="flex: 1; min-width: 0;">
-            <select class="search-select" id="sourceSelect">
-                <option value="1">源1</option>
-                <option value="2">源2</option>
-            </select>
-            <button class="search-button">搜索</button>
-        </div>
-        <div id="loading-results"></div>
-        <div id="search-imglist" style="width: 100%;"></div>
+    <h1 class="search-title">影视搜索</h1>
+    <div class="search-form">
+        <input class="search-input" type="text" id="searchInput" placeholder="输入影视名称">
+        <select class="search-select" id="sourceSelect">
+            <option value="1">源1</option>
+            <option value="2">源2</option>
+        </select>
+        <button class="search-button">搜索</button>
     </div>
-`;
+    `;
+    
+    // 清空之前的搜索结果
+    document.getElementById("loading-results").innerHTML = "";
+    document.getElementById("search-imglist").innerHTML = "";
 }
 
 // 搜索
@@ -268,6 +276,8 @@ function search() {
             // 创建搜索结果容器
             const mainContainer = document.createElement('div');
             mainContainer.className = 'search-results-container';
+            mainContainer.style.width = '100%';
+            mainContainer.style.maxWidth = '100vw';
 
             // 用于临时存储三个一组的电影项
             let rowDiv = null;
@@ -282,17 +292,21 @@ function search() {
                 if (count % 3 === 0) {
                     rowDiv = document.createElement('div');
                     rowDiv.className = 'movie-row';
+                    rowDiv.style.width = '100%';
                     mainContainer.appendChild(rowDiv);
                 }
                 
                 // 创建单个电影容器
                 const movieDiv = document.createElement('div');
                 movieDiv.className = 'movie-item';
+                movieDiv.style.width = '30%';
+                movieDiv.style.margin = '0 1.5%';
 
                 // 创建图片
                 const img = document.createElement('img');
                 img.src = vodPic;
                 img.alt = vodName;
+                img.style.width = '100%';
                 img.onerror = function() { 
                     this.src = 'https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/img/no-image.jpg';
                 };
@@ -329,6 +343,10 @@ function search() {
 
 // 显示视频详情
 function showVideoDetail(vodName, vodPic, vodContent, episodes) {
+    // 清空搜索结果和加载显示
+    document.getElementById("search-imglist").innerHTML = "";
+    document.getElementById("loading-results").innerHTML = "";
+    
     const mainContainer = document.getElementById("main-container");
     mainContainer.innerHTML = `
         <div class="video-detail">
@@ -372,6 +390,10 @@ function playVideo(url, title) {
 
 // 最近
 function showList() {
+    // 清空搜索结果显示
+    document.getElementById("search-imglist").innerHTML = "";
+    
+    // 显示加载动画
     var loadingResults = document.getElementById("loading-results");
     loadAnimation(loadingResults);
 }
