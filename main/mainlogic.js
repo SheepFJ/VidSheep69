@@ -151,7 +151,7 @@ function finishScript() {
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/main12.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/user02.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/search3.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/search03.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/search04.css">
         <link rel="stylesheet" href="https://at.alicdn.com/t/c/font_4885201_uujsdzmia5h.css">
     </head>
     <style>
