@@ -234,11 +234,73 @@ function showSearch() {
 }
 
 
+// 搜索
+function search() {
+    var wd = encodeURIComponent(document.getElementById("searchInput").value);
+    var source = document.getElementById("sourceSelect").value;
+
+    if (!wd) {
+        alert("请输入搜索内容");
+        return;
+    }
+
+    // 显示加载提示
+    var results = document.getElementById("loading-results");
+    loadAnimation(results);
+
+    var apiUrl = "https://api.sheep.com/sheep/videoPolymerization/videoword/" + source + "/?wd=" + wd;
+
+    fetch(apiUrl)
+        .then(res => res.json())
+        .then(data => {
+            results.innerHTML = "";
+
+            if (!data.list || data.list.length === 0) {
+                results.innerHTML = '<div class="no-results">未找到相关影视，尝试切换源~</div>';
+                return;
+            }
+
+            data.list.forEach((vod, index) => {
+                var container = document.createElement("div");
+                container.className = "movie-container";
+                container.style.width = "calc(33.33% - 30px)"; // 确保每行显示三个
+
+                var img = document.createElement("img");
+                img.src = vod.vod_pic;
+                img.onerror = function() { this.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgMTAwIDE1MCIgZmlsbD0iIzMzMyI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxNTAiIGZpbGw9IiMyMjIiLz48dGV4dCB4PSI1MCIgeT0iNzUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2FhYSI+无图片</dGV4dD48L3N2Zz4='; };
+                img.onclick = function() { loadVideoInfo(index); };
+
+                var title = document.createElement("p");
+                title.textContent = vod.vod_name;
+                title.style.whiteSpace = "normal"; // 允许文字换行
+                title.style.textAlign = "center"; // 文字居中对齐
+                title.style.height = "40px"; // 固定高度,显示两行
+                title.style.overflow = "hidden"; // 超出隐藏
+                title.style.display = "-webkit-box";
+                title.style.webkitLineClamp = "2"; // 最多显示两行
+                title.style.webkitBoxOrient = "vertical";
+
+                container.appendChild(img);
+                container.appendChild(title);
+                results.appendChild(container);
+
+                // **存储到本地，便于匹配点击事件**
+                localStorage.setItem("sheep_vod_info_" + index, JSON.stringify(vod));
+            });
+        })
+        .catch(err => {
+            console.error("请求失败", err);
+            results.innerHTML = '<div class="no-results">搜索失败，请稍后重试</div>';
+        });
+}
 
 // 最近
 function showList() {
     var loadingResults = document.getElementById("loading-results");
     loadAnimation(loadingResults);
+    setTimeout(() => {
+        loadingResults.innerHTML = "";
+    }, 3000);
 }
 
 // 选中样式应用
