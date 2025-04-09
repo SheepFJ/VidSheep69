@@ -247,92 +247,103 @@ function search() {
     }
 
     // 显示加载提示
-    var results = document.getElementById("loading-results");
-    loadAnimation(results);
+    var loadingResults = document.getElementById("loading-results");
+    loadAnimation(loadingResults);
 
     var apiUrl = "https://api.sheep.com/sheep/videoPolymerization/videoword/" + source + "/?wd=" + wd;
 
     fetch(apiUrl)
         .then(res => res.json())
-        .then(data => {
-            results.innerHTML = "";
+        .then(response => {
+            loadingResults.innerHTML = "";
+            const searchImgList = document.getElementById("search-imglist");
+            searchImgList.innerHTML = ""; // 清空之前的搜索结果
 
-            if (!data.success || data.total === 0) {
-                results.innerHTML = '<div class="no-results">未找到相关影视，尝试切换源~</div>';
+            if (!response.success || response.total === 0) {
+                searchImgList.innerHTML = '<div class="no-results">未找到相关影视，尝试切换源~</div>';
                 return;
             }
 
             // 创建搜索结果容器
-            const searchResults = document.createElement('div');
-            searchResults.className = 'search-results-grid';
-            results.appendChild(searchResults);
+            const resultsContainer = document.createElement('div');
+            resultsContainer.className = 'search-results-container';
 
             // 遍历存储的数据
-            Object.entries(data.data).forEach(([key, value]) => {
+            Object.entries(response.data).forEach(([key, value]) => {
                 // 解析存储的数据
                 const [vodName, vodPic, vodContent, ...episodes] = value.split(',');
                 
                 // 创建电影容器
                 const movieContainer = document.createElement('div');
-                movieContainer.className = 'movie-container';
+                movieContainer.className = 'movie-item';
+                
+                // 创建图片容器
+                const imgContainer = document.createElement('div');
+                imgContainer.className = 'movie-img-container';
                 
                 // 创建图片元素
                 const img = document.createElement('img');
                 img.src = vodPic;
+                img.alt = vodName;
                 img.onerror = function() { 
                     this.src = 'https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/img/no-image.png';
                 };
-                img.onclick = function() {
-                    loadVideoInfo(key, {
-                        vodName,
-                        vodPic,
-                        vodContent,
-                        episodes
-                    });
-                };
-
+                img.loading = 'lazy'; // 启用懒加载
+                
                 // 创建标题元素
-                const title = document.createElement('p');
-                title.textContent = vodName;
+                const title = document.createElement('div');
                 title.className = 'movie-title';
+                title.textContent = vodName;
 
-                // 添加到容器
-                movieContainer.appendChild(img);
+                // 添加点击事件
+                movieContainer.addEventListener('click', () => {
+                    showVideoDetail(vodName, vodPic, vodContent, episodes);
+                });
+
+                // 组装元素
+                imgContainer.appendChild(img);
+                movieContainer.appendChild(imgContainer);
                 movieContainer.appendChild(title);
-                searchResults.appendChild(movieContainer);
+                resultsContainer.appendChild(movieContainer);
             });
+
+            // 将结果添加到页面
+            searchImgList.appendChild(resultsContainer);
         })
         .catch(err => {
             console.error("请求失败", err);
-            results.innerHTML = '<div class="no-results">搜索失败，请稍后重试</div>';
+            const searchImgList = document.getElementById("search-imglist");
+            searchImgList.innerHTML = '<div class="no-results">搜索失败，请稍后重试</div>';
         });
 }
 
-// 加载视频详情
-function loadVideoInfo(key, videoData) {
+// 显示视频详情
+function showVideoDetail(vodName, vodPic, vodContent, episodes) {
     const mainContainer = document.getElementById("main-container");
     mainContainer.innerHTML = `
-        <div class="video-detail-container">
+        <div class="video-detail">
             <div class="video-header">
                 <button onclick="showSearch()" class="back-button">
                     <i class="iconfont icon-fanhui"></i>
                 </button>
-                <h2>${videoData.vodName}</h2>
+                <h2>${vodName}</h2>
             </div>
             <div class="video-info">
-                <img src="${videoData.vodPic}" onerror="this.src='https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/img/no-image.png'">
-                <div class="video-description">
+                <div class="video-poster">
+                    <img src="${vodPic}" onerror="this.src='https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/img/no-image.png'" alt="${vodName}">
+                </div>
+                <div class="video-content">
                     <h3>简介</h3>
-                    <p>${videoData.vodContent}</p>
+                    <p>${vodContent}</p>
                 </div>
             </div>
-            <div class="episodes-container">
+            <div class="episodes-list">
                 <h3>剧集列表</h3>
                 <div class="episodes-grid">
-                    ${videoData.episodes.map((episode, index) => {
+                    ${episodes.map(episode => {
                         const [title, url] = episode.split(': ');
                         return `
-                            <div class="episode-item" onclick="playVideo('${url}')">
+                            <div class="episode-item" onclick="playVideo('${url}', '${title}')">
                                 ${title}
                             </div>
                         `;
@@ -344,9 +355,9 @@ function loadVideoInfo(key, videoData) {
 }
 
 // 播放视频
-function playVideo(url) {
+function playVideo(url, title) {
     // 实现视频播放逻辑
-    console.log('播放视频:', url);
+    console.log('播放视频:', title, url);
 }
 
 // 最近

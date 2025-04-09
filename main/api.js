@@ -80,6 +80,8 @@ if (url.includes('/videoword/')) {
     handleSearchRequest();
 }
 
+
+// 搜索获取数据
 function handleSearchRequest() {
     const urlMatch = $request.url.match(/sheep\/videoPolymerization\/videoword\/([^\/]+)\/\?wd=(.*)/);
     if (!urlMatch) {
@@ -138,7 +140,7 @@ function handleSearchRequest() {
             notify("数据解析成功", "", `共找到 ${json.list ? json.list.length : 0} 个结果`);
             // 返回存储的数据对象
             $done({ body: JSON.stringify({ 
-                success: "数据已存储", 
+                success: "成功获取数据", 
                 total: json.list ? json.list.length : 0,
                 data: storedData 
             }) });
