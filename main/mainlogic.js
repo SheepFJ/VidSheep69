@@ -165,7 +165,7 @@ function finishScript() {
 
         </div>
 
-        <div id="search-imglist">11111111111111111111111111111111111111111111111111111111111111111111111111</div>
+        <div id="search-imglist"></div>
 
 
         <div id="loading-results"></div>
@@ -198,7 +198,7 @@ function finishScript() {
     <script>
         const username = "${username}";
     </script>   
-    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/main42.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/main43.js"></script>
     </html>`;
 
     $done({ 
