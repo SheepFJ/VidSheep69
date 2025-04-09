@@ -233,33 +233,6 @@ function showSearch() {
 `;
 }
 
-// 搜索
-function search() {
-    //获取搜索源与搜索内容
-    var wd = encodeURIComponent(document.getElementById("searchInput").value);
-    var source = document.getElementById("sourceSelect").value;
-
-    if (!wd) {
-        alert("请输入搜索内容");
-        return;
-    }
-
-    // 显示加载提示
-    var loadingResults = document.getElementById("loading-results");
-    loadAnimation(loadingResults);
-
-    var apiUrl = "https://api.sheep.com/sheep/videoPolymerization/videoword/" + source + "/?wd=" + wd;
-
-    fetch(apiUrl)
-        .then(res => res.json())
-        .then(response => {
-            console.log(response);
-        })
-        .catch(err => {
-            console.error("请求失败", err);
-            searchImgList.innerHTML = '<div class="no-results">搜索失败，请稍后重试</div>';
-        });
-}
 
 
 // 最近
