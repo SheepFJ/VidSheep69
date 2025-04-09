@@ -158,3 +158,26 @@ body::after {
     font-size: 16px;
     font-weight: 500;
 }
+
+/* 搜索结果列表容器 */
+#search-imglist {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 10px 0;
+    box-sizing: border-box;
+}
+
+/* 响应式设置 */
+@media (max-width: 768px) {
+    #search-imglist {
+        padding: 5px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    #search-imglist {
+        padding: 3px 0;
+    }
+}

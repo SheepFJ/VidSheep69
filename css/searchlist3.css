@@ -1,8 +1,9 @@
 /* 搜索结果容器 */
 .search-results-container {
-    width: 90%;
+    width: 100%;
     padding: 10px;
     box-sizing: border-box;
+    margin: 0 auto;
 }
 
 /* 电影行 */
@@ -166,6 +167,7 @@
 @media (max-width: 768px) {
     .search-results-container {
         padding: 8px;
+        width: 100%;
     }
 
     .movie-row {
@@ -192,10 +194,15 @@
 @media (max-width: 480px) {
     .search-results-container {
         padding: 6px;
+        width: 100%;
     }
 
     .movie-row {
         margin-bottom: 8px;
+    }
+
+    .movie-item {
+        width: 32%;
     }
 
     .movie-title {
