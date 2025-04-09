@@ -135,72 +135,20 @@ function handleSearchRequest() {
 
         try {
             const json = JSON.parse(body);
-            
             // 存储视频数据并获取存储的数据对象
             const storedData = storeVodData(json.list || []);
             notify("数据解析成功", "", `共找到 ${json.list ? json.list.length : 0} 个结果`);
-            
-            // 生成HTML内容而不是返回JSON
-            if (!json.list || json.list.length === 0) {
-                // 没有结果时返回提示
-                $done({ body: '<div class="no-results">未找到相关影视，尝试切换源~</div>' });
-            } else {
-                // 有结果时生成HTML内容
-                let htmlContent = generateResultsHtml(storedData);
-                $done({ body: htmlContent });
-            }
+            // 返回存储的数据对象
+            $done({ body: JSON.stringify({ 
+                success: "成功获取数据", 
+                total: json.list ? json.list.length : 0,
+                data: storedData 
+            }) });
         } catch (e) {
             notify("解析失败", "", e.message);
-            $done({ body: '<div class="no-results">搜索失败，请稍后重试</div>' });
+            $done({ body: JSON.stringify({ error: "解析失败" }) });
         }
     });
-}
-
-// 生成搜索结果的HTML内容
-function generateResultsHtml(storedData) {
-    let html = '<div class="search-results-container" style="width: 100%; max-width: 100vw;">';
-    
-    // 计数器用于每三个项目创建一个新行
-    let count = 0;
-    let rowHtml = '';
-    
-    // 遍历所有存储的数据
-    for (let key in storedData) {
-        // 解析存储的数据
-        const parts = storedData[key].split(',');
-        const vodName = parts[0];
-        const vodPic = parts[1];
-        const vodContent = parts[2];
-        const episodes = parts.slice(3);
-        
-        // 每三个项目创建一个新行
-        if (count % 3 === 0) {
-            // 如果有上一行的内容，先关闭它
-            if (rowHtml) {
-                html += rowHtml + '</div>';
-            }
-            // 开始新行
-            rowHtml = '<div class="movie-row" style="width: 100%; display: flex; justify-content: space-between; margin-bottom: 12px; padding: 0 5px; box-sizing: border-box;">';
-        }
-        
-        // 电影项目HTML
-        rowHtml += `
-            <div class="movie-item" data-key="${key}" data-name="${vodName}" data-pic="${vodPic}" data-content="${vodContent}" data-episodes="${episodes.join('|')}" style="width: 30%; margin: 0 1.5%; background: rgba(40, 40, 40, 0.6); border-radius: 8px; overflow: hidden; position: relative;">
-                <img src="${vodPic}" alt="${vodName}" style="width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block;" onerror="this.src='https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/img/no-image.jpg'" loading="lazy">
-                <span class="movie-title" style="position: absolute; bottom: 0; left: 0; right: 0; padding: 8px; font-size: 13px; color: #fff; text-align: center; min-height: 36px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; background: rgba(0, 0, 0, 0.7);">${vodName}</span>
-            </div>
-        `;
-        
-        count++;
-    }
-    
-    // 添加最后一行
-    if (rowHtml) {
-        html += rowHtml + '</div>';
-    }
-    
-    html += '</div>';
-    return html;
 }
 
 // 存储视频数据到本地并返回存储的数据对象

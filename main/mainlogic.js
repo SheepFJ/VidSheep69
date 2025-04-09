@@ -165,7 +165,7 @@ function finishScript() {
 
         </div>
 
-        <div id="search-imglist"></div>
+        <div id="search-imglist">11111111111111111111111111111111111111111111111111111111111111111111111111</div>
 
 
         <div id="loading-results"></div>
