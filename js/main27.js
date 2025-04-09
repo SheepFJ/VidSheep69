@@ -256,15 +256,13 @@ function search() {
         .then(res => res.json())
         .then(response => {
             loadingResults.innerHTML = "";
-            const searchImgList = document.getElementById("search-imglist");
-            searchImgList.innerHTML = ""; // 清空之前的搜索结果
 
             if (!response.success || response.total === 0) {
-                searchImgList.innerHTML = '<div class="no-results">未找到相关影视，尝试切换源~</div>';
+                loadingResults.innerHTML = '<div class="no-results">未找到相关影视，尝试切换源~</div>';
                 return;
             }
 
-            // 创建主容器
+            // 创建搜索结果容器
             const mainContainer = document.createElement('div');
             mainContainer.className = 'search-results-container';
 
@@ -272,24 +270,27 @@ function search() {
             let rowDiv = null;
             let count = 0;
 
-            // 遍历视频数据
+            // 遍历存储的数据
             Object.entries(response.data).forEach(([key, value]) => {
+                // 解析存储的数据
+                const [vodName, vodPic, vodContent, ...episodes] = value.split(',');
+                
                 // 每三个项目创建一个新的行div
                 if (count % 3 === 0) {
                     rowDiv = document.createElement('div');
                     rowDiv.className = 'movie-row';
                     mainContainer.appendChild(rowDiv);
                 }
-
+                
                 // 创建单个电影容器
                 const movieDiv = document.createElement('div');
                 movieDiv.className = 'movie-item';
 
                 // 创建图片
                 const img = document.createElement('img');
-                img.src = value.vod_pic;
-                img.alt = value.vod_name;
-                img.onerror = function() {
+                img.src = vodPic;
+                img.alt = vodName;
+                img.onerror = function() { 
                     this.src = 'https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/img/no-image.jpg';
                 };
                 img.loading = 'lazy';
@@ -297,7 +298,7 @@ function search() {
                 // 创建标题
                 const titleSpan = document.createElement('span');
                 titleSpan.className = 'movie-title';
-                titleSpan.textContent = value.vod_name;
+                titleSpan.textContent = vodName;
 
                 // 组装电影项
                 movieDiv.appendChild(img);
@@ -305,11 +306,7 @@ function search() {
 
                 // 添加点击事件
                 movieDiv.addEventListener('click', () => {
-                    const episodes = value.vod_play_url.split('#').map(item => {
-                        const [title, url] = item.split('$');
-                        return `${title}: ${url}`;
-                    });
-                    showVideoDetail(value.vod_name, value.vod_pic, value.vod_content, episodes);
+                    showVideoDetail(vodName, vodPic, vodContent, episodes);
                 });
 
                 // 将电影项添加到行div中
@@ -317,13 +314,12 @@ function search() {
                 count++;
             });
 
-            // 将主容器添加到页面
-            searchImgList.appendChild(mainContainer);
+            // 将主容器添加到loadingResults div中
+            loadingResults.appendChild(mainContainer);
         })
         .catch(err => {
             console.error("请求失败", err);
-            const searchImgList = document.getElementById("search-imglist");
-            searchImgList.innerHTML = '<div class="no-results">搜索失败，请稍后重试</div>';
+            loadingResults.innerHTML = '<div class="no-results">搜索失败，请稍后重试</div>';
         });
 }
 
