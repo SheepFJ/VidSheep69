@@ -287,10 +287,6 @@ function search() {
             // 创建结果容器
             const resultsContainer = document.createElement('div');
             resultsContainer.className = 'results-grid';
-            resultsContainer.style.display = 'flex';
-            resultsContainer.style.flexWrap = 'wrap';
-            resultsContainer.style.justifyContent = 'space-between';
-            resultsContainer.style.width = '100%';
             
             // 遍历返回的数据
             Object.entries(response.data).forEach(([key, value]) => {
@@ -303,42 +299,19 @@ function search() {
                 
                 // 创建电影容器
                 var container = document.createElement("div");
-                container.className = "movie-container";
-                container.style.width = "calc(30.33% - 10px)"; // 确保每行显示三个
-                container.style.marginBottom = "15px";
-                container.style.position = "relative";
+                container.className = "movie-item";
                 
                 // 创建图片
                 var img = document.createElement("img");
                 img.src = vodPic;
-                img.style.width = "100%";
-                img.style.aspectRatio = "2/3";
-                img.style.objectFit = "cover";
-                img.style.borderRadius = "8px";
-                img.style.display = "block";
                 img.onerror = function() { 
                     this.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgMTAwIDE1MCIgZmlsbD0iIzMzMyI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxNTAiIGZpbGw9IiMyMjIiLz48dGV4dCB4PSI1MCIgeT0iNzUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2FhYSI+无图片</dGV4dD48L3N2Zz4='; 
                 };
                 
                 // 创建标题
                 var title = document.createElement("div");
+                title.className = "movie-title";
                 title.textContent = vodName;
-                title.style.position = "absolute";
-                title.style.bottom = "0";
-                title.style.left = "0";
-                title.style.right = "0";
-                title.style.background = "rgba(0, 0, 0, 0.5)";
-                title.style.color = "#fff";
-                title.style.padding = "8px";
-                title.style.fontSize = "13px";
-                title.style.textAlign = "center";
-                title.style.whiteSpace = "normal";
-                title.style.overflow = "hidden";
-                title.style.display = "-webkit-box";
-                title.style.webkitLineClamp = "2";
-                title.style.webkitBoxOrient = "vertical";
-                title.style.borderBottomLeftRadius = "8px";
-                title.style.borderBottomRightRadius = "8px";
                 
                 // 添加点击事件
                 container.addEventListener('click', function() {
@@ -370,31 +343,31 @@ function showVideoDetail(vodName, vodPic, vodContent, episodes) {
     
     // 创建视频详情页面
     mainContainer.innerHTML = `
-        <div class="video-detail" style="padding: 15px; color: #fff;">
-            <div class="video-header" style="display: flex; align-items: center; margin-bottom: 20px; position: sticky; top: 0; background: rgba(30, 30, 30, 0.9); padding: 10px; z-index: 100; border-radius: 8px;">
-                <button onclick="showSearch()" class="back-button" style="background: none; border: none; color: #f39c12; font-size: 24px; padding: 5px 15px; cursor: pointer;">
+        <div class="video-detail">
+            <div class="video-header">
+                <button onclick="showSearch()" class="back-button">
                     <i class="iconfont icon-fanhui"></i>
                 </button>
-                <h2 style="margin: 0 0 0 10px; flex: 1; font-size: 18px;">${vodName}</h2>
+                <h2>${vodName}</h2>
             </div>
-            <div class="video-info" style="display: flex; gap: 20px; margin-bottom: 20px; background: rgba(40, 40, 40, 0.6); padding: 15px; border-radius: 8px;">
-                <div class="video-poster" style="flex-shrink: 0; width: 200px;">
-                    <img src="${vodPic}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgMTAwIDE1MCIgZmlsbD0iIzMzMyI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxNTAiIGZpbGw9IiMyMjIiLz48dGV4dCB4PSI1MCIgeT0iNzUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2FhYSI+无图片</dGV4dD48L3N2Zz4=';" alt="${vodName}" style="width: 100%; height: auto; border-radius: 8px;">
+            <div class="video-info">
+                <div class="video-poster">
+                    <img src="${vodPic}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgMTAwIDE1MCIgZmlsbD0iIzMzMyI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxNTAiIGZpbGw9IiMyMjIiLz48dGV4dCB4PSI1MCIgeT0iNzUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2FhYSI+无图片</dGV4dD48L3N2Zz4=';" alt="${vodName}">
                 </div>
-                <div class="video-content" style="flex: 1;">
-                    <h3 style="color: #f39c12; margin-bottom: 10px;">简介</h3>
-                    <p style="line-height: 1.6; font-size: 14px; color: #ddd;">${vodContent || '暂无简介'}</p>
+                <div class="video-content">
+                    <h3>简介</h3>
+                    <p>${vodContent || '暂无简介'}</p>
                 </div>
             </div>
-            <div class="episodes-list" style="background: rgba(40, 40, 40, 0.6); padding: 15px; border-radius: 8px;">
-                <h3 style="color: #f39c12; margin-bottom: 15px;">剧集列表</h3>
-                <div class="episodes-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+            <div class="episodes-list">
+                <h3>剧集列表</h3>
+                <div class="episodes-grid">
                     ${episodes.map(episode => {
                         const parts = episode.split(': ');
                         const title = parts[0];
                         const url = parts[1] || '';
                         return `
-                            <div class="episode-item" onclick="playVideo('${url}', '${title}')" style="background: rgba(60, 60, 60, 0.8); padding: 10px; border-radius: 5px; text-align: center; cursor: pointer; transition: all 0.3s;">
+                            <div class="episode-item" onclick="playVideo('${url}', '${title}')">
                                 ${title}
                             </div>
                         `;
@@ -419,7 +392,7 @@ function playVideo(url, title) {
     } else {
         alert('无法播放，视频地址不存在');
     }
-}
+} 
 
 // 最近
 function showList() {
