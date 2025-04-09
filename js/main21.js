@@ -17,8 +17,8 @@ document.getElementById('main-container').addEventListener('click', function (ev
                     <h3 class="popup-title">修改用户名</h3>
                     <input type="text" id="newUsername" class="popup-input" value="${username}" placeholder="请输入新的用户名">
                     <div class="popup-buttons">
-                        <button class="popup-button cancel-button" onclick="closeUsernamePopup()">取消</button>
-                        <button class="popup-button confirm-button" onclick="confirmUsernameEdit()">确认</button>
+                        <button class="popup-button cancel-button" >取消</button>
+                        <button class="popup-button confirm-button">确认</button>
                     </div>
                 </div>
             </div>
@@ -325,7 +325,7 @@ function showSearch() {
             <option value="1">源1</option>
             <option value="2">源2</option>
         </select>
-        <button onclick="search()" class="search-button">搜索</button>
+        <button  class="search-button">搜索</button>
     </div>
     <div id="loading-results"></div>
     <div id="search-imglist"></div>
