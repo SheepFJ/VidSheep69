@@ -101,10 +101,6 @@ function confirmUsernameEdit() {
 
 // 我的页面--关于--历史版本
 function showProfile() {
-    // 清空搜索结果和加载显示
-    document.getElementById("search-imglist").innerHTML = "";
-    document.getElementById("loading-results").innerHTML = "";
-    
     const mainContainer = document.getElementById("main-container");
     mainContainer.innerHTML = `
 <div class="user-container">
@@ -208,10 +204,6 @@ function showProfile() {
 
 //发现
 function disCover() {
-    // 清空搜索结果和加载显示
-    document.getElementById("search-imglist").innerHTML = "";
-    document.getElementById("loading-results").innerHTML = "";
-    
     const mainContainer = document.getElementById("main-container");
     mainContainer.innerHTML = `hello world`;
 }
@@ -236,13 +228,9 @@ function showSearch() {
             <option value="1">源1</option>
             <option value="2">源2</option>
         </select>
-        <button class="search-button">搜索</button>
+        <button  class="search-button">搜索</button>
     </div>
-    `;
-    
-    // 清空之前的搜索结果
-    document.getElementById("loading-results").innerHTML = "";
-    document.getElementById("search-imglist").innerHTML = "";
+`;
 }
 
 // 搜索
@@ -265,75 +253,7 @@ function search() {
     fetch(apiUrl)
         .then(res => res.json())
         .then(response => {
-            loadingResults.innerHTML = "";
-            const searchImgList = document.getElementById("search-imglist");
-
-            if (!response.success || response.total === 0) {
-                searchImgList.innerHTML = '<div class="no-results">未找到相关影视，尝试切换源~</div>';
-                return;
-            }
-
-            // 创建搜索结果容器
-            const mainContainer = document.createElement('div');
-            mainContainer.className = 'search-results-container';
-            mainContainer.style.width = '100%';
-            mainContainer.style.maxWidth = '100vw';
-
-            // 用于临时存储三个一组的电影项
-            let rowDiv = null;
-            let count = 0;
-
-            // 遍历存储的数据
-            Object.entries(response.data).forEach(([key, value]) => {
-                // 解析存储的数据
-                const [vodName, vodPic, vodContent, ...episodes] = value.split(',');
-                
-                // 每三个项目创建一个新的行div
-                if (count % 3 === 0) {
-                    rowDiv = document.createElement('div');
-                    rowDiv.className = 'movie-row';
-                    rowDiv.style.width = '100%';
-                    mainContainer.appendChild(rowDiv);
-                }
-                
-                // 创建单个电影容器
-                const movieDiv = document.createElement('div');
-                movieDiv.className = 'movie-item';
-                movieDiv.style.width = '30%';
-                movieDiv.style.margin = '0 1.5%';
-
-                // 创建图片
-                const img = document.createElement('img');
-                img.src = vodPic;
-                img.alt = vodName;
-                img.style.width = '100%';
-                img.onerror = function() { 
-                    this.src = 'https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/img/no-image.jpg';
-                };
-                img.loading = 'lazy';
-
-                // 创建标题
-                const titleSpan = document.createElement('span');
-                titleSpan.className = 'movie-title';
-                titleSpan.textContent = vodName;
-
-                // 组装电影项
-                movieDiv.appendChild(img);
-                movieDiv.appendChild(titleSpan);
-
-                // 添加点击事件
-                movieDiv.addEventListener('click', () => {
-                    showVideoDetail(vodName, vodPic, vodContent, episodes);
-                });
-
-                // 将电影项添加到行div中
-                rowDiv.appendChild(movieDiv);
-                count++;
-            });
-
-            // 将主容器添加到search-imglist div中
-            searchImgList.innerHTML = '';
-            searchImgList.appendChild(mainContainer);
+            console.log(response);
         })
         .catch(err => {
             console.error("请求失败", err);
@@ -341,59 +261,9 @@ function search() {
         });
 }
 
-// 显示视频详情
-function showVideoDetail(vodName, vodPic, vodContent, episodes) {
-    // 清空搜索结果和加载显示
-    document.getElementById("search-imglist").innerHTML = "";
-    document.getElementById("loading-results").innerHTML = "";
-    
-    const mainContainer = document.getElementById("main-container");
-    mainContainer.innerHTML = `
-        <div class="video-detail">
-            <div class="video-header">
-                <button onclick="showSearch()" class="back-button">
-                    <i class="iconfont icon-fanhui"></i>
-                </button>
-                <h2>${vodName}</h2>
-            </div>
-            <div class="video-info">
-                <div class="video-poster">
-                    <img src="${vodPic}" onerror="this.src='https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/img/no-image.png'" alt="${vodName}">
-                </div>
-                <div class="video-content">
-                    <h3>简介</h3>
-                    <p>${vodContent}</p>
-                </div>
-            </div>
-            <div class="episodes-list">
-                <h3>剧集列表</h3>
-                <div class="episodes-grid">
-                    ${episodes.map(episode => {
-                        const [title, url] = episode.split(': ');
-                        return `
-                            <div class="episode-item" onclick="playVideo('${url}', '${title}')">
-                                ${title}
-                            </div>
-                        `;
-                    }).join('')}
-                </div>
-            </div>
-        </div>
-    `;
-}
-
-// 播放视频
-function playVideo(url, title) {
-    // 实现视频播放逻辑
-    console.log('播放视频:', title, url);
-}
 
 // 最近
 function showList() {
-    // 清空搜索结果显示
-    document.getElementById("search-imglist").innerHTML = "";
-    
-    // 显示加载动画
     var loadingResults = document.getElementById("loading-results");
     loadAnimation(loadingResults);
 }
