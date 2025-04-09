@@ -304,7 +304,7 @@ function search() {
                 // 创建电影容器
                 var container = document.createElement("div");
                 container.className = "movie-container";
-                container.style.width = "calc(33.33% - 10px)"; // 确保每行显示三个
+                container.style.width = "calc(30.33% - 10px)"; // 确保每行显示三个
                 container.style.marginBottom = "15px";
                 container.style.position = "relative";
                 
@@ -327,7 +327,7 @@ function search() {
                 title.style.bottom = "0";
                 title.style.left = "0";
                 title.style.right = "0";
-                title.style.background = "rgba(0, 0, 0, 0.7)";
+                title.style.background = "rgba(0, 0, 0, 0.5)";
                 title.style.color = "#fff";
                 title.style.padding = "8px";
                 title.style.fontSize = "13px";
