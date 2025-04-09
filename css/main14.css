@@ -162,9 +162,7 @@ body::after {
 /* 搜索结果列表容器 */
 #search-imglist {
     width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
+    display: block;
     padding: 10px 0;
     box-sizing: border-box;
 }

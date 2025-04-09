@@ -221,17 +221,19 @@ function loadAnimation(loadingResults) {
 // 搜素事件
 function showSearch() {
     document.getElementById("main-container").innerHTML = `
-    <h1 class="search-title">影视搜索</h1>
-    <div class="search-form">
-        <input class="search-input" type="text" id="searchInput" placeholder="输入影视名称">
-        <select class="search-select" id="sourceSelect">
-            <option value="1">源1</option>
-            <option value="2">源2</option>
-        </select>
-        <button  class="search-button">搜索</button>
+    <div style="width: 100%; padding: 0 10px; box-sizing: border-box;">
+        <h1 class="search-title">影视搜索</h1>
+        <div class="search-form" style="display: flex; width: 100%; margin-bottom: 15px;">
+            <input class="search-input" type="text" id="searchInput" placeholder="输入影视名称" style="flex: 1; min-width: 0;">
+            <select class="search-select" id="sourceSelect">
+                <option value="1">源1</option>
+                <option value="2">源2</option>
+            </select>
+            <button class="search-button">搜索</button>
+        </div>
+        <div id="loading-results"></div>
+        <div id="search-imglist" style="width: 100%;"></div>
     </div>
-    <div id="loading-results"></div>
-    <div id="search-imglist"></div>
 `;
 }
 

@@ -1,7 +1,8 @@
 /* 搜索结果容器 */
 .search-results-container {
     width: 100%;
-    padding: 10px;
+    max-width: 100%;
+    padding: 0;
     box-sizing: border-box;
     margin: 0 auto;
 }
@@ -12,6 +13,8 @@
     justify-content: space-between;
     margin-bottom: 12px;
     width: 100%;
+    padding: 0 5px;
+    box-sizing: border-box;
 }
 
 /* 电影项目样式 */
@@ -166,12 +169,14 @@
 /* 响应式布局 */
 @media (max-width: 768px) {
     .search-results-container {
-        padding: 8px;
+        padding: 0;
         width: 100%;
+        max-width: 100%;
     }
 
     .movie-row {
-        margin-bottom: 10px;
+        margin-bottom: 8px;
+        padding: 0 3px;
     }
 
     .movie-title {
@@ -193,16 +198,19 @@
 
 @media (max-width: 480px) {
     .search-results-container {
-        padding: 6px;
+        padding: 0;
         width: 100%;
+        max-width: 100%;
     }
 
     .movie-row {
-        margin-bottom: 8px;
+        margin-bottom: 6px;
+        padding: 0 2px;
     }
 
     .movie-item {
         width: 32%;
+        margin: 0 1px;
     }
 
     .movie-title {
