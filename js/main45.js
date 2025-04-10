@@ -289,13 +289,12 @@ function search() {
             resultsContainer.className = 'results-grid';
             
             // 遍历返回的数据
-            Object.entries(response.data).forEach(([key, value]) => {
+            Object.entries(response.data).forEach(([key, value], index) => {
                 // 解析字符串格式的数据
                 const parts = value.split(',');
                 const vodName = parts[0];
                 const vodPic = parts[1];
                 const vodContent = parts[2] || '';
-                const episodes = parts.slice(3);
                 
                 // 创建电影容器
                 var container = document.createElement("div");
@@ -313,9 +312,36 @@ function search() {
                 title.className = "movie-title";
                 title.textContent = vodName;
                 
-                // 添加点击事件
+                // 添加点击事件 - 修改为请求详情API
                 container.addEventListener('click', function() {
-                    showVideoDetail(vodName, vodPic, vodContent, episodes);
+                    // 显示加载动画
+                    const loadingResults = document.getElementById("loading-results");
+                    loadAnimation(loadingResults);
+                    
+                    // 获取当前索引值
+                    const currentIndex = index;
+                    
+                    // 发送请求获取详情
+                    const detailUrl = `https://api.sheep.com/sheep/videoPolymerization/videolist/${currentIndex}`;
+                    
+                    fetch(detailUrl)
+                        .then(res => res.json())
+                        .then(detailResponse => {
+                            // 清除加载动画
+                            loadingResults.innerHTML = "";
+                            
+                            // 渲染详情页面
+                            if (detailResponse.success && detailResponse.data) {
+                                renderVideoDetail(detailResponse.data);
+                            } else {
+                                alert("获取影片详情失败，请稍后重试");
+                            }
+                        })
+                        .catch(err => {
+                            console.error("详情请求失败", err);
+                            loadingResults.innerHTML = "";
+                            alert("网络错误，请稍后重试");
+                        });
                 });
                 
                 // 组装元素
@@ -333,18 +359,8 @@ function search() {
         });
 }
 
-// 显示视频详情页面
-function showVideoDetail(title, image, description, episodes) {
-    // 保存当前电影信息到本地存储
-    const movieData = {
-        title: title,
-        image: image,
-        description: description,
-        episodes: episodes
-    };
-    
-    localStorage.setItem('currentMovie', JSON.stringify(movieData));
-    
+// 新的详情页面渲染函数
+function renderVideoDetail(detailData) {
     // 清空先前的内容
     const mainContainer = document.getElementById('main-container');
     const searchImgList = document.getElementById('search-imglist');
@@ -356,7 +372,30 @@ function showVideoDetail(title, image, description, episodes) {
     if (searchImgPlay) searchImgPlay.innerHTML = '';
     if (loadingResults) loadingResults.innerHTML = '';
     
-    // 创建视频详情页
+    // 获取详情数据
+    const dataEntry = Object.values(detailData)[0];
+    if (!dataEntry) {
+        alert("数据解析错误");
+        return;
+    }
+    
+    // 解析详情字符串
+    const parts = dataEntry.split(',');
+    const title = parts[0];
+    const image = parts[1];
+    const description = parts[2] || '暂无简介';
+    const episodes = parts.slice(3);
+    
+    // 保存当前电影信息到本地存储
+    const movieData = {
+        title: title,
+        image: image,
+        description: description,
+        episodes: episodes
+    };
+    localStorage.setItem('currentMovie', JSON.stringify(movieData));
+    
+    // 创建详情页容器
     const detailPage = document.createElement('div');
     detailPage.className = 'video-detail';
     
@@ -392,7 +431,7 @@ function showVideoDetail(title, image, description, episodes) {
     // 添加描述
     const movieDescription = document.createElement('p');
     movieDescription.className = 'video-description';
-    movieDescription.textContent = description || '暂无简介';
+    movieDescription.textContent = description;
     
     // 添加信息到头部
     movieInfo.appendChild(movieTitle);
@@ -415,9 +454,9 @@ function showVideoDetail(title, image, description, episodes) {
     if (episodes && episodes.length > 0) {
         episodes.forEach((episode, index) => {
             // 解析剧集信息
-            const parts = episode.split('$');
-            const episodeName = parts[0];
-            const episodeUrl = parts[1];
+            const epParts = episode.split(': ');
+            const episodeName = epParts[0];
+            const episodeUrl = epParts[1];
             
             if (!episodeUrl) return;
             
@@ -427,7 +466,7 @@ function showVideoDetail(title, image, description, episodes) {
             
             // 添加点击播放功能
             episodeItem.addEventListener('click', function() {
-                playVideo(episodeUrl, title, episodeName);
+                renderVideoPlayer(episodeUrl, title, episodeName);
             });
             
             episodesList.appendChild(episodeItem);
@@ -455,8 +494,8 @@ function showVideoDetail(title, image, description, episodes) {
     }
 }
 
-// 播放视频
-function playVideo(url, title, episodeName) {
+// 新的视频播放器渲染函数
+function renderVideoPlayer(url, title, episodeName) {
     // 清空内容
     const mainContainer = document.getElementById('main-container');
     const searchImgList = document.getElementById('search-imglist');
@@ -483,7 +522,9 @@ function playVideo(url, title, episodeName) {
     backButton.addEventListener('click', function() {
         if (savedMovieData) {
             const movieData = JSON.parse(savedMovieData);
-            showVideoDetail(movieData.title, movieData.image, movieData.description, movieData.episodes);
+            renderVideoDetail({
+                "sheep_vod_info_0": [movieData.title, movieData.image, movieData.description, ...movieData.episodes].join(',')
+            });
         } else {
             showSearch();
         }

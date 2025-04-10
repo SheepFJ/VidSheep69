@@ -80,6 +80,11 @@ if (url.includes('/videoword/')) {
     handleSearchRequest();
 }
 
+// 添加处理videolist请求的条件
+if (url.includes('/videolist/')) {
+    handleVideoDetailRequest();
+}
+
 
 // 搜索获取数据
 function handleSearchRequest() {
@@ -186,4 +191,35 @@ function storeVodData(vodList) {
     }
 
     return storedData;  // 返回存储的数据对象
+}
+
+// 新增处理影片详情请求的函数
+function handleVideoDetailRequest() {
+    const urlMatch = $request.url.match(/sheep\/videoPolymerization\/videolist\/(\d+)/);
+    if (!urlMatch) {
+        $done({ body: JSON.stringify({ error: "无效的请求格式" }) });
+        return;
+    }
+
+    const index = urlMatch[1];
+    const key = `sheep_vod_info_${index}`;
+    
+    // 从本地存储中获取对应索引的影片信息
+    const storedVodInfo = storage.get(key);
+    
+    if (!storedVodInfo) {
+        $done({ body: JSON.stringify({ error: "未找到对应影片信息", index: index }) });
+        return;
+    }
+    
+    // 构建响应对象
+    const responseData = {
+        success: "剧集信息获取成功",
+        total: 1,
+        data: {
+            [key]: storedVodInfo
+        }
+    };
+    
+    $done({ body: JSON.stringify(responseData) });
 }
