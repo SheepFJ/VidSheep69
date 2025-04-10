@@ -251,6 +251,58 @@ function showSearch() {
     }
 }
 
+// 解析视频数据的通用函数
+function parseVideoData(dataString) {
+    if (!dataString) {
+        return {
+            title: '未知标题',
+            image: '',
+            description: '暂无简介',
+            episodes: []
+        };
+    }
+    
+    try {
+        const parts = dataString.split(',');
+        return {
+            title: parts[0] || '未知标题',
+            image: parts[1] || '',
+            description: parts[2] || '暂无简介',
+            episodes: parts.slice(3) || []
+        };
+    } catch (error) {
+        console.error('解析视频数据失败:', error);
+        return {
+            title: '解析错误',
+            image: '',
+            description: '数据解析失败',
+            episodes: []
+        };
+    }
+}
+
+// 处理详情数据的函数
+function processDetailData(detailData) {
+    // 如果是对象，获取第一个值
+    let dataString = '';
+    
+    if (typeof detailData === 'object') {
+        // 如果是具有data属性的API响应
+        if (detailData.data && Object.values(detailData.data).length > 0) {
+            dataString = Object.values(detailData.data)[0];
+        } 
+        // 如果直接是数据对象
+        else if (Object.values(detailData).length > 0) {
+            dataString = Object.values(detailData)[0];
+        }
+    } 
+    // 如果已经是字符串
+    else if (typeof detailData === 'string') {
+        dataString = detailData;
+    }
+    
+    return parseVideoData(dataString);
+}
 
 // 搜索
 function search() {
@@ -290,11 +342,8 @@ function search() {
             
             // 遍历返回的数据
             Object.entries(response.data).forEach(([key, value], index) => {
-                // 解析字符串格式的数据
-                const parts = value.split(',');
-                const vodName = parts[0];
-                const vodPic = parts[1];
-                const vodContent = parts[2] || '';
+                // 使用通用函数解析数据
+                const videoData = parseVideoData(value);
                 
                 // 创建电影容器
                 var container = document.createElement("div");
@@ -302,7 +351,7 @@ function search() {
                 
                 // 创建图片
                 var img = document.createElement("img");
-                img.src = vodPic;
+                img.src = videoData.image;
                 img.onerror = function() { 
                     this.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgMTAwIDE1MCIgZmlsbD0iIzMzMyI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxNTAiIGZpbGw9IiMyMjIiLz48dGV4dCB4PSI1MCIgeT0iNzUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2FhYSI+无图片</dGV4dD48L3N2Zz4='; 
                 };
@@ -310,7 +359,7 @@ function search() {
                 // 创建标题
                 var title = document.createElement("div");
                 title.className = "movie-title";
-                title.textContent = vodName;
+                title.textContent = videoData.title;
                 
                 // 添加点击事件 - 修改为请求详情API
                 container.addEventListener('click', function() {
@@ -372,28 +421,11 @@ function renderVideoDetail(detailData) {
     if (searchImgPlay) searchImgPlay.innerHTML = '';
     if (loadingResults) loadingResults.innerHTML = '';
     
-    // 获取详情数据
-    const dataEntry = Object.values(detailData)[0];
-    if (!dataEntry) {
-        alert("数据解析错误");
-        return;
-    }
-    
-    // 解析详情字符串
-    const parts = dataEntry.split(',');
-    const title = parts[0];
-    const image = parts[1];
-    const description = parts[2] || '暂无简介';
-    const episodes = parts.slice(3);
+    // 使用封装函数处理详情数据
+    const videoData = processDetailData(detailData);
     
     // 保存当前电影信息到本地存储
-    const movieData = {
-        title: title,
-        image: image,
-        description: description,
-        episodes: episodes
-    };
-    localStorage.setItem('currentMovie', JSON.stringify(movieData));
+    localStorage.setItem('currentMovie', JSON.stringify(videoData));
     
     // 创建详情页容器
     const detailPage = document.createElement('div');
@@ -414,7 +446,7 @@ function renderVideoDetail(detailData) {
     // 创建影片图片
     const movieImage = document.createElement('img');
     movieImage.className = 'video-image';
-    movieImage.src = image;
+    movieImage.src = videoData.image;
     movieImage.onerror = function() { 
         this.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgMTAwIDE1MCIgZmlsbD0iIzMzMyI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxNTAiIGZpbGw9IiMyMjIiLz48dGV4dCB4PSI1MCIgeT0iNzUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2FhYSI+无图片</dGV4dD48L3N2Zz4='; 
     };
@@ -426,12 +458,12 @@ function renderVideoDetail(detailData) {
     // 添加标题
     const movieTitle = document.createElement('h1');
     movieTitle.className = 'video-title';
-    movieTitle.textContent = title;
+    movieTitle.textContent = videoData.title;
     
     // 添加描述
     const movieDescription = document.createElement('p');
     movieDescription.className = 'video-description';
-    movieDescription.textContent = description;
+    movieDescription.textContent = videoData.description;
     
     // 添加信息到头部
     movieInfo.appendChild(movieTitle);
@@ -451,8 +483,8 @@ function renderVideoDetail(detailData) {
     episodesList.className = 'episodes-list';
     
     // 添加剧集
-    if (episodes && episodes.length > 0) {
-        episodes.forEach((episode, index) => {
+    if (videoData.episodes && videoData.episodes.length > 0) {
+        videoData.episodes.forEach((episode, index) => {
             // 解析剧集信息
             const epParts = episode.split(': ');
             const episodeName = epParts[0];
@@ -466,7 +498,7 @@ function renderVideoDetail(detailData) {
             
             // 添加点击播放功能
             episodeItem.addEventListener('click', function() {
-                renderVideoPlayer(episodeUrl, title, episodeName);
+                renderVideoPlayer(episodeUrl, videoData.title, episodeName);
             });
             
             episodesList.appendChild(episodeItem);
@@ -486,15 +518,22 @@ function renderVideoDetail(detailData) {
     detailPage.appendChild(header);
     detailPage.appendChild(episodesContainer);
     
-    // 添加到主容器
-    if (searchImgPlay) {
+    // 添加到主容器 - 确保添加到正确的容器
+    if (searchImgPlay && searchImgPlay.parentNode) {
+        searchImgPlay.innerHTML = ''; // 清空容器
         searchImgPlay.appendChild(detailPage);
     } else if (mainContainer) {
         mainContainer.appendChild(detailPage);
+    } else {
+        // 找不到适合的容器，创建一个新的
+        const fallbackContainer = document.createElement('div');
+        fallbackContainer.id = 'search-imgplay';
+        fallbackContainer.appendChild(detailPage);
+        document.body.appendChild(fallbackContainer);
     }
 }
 
-// 新的视频播放器渲染函数
+// 修改视频播放器渲染函数
 function renderVideoPlayer(url, title, episodeName) {
     // 清空内容
     const mainContainer = document.getElementById('main-container');
@@ -521,10 +560,14 @@ function renderVideoPlayer(url, title, episodeName) {
     
     backButton.addEventListener('click', function() {
         if (savedMovieData) {
-            const movieData = JSON.parse(savedMovieData);
-            renderVideoDetail({
-                "sheep_vod_info_0": [movieData.title, movieData.image, movieData.description, ...movieData.episodes].join(',')
-            });
+            try {
+                const movieData = JSON.parse(savedMovieData);
+                // 根据储存的数据直接渲染，不需要重新请求
+                renderVideoDetail(movieData);
+            } catch (e) {
+                console.error("解析保存的电影数据失败", e);
+                showSearch(); // 失败则返回搜索页
+            }
         } else {
             showSearch();
         }
@@ -550,11 +593,18 @@ function renderVideoPlayer(url, title, episodeName) {
     playerContainer.appendChild(playerHeader);
     playerContainer.appendChild(videoPlayer);
     
-    // 添加到容器
-    if (searchImgPlay) {
+    // 添加到容器 - 确保添加到正确的容器
+    if (searchImgPlay && searchImgPlay.parentNode) {
+        searchImgPlay.innerHTML = ''; // 清空容器
         searchImgPlay.appendChild(playerContainer);
     } else if (mainContainer) {
         mainContainer.appendChild(playerContainer);
+    } else {
+        // 找不到适合的容器，创建一个新的
+        const fallbackContainer = document.createElement('div');
+        fallbackContainer.id = 'search-imgplay';
+        fallbackContainer.appendChild(playerContainer);
+        document.body.appendChild(fallbackContainer);
     }
 }
 
