@@ -370,6 +370,9 @@ function search() {
                     // 获取当前索引值
                     const currentIndex = index;
                     
+                    // 保存当前索引到localStorage，用于返回时获取
+                    localStorage.setItem('currentMovieIndex', currentIndex);
+                    
                     // 发送请求获取详情
                     const detailUrl = `https://api.sheep.com/sheep/videoPolymerization/videolist/${currentIndex}`;
                     
@@ -555,21 +558,87 @@ function renderVideoPlayer(url, title, episodeName) {
     backButton.className = 'back-button';
     backButton.textContent = '返回详情';
     
-    // 获取保存的电影信息
-    const savedMovieData = localStorage.getItem('currentMovie');
-    
+    // 添加返回按钮点击事件，通过索引重新获取详情
     backButton.addEventListener('click', function() {
-        if (savedMovieData) {
-            try {
-                const movieData = JSON.parse(savedMovieData);
-                // 根据储存的数据直接渲染，不需要重新请求
-                renderVideoDetail(movieData);
-            } catch (e) {
-                console.error("解析保存的电影数据失败", e);
-                showSearch(); // 失败则返回搜索页
-            }
+        // 显示加载动画
+        if (loadingResults) {
+            loadAnimation(loadingResults);
+        }
+        
+        // 获取保存的索引值
+        const currentMovieIndex = localStorage.getItem('currentMovieIndex');
+        
+        if (currentMovieIndex) {
+            // 通过索引值重新请求详情API
+            const detailUrl = `https://api.sheep.com/sheep/videoPolymerization/videolist/${currentMovieIndex}`;
+            
+            fetch(detailUrl)
+                .then(res => res.json())
+                .then(detailResponse => {
+                    // 清除加载动画
+                    if (loadingResults) {
+                        loadingResults.innerHTML = "";
+                    }
+                    
+                    // 渲染详情页面
+                    if (detailResponse.success && detailResponse.data) {
+                        renderVideoDetail(detailResponse.data);
+                    } else {
+                        // 如果API请求失败，尝试使用localStorage缓存的数据
+                        const savedMovieData = localStorage.getItem('currentMovie');
+                        if (savedMovieData) {
+                            try {
+                                const movieData = JSON.parse(savedMovieData);
+                                renderVideoDetail(movieData);
+                            } catch (e) {
+                                console.error("解析保存的电影数据失败", e);
+                                showSearch(); // 失败则返回搜索页
+                            }
+                        } else {
+                            alert("获取影片详情失败，请稍后重试");
+                            showSearch();
+                        }
+                    }
+                })
+                .catch(err => {
+                    console.error("详情请求失败", err);
+                    if (loadingResults) {
+                        loadingResults.innerHTML = "";
+                    }
+                    
+                    // 如果API请求出错，尝试使用localStorage缓存的数据
+                    const savedMovieData = localStorage.getItem('currentMovie');
+                    if (savedMovieData) {
+                        try {
+                            const movieData = JSON.parse(savedMovieData);
+                            renderVideoDetail(movieData);
+                        } catch (e) {
+                            console.error("解析保存的电影数据失败", e);
+                            showSearch(); // 失败则返回搜索页
+                        }
+                    } else {
+                        alert("网络错误，请稍后重试");
+                        showSearch();
+                    }
+                });
         } else {
-            showSearch();
+            // 如果没有索引值，尝试使用localStorage缓存的数据
+            const savedMovieData = localStorage.getItem('currentMovie');
+            if (savedMovieData) {
+                try {
+                    const movieData = JSON.parse(savedMovieData);
+                    renderVideoDetail(movieData);
+                    if (loadingResults) {
+                        loadingResults.innerHTML = "";
+                    }
+                } catch (e) {
+                    console.error("解析保存的电影数据失败", e);
+                    showSearch(); // 失败则返回搜索页
+                }
+            } else {
+                alert("无法找到原页面信息，返回搜索页");
+                showSearch();
+            }
         }
     });
     
@@ -583,6 +652,16 @@ function renderVideoPlayer(url, title, episodeName) {
     videoPlayer.className = 'video-player-iframe';
     videoPlayer.src = url;
     videoPlayer.allowFullscreen = true;
+    
+    // 创建加载提示
+    const playerLoading = document.createElement('div');
+    playerLoading.className = 'player-loading';
+    playerLoading.innerHTML = '<div class="loading-spinner"></div><div>视频加载中...</div>';
+    
+    // 视频加载完成时隐藏加载提示
+    videoPlayer.addEventListener('load', function() {
+        playerLoading.style.display = 'none';
+    });
     
     // 组装播放器界面
     const playerHeader = document.createElement('div');

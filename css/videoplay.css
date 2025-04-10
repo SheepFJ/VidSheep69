@@ -1,0 +1,152 @@
+/* 播放器容器样式 */
+.player-container {
+    width: 100%;
+    padding: 15px;
+    background-color: #1a1a1a;
+    color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+}
+
+/* 播放器头部样式 */
+.player-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* 返回按钮样式 */
+.back-button {
+    background-color: #f39c12;
+    color: #fff;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    flex-shrink: 0;
+}
+
+.back-button:hover {
+    background-color: #e67e22;
+}
+
+/* 视频标题样式 */
+.video-player-title {
+    font-size: 1.2rem;
+    margin: 0;
+    color: #f39c12;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 播放器iframe样式 */
+.video-player-iframe {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: none;
+    border-radius: 6px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    background-color: #000;
+}
+
+/* 加载动画样式 */
+.player-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(243, 156, 18, 0.3);
+    border-top: 4px solid #f39c12;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 10px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 控制按钮区域 */
+.player-controls {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #333;
+}
+
+.control-button {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.control-button:hover {
+    background-color: #444;
+}
+
+.control-button.active {
+    background-color: #f39c12;
+}
+
+/* 全屏时的样式 */
+.fullscreen-player {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1000;
+    background-color: #000;
+    display: flex;
+    flex-direction: column;
+}
+
+.fullscreen-player .video-player-iframe {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+}
+
+/* 响应式设计 */
+@media (max-width: 480px) {
+    .player-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .video-player-iframe {
+        aspect-ratio: 16 / 9;
+    }
+    
+    .player-controls {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .control-button {
+        flex: 1;
+        min-width: 70px;
+        text-align: center;
+    }
+}
