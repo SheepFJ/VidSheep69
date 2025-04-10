@@ -28,7 +28,7 @@
     cursor: pointer;
     transition: all 0.3s ease;
     position: fixed;
-    top: 45px; /* 向下移动一点距离 */
+    top: 65px; /* 向下移动一点距离 */
     left: 15px;
     z-index: 100;
     font-size: 1.2rem;
