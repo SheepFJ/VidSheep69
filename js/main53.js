@@ -99,8 +99,19 @@ function confirmUsernameEdit() {
         });
 }
 
+// 页面加载时清空play-container
+document.addEventListener('DOMContentLoaded', function() {
+    // 确保加载页面时play-container为空
+    const playContainer = document.getElementById('play-container');
+    if (playContainer) playContainer.innerHTML = '';
+});
+
 // 我的页面--关于--历史版本
 function showProfile() {
+    // 清空播放容器
+    const playContainer = document.getElementById('play-container');
+    if (playContainer) playContainer.innerHTML = '';
+    
     const mainContainer = document.getElementById("main-container");
     mainContainer.innerHTML = `
 <div class="user-container">
@@ -204,6 +215,10 @@ function showProfile() {
 
 //发现
 function disCover() {
+    // 清空播放容器
+    const playContainer = document.getElementById('play-container');
+    if (playContainer) playContainer.innerHTML = '';
+    
     // 清空相关元素
     const searchImgPlay = document.getElementById("search-imgplay");
     if (searchImgPlay) {
@@ -685,19 +700,9 @@ function renderVideoDetail(detailData) {
                 // 更新当前播放URL (用于分享)
                 currentEpisodeUrl = episodeUrl;
                 
-                // 创建加载提示
-                const playerLoading = document.createElement('div');
-                playerLoading.className = 'player-loading';
-                playerLoading.innerHTML = '<div class="loading-spinner"></div><div>视频加载中...</div>';
-                
-                // 视频加载完成时隐藏加载提示
-                videoPlayer.addEventListener('load', function() {
-                    playerLoading.style.display = 'none';
-                });
                 
                 // 添加到播放器框架
                 playerFrame.appendChild(videoPlayer);
-                playerFrame.appendChild(playerLoading);
                 
                 // 更新当前播放信息
                 nowPlaying.textContent = `当前播放: ${episodeName || `第${index + 1}集`}`;
@@ -983,6 +988,10 @@ function renderVideoPlayer(url, title, episodeName) {
 
 // 最近
 function showList() {
+    // 清空播放容器
+    const playContainer = document.getElementById('play-container');
+    if (playContainer) playContainer.innerHTML = '';
+    
     var loadingResults = document.getElementById("loading-results");
     loadAnimation(loadingResults);
     setTimeout(() => {
@@ -1003,4 +1012,10 @@ for (let i = 0; i < navButtons.length; i++) {
 
 // 直接执行showProfile，不需要等待DOM加载
 showProfile();
+
+// 确保页面初始化时play-container为空
+(function() {
+    const playContainer = document.getElementById('play-container');
+    if (playContainer) playContainer.innerHTML = '';
+})();
 
