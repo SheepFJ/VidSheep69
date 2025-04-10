@@ -49,7 +49,7 @@
 /* 改进的视频头部区域样式 */
 .video-header {
     display: flex;
-    margin: 40px 0 20px; /* 增加顶部边距，原来是25px */
+    margin: 30px 0 10px; /* 增加顶部边距，原来是25px */
     gap: 15px;
     background-color: #1e1e1e; /* 调整背景色，与主背景形成对比 */
     padding: 15px;
@@ -93,7 +93,7 @@
     line-height: 1.4;
     color: #cccccc;
     margin-bottom: 5px;
-    padding-right: 10px;
+    padding-right: 6px;
     overflow-y: auto; /* 保留滚动 */
     flex: 1; /* 占用剩余空间 */
 }
@@ -123,7 +123,7 @@
 
 /* 播放器标题样式 - 修改为居中 */
 .player-title {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     color: #f39c12;
     margin-top: 0;
     margin-bottom: 15px;
@@ -469,4 +469,9 @@
 /* 添加播放容器内相对定位容器样式，确保滚动正确 */
 #play-container .video-detail {
     min-height: 100vh; /* 确保至少占满整个视口高度 */
+}
+
+/* 获取最后一个 .episode-item */
+.episodes-list .episode-item:last-child {
+    margin-bottom: 16px; /* 增加底部间距 */
 }
