@@ -444,17 +444,18 @@
     }
 }
 
-/* 添加固定背景层 */
+/* 修改固定背景层 - 默认不显示 */
 #play-container {
     position: relative;
     overflow: hidden; /* 防止内容超出容器 */
     height: 100%;
     width: 100%;
     background-color: #121212; /* 与详情页背景色一致 */
+    display: none; /* 默认隐藏 */
 }
 
-/* 确保播放容器占满屏幕 */
-#play-container {
+/* 确保播放容器占满屏幕 - 只有当有内容时才显示 */
+#play-container:not(:empty) {
     position: fixed;
     top: 0;
     left: 0;
@@ -462,4 +463,10 @@
     bottom: 0;
     z-index: 900; /* 高于页面其他内容但低于返回按钮 */
     overflow-y: auto; /* 允许容器内滚动 */
+    display: block; /* 有内容时才显示 */
+}
+
+/* 添加播放容器内相对定位容器样式，确保滚动正确 */
+#play-container .video-detail {
+    min-height: 100vh; /* 确保至少占满整个视口高度 */
 }
