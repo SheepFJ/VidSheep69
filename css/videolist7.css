@@ -9,11 +9,14 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     display: flex;
     flex-direction: column;
-    overflow: hidden; /* 防止内容溢出 */
     position: relative; /* 添加相对定位 */
     box-sizing: border-box; /* 确保padding不会增加宽度 */
     margin: 0 auto; /* 居中 */
     max-width: 100%; /* 防止溢出屏幕 */
+    margin-top: -15px;
+    margin-bottom: -15px;
+    padding-top: 30px; /* 增加顶部内边距 */
+    padding-bottom: 30px; /* 增加底部内边距 */
 }
 
 /* 返回按钮样式 - 固定在左上角，调整为图标 */
@@ -28,9 +31,9 @@
     cursor: pointer;
     transition: all 0.3s ease;
     position: fixed;
-    top: 65px; /* 向下移动一点距离 */
+    top: 65px; /* 保持位置不变 */
     left: 15px;
-    z-index: 100;
+    z-index: 1000; /* 提高z-index确保按钮在最上层 */
     font-size: 1.2rem;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
     display: flex;
@@ -46,7 +49,7 @@
 /* 改进的视频头部区域样式 */
 .video-header {
     display: flex;
-    margin: 25px 0 20px; /* 减小顶部边距，原来是60px */
+    margin: 40px 0 20px; /* 增加顶部边距，原来是25px */
     gap: 15px;
     background-color: #1e1e1e; /* 调整背景色，与主背景形成对比 */
     padding: 15px;
@@ -56,6 +59,7 @@
     width: 100%;
     box-sizing: border-box;
     border: 1px solid #2c2c2c; /* 添加细微边框 */
+    z-index: 10; /* 确保在返回按钮之下但比其他内容高 */
 }
 
 /* 视频封面图片样式 - 调整为左侧固定尺寸 */
@@ -101,6 +105,9 @@
     padding-right: 5px;
     scroll-behavior: smooth; /* 添加平滑滚动 */
     margin-top: 5px; /* 减小间距，原来是10px */
+    position: relative; /* 添加相对定位 */
+    z-index: 5; /* 确保内容在适当的层级 */
+    max-height: calc(100vh - 180px); /* 限制最大高度，防止内容过长 */
 }
 
 /* 内嵌播放器容器样式 */
@@ -394,8 +401,12 @@
 /* 响应式设计 */
 @media (max-width: 480px) {
     .video-header {
-        margin-top: 45px; /* 减小顶部距离，原来是70px */
+        margin-top: 60px; /* 增加顶部距离，原来是45px */
         padding: 10px;
+    }
+    
+    .back-button {
+        top: 60px; /* 适当调整移动端返回按钮位置 */
     }
     
     .video-image {
@@ -421,5 +432,34 @@
     .video-detail {
         width: 95%;
         border-radius: 10px;
+        padding-top: 40px; /* 在大屏幕上增加顶部内边距 */
     }
+    
+    .video-header {
+        margin-top: 50px; /* 大屏幕上增加顶部距离 */
+    }
+    
+    .back-button {
+        top: 70px; /* 大屏幕上调整返回按钮位置 */
+    }
+}
+
+/* 添加固定背景层 */
+#play-container {
+    position: relative;
+    overflow: hidden; /* 防止内容超出容器 */
+    height: 100%;
+    width: 100%;
+    background-color: #121212; /* 与详情页背景色一致 */
+}
+
+/* 确保播放容器占满屏幕 */
+#play-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 900; /* 高于页面其他内容但低于返回按钮 */
+    overflow-y: auto; /* 允许容器内滚动 */
 }
