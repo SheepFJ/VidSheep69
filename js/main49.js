@@ -474,6 +474,10 @@ function renderVideoDetail(detailData) {
     header.appendChild(movieImage);
     header.appendChild(movieInfo);
     
+    // 创建可滚动的内容区域
+    const contentArea = document.createElement('div');
+    contentArea.className = 'video-content-area';
+    
     // 创建播放器容器（初始隐藏）
     const playerContainer = document.createElement('div');
     playerContainer.className = 'player-container';
@@ -557,7 +561,7 @@ function renderVideoDetail(detailData) {
                 playerFrame.appendChild(videoPlayer);
                 
                 // 平滑滚动到播放器位置
-                playerContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                playerContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
             });
             
             episodesList.appendChild(episodeItem);
@@ -583,11 +587,14 @@ function renderVideoDetail(detailData) {
     episodesContainer.appendChild(episodesTitle);
     episodesContainer.appendChild(episodesList);
     
-    // 组装页面 - 修改顺序：返回按钮，影片信息，播放器，剧集列表
+    // 将播放器和剧集添加到内容区域
+    contentArea.appendChild(playerContainer);
+    contentArea.appendChild(episodesContainer);
+    
+    // 组装页面 - 修改顺序：返回按钮，固定头部，可滚动内容区域
     detailPage.appendChild(backButton);
     detailPage.appendChild(header);
-    detailPage.appendChild(playerContainer);  // 添加播放器容器
-    detailPage.appendChild(episodesContainer);
+    detailPage.appendChild(contentArea);
     
     // 添加到主容器 - 确保添加到正确的容器
     if (searchImgPlay && searchImgPlay.parentNode) {
@@ -617,9 +624,9 @@ function renderVideoPlayer(url, title, episodeName) {
     if (searchImgPlay) searchImgPlay.innerHTML = '';
     if (loadingResults) loadingResults.innerHTML = '';
 
-    // 创建播放器容器
-    const playerContainer = document.createElement('div');
-    playerContainer.className = 'player-container';
+    // 创建详情页容器
+    const detailPage = document.createElement('div');
+    detailPage.className = 'video-detail';
     
     // 创建返回按钮
     const backButton = document.createElement('button');
@@ -710,16 +717,29 @@ function renderVideoPlayer(url, title, episodeName) {
         }
     });
     
-    // 创建标题
-    const videoTitle = document.createElement('h1');
-    videoTitle.className = 'video-player-title';
-    videoTitle.textContent = `${title} - ${episodeName || ''}`;
+    // 创建可滚动的内容区域
+    const contentArea = document.createElement('div');
+    contentArea.className = 'video-content-area';
+    
+    // 创建播放器容器
+    const playerContainer = document.createElement('div');
+    playerContainer.className = 'player-container';
+    
+    // 创建播放器标题
+    const playerTitle = document.createElement('h2');
+    playerTitle.className = 'player-title';
+    playerTitle.textContent = `正在播放：${title} ${episodeName ? '- ' + episodeName : ''}`;
     
     // 创建视频播放器
     const videoPlayer = document.createElement('iframe');
     videoPlayer.className = 'video-player-iframe';
     videoPlayer.src = url;
     videoPlayer.allowFullscreen = true;
+    
+    // 创建播放器iframe容器
+    const playerFrame = document.createElement('div');
+    playerFrame.className = 'player-frame';
+    playerFrame.appendChild(videoPlayer);
     
     // 创建加载提示
     const playerLoading = document.createElement('div');
@@ -731,26 +751,29 @@ function renderVideoPlayer(url, title, episodeName) {
         playerLoading.style.display = 'none';
     });
     
-    // 组装播放器界面
-    const playerHeader = document.createElement('div');
-    playerHeader.className = 'player-header';
-    playerHeader.appendChild(backButton);
-    playerHeader.appendChild(videoTitle);
+    // 添加播放器元素
+    playerContainer.appendChild(playerTitle);
+    playerContainer.appendChild(playerFrame);
+    playerFrame.appendChild(playerLoading);
     
-    playerContainer.appendChild(playerHeader);
-    playerContainer.appendChild(videoPlayer);
+    // 将播放器添加到内容区域
+    contentArea.appendChild(playerContainer);
     
-    // 添加到容器 - 确保添加到正确的容器
+    // 组装页面
+    detailPage.appendChild(backButton);
+    detailPage.appendChild(contentArea);
+    
+    // 添加到主容器 - 确保添加到正确的容器
     if (searchImgPlay && searchImgPlay.parentNode) {
         searchImgPlay.innerHTML = ''; // 清空容器
-        searchImgPlay.appendChild(playerContainer);
+        searchImgPlay.appendChild(detailPage);
     } else if (mainContainer) {
-        mainContainer.appendChild(playerContainer);
+        mainContainer.appendChild(detailPage);
     } else {
         // 找不到适合的容器，创建一个新的
         const fallbackContainer = document.createElement('div');
         fallbackContainer.id = 'search-imgplay';
-        fallbackContainer.appendChild(playerContainer);
+        fallbackContainer.appendChild(detailPage);
         document.body.appendChild(fallbackContainer);
     }
 }
