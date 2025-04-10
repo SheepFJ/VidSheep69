@@ -304,6 +304,48 @@ function processDetailData(detailData) {
     return parseVideoData(dataString);
 }
 
+// 辅助函数：复制文本到剪贴板
+function copyToClipboard(text, callback) {
+    // 优先使用现代Clipboard API
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function() {
+            if (callback) callback(true);
+        }).catch(function(err) {
+            console.error('Clipboard API失败:', err);
+            fallbackCopy();
+        });
+    } else {
+        fallbackCopy();
+    }
+
+    // 备用复制方法
+    function fallbackCopy() {
+        try {
+            // 创建临时textarea元素
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            
+            // 设置样式避免闪烁
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            textArea.style.top = '-999999px';
+            document.body.appendChild(textArea);
+            
+            // 选择并复制文本
+            textArea.focus();
+            textArea.select();
+            
+            const successful = document.execCommand('copy');
+            document.body.removeChild(textArea);
+            
+            if (callback) callback(successful);
+        } catch (err) {
+            console.error('Fallback复制失败:', err);
+            if (callback) callback(false);
+        }
+    }
+}
+
 // 搜索
 function search() {
     var wd = encodeURIComponent(document.getElementById("searchInput").value);
@@ -434,10 +476,11 @@ function renderVideoDetail(detailData) {
     const detailPage = document.createElement('div');
     detailPage.className = 'video-detail';
     
-    // 创建返回按钮
+    // 创建返回按钮 - 改为图标
     const backButton = document.createElement('button');
     backButton.className = 'back-button';
-    backButton.textContent = '返回搜索';
+    backButton.innerHTML = '<i class="iconfont icon-fanhui"></i>';
+    backButton.title = '返回搜索';
     backButton.addEventListener('click', function() {
         showSearch();
     });
@@ -498,16 +541,36 @@ function renderVideoDetail(detailData) {
     playerContainer.appendChild(playerTitle);
     playerContainer.appendChild(playerFrame);
     
-    // 创建当前播放信息显示
+    // 创建当前播放信息显示和分享按钮容器
+    const nowPlayingContainer = document.createElement('div');
+    nowPlayingContainer.className = 'now-playing-container';
+    nowPlayingContainer.style.display = 'none';
+    
+    // 创建当前播放信息
     const nowPlaying = document.createElement('div');
     nowPlaying.className = 'now-playing';
-    nowPlaying.style.display = 'none';
     nowPlaying.id = 'now-playing';
+    
+    // 创建分享按钮
+    const shareButton = document.createElement('button');
+    shareButton.className = 'share-button';
+    shareButton.innerHTML = '<i class="iconfont icon-fenxiang"></i>';
+    shareButton.title = '复制播放地址';
+    
+    // 添加到播放信息容器
+    nowPlayingContainer.appendChild(nowPlaying);
+    nowPlayingContainer.appendChild(shareButton);
+    
+    // 创建复制成功提示
+    const copyToast = document.createElement('div');
+    copyToast.className = 'copy-toast';
+    copyToast.textContent = '已复制到剪贴板';
+    document.body.appendChild(copyToast);
     
     // 创建选集按钮
     const selectEpisodesButton = document.createElement('button');
     selectEpisodesButton.className = 'select-episodes-button';
-    selectEpisodesButton.textContent = '点击选择剧集';
+    selectEpisodesButton.innerHTML = '<i class="iconfont icon-liebiao"></i> 点击选择剧集';
     selectEpisodesButton.id = 'select-episodes-button';
     
     // 创建剧集列表
@@ -528,7 +591,7 @@ function renderVideoDetail(detailData) {
     closeEpisodesBtn.className = 'close-episodes';
     closeEpisodesBtn.innerHTML = '×';
     closeEpisodesBtn.addEventListener('click', function() {
-        episodesContainer.classList.remove('show');
+        toggleEpisodes(false);
     });
     
     // 组装标题行
@@ -538,9 +601,38 @@ function renderVideoDetail(detailData) {
     const episodesList = document.createElement('div');
     episodesList.className = 'episodes-list';
     
+    // 切换剧集列表显示/隐藏函数
+    function toggleEpisodes(show) {
+        if (show) {
+            episodesContainer.classList.add('show');
+        } else {
+            episodesContainer.classList.remove('show');
+        }
+    }
+    
     // 添加选集按钮点击事件
     selectEpisodesButton.addEventListener('click', function() {
-        episodesContainer.classList.add('show');
+        toggleEpisodes(true);
+    });
+    
+    // 当前播放的剧集URL
+    let currentEpisodeUrl = '';
+    
+    // 添加分享按钮事件
+    shareButton.addEventListener('click', function() {
+        if (currentEpisodeUrl) {
+            copyToClipboard(currentEpisodeUrl, function(success) {
+                if (success) {
+                    // 显示复制成功提示
+                    copyToast.classList.add('show');
+                    setTimeout(() => {
+                        copyToast.classList.remove('show');
+                    }, 2000);
+                } else {
+                    alert('复制链接失败，请手动复制');
+                }
+            });
+        }
     });
     
     // 添加剧集
@@ -581,6 +673,9 @@ function renderVideoDetail(detailData) {
                 videoPlayer.src = episodeUrl;
                 videoPlayer.allowFullscreen = true;
                 
+                // 更新当前播放URL (用于分享)
+                currentEpisodeUrl = episodeUrl;
+                
                 // 创建加载提示
                 const playerLoading = document.createElement('div');
                 playerLoading.className = 'player-loading';
@@ -593,13 +688,14 @@ function renderVideoDetail(detailData) {
                 
                 // 添加到播放器框架
                 playerFrame.appendChild(videoPlayer);
+                playerFrame.appendChild(playerLoading);
                 
                 // 更新当前播放信息
                 nowPlaying.textContent = `当前播放: ${episodeName || `第${index + 1}集`}`;
-                nowPlaying.style.display = 'block';
+                nowPlayingContainer.style.display = 'flex';
                 
                 // 隐藏剧集列表
-                episodesContainer.classList.remove('show');
+                toggleEpisodes(false);
                 
                 // 平滑滚动到播放器位置
                 playerContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -634,7 +730,7 @@ function renderVideoDetail(detailData) {
     
     // 将播放器和剧集控件添加到内容区域
     contentArea.appendChild(playerContainer);
-    contentArea.appendChild(nowPlaying);
+    contentArea.appendChild(nowPlayingContainer);
     contentArea.appendChild(selectEpisodesButton);
     contentArea.appendChild(episodesContainer);
     
@@ -675,10 +771,11 @@ function renderVideoPlayer(url, title, episodeName) {
     const detailPage = document.createElement('div');
     detailPage.className = 'video-detail';
     
-    // 创建返回按钮
+    // 创建返回按钮 - 改为图标
     const backButton = document.createElement('button');
     backButton.className = 'back-button';
-    backButton.textContent = '返回详情';
+    backButton.innerHTML = '<i class="iconfont icon-fanhui"></i>';
+    backButton.title = '返回详情';
     
     // 添加返回按钮点击事件，通过索引重新获取详情
     backButton.addEventListener('click', function() {
@@ -799,19 +896,51 @@ function renderVideoPlayer(url, title, episodeName) {
         playerLoading.style.display = 'none';
     });
     
-    // 添加播放器元素
-    playerContainer.appendChild(playerTitle);
-    playerContainer.appendChild(playerFrame);
-    playerFrame.appendChild(playerLoading);
+    // 创建播放信息和分享按钮容器
+    const nowPlayingContainer = document.createElement('div');
+    nowPlayingContainer.className = 'now-playing-container';
     
     // 创建当前播放信息
     const nowPlaying = document.createElement('div');
     nowPlaying.className = 'now-playing';
     nowPlaying.textContent = `当前播放: ${title} ${episodeName ? '- ' + episodeName : ''}`;
     
+    // 创建分享按钮
+    const shareButton = document.createElement('button');
+    shareButton.className = 'share-button';
+    shareButton.innerHTML = '<i class="iconfont icon-fenxiang"></i>';
+    shareButton.title = '复制播放地址';
+    
+    // 创建复制成功提示
+    const copyToast = document.createElement('div');
+    copyToast.className = 'copy-toast';
+    copyToast.textContent = '已复制到剪贴板';
+    document.body.appendChild(copyToast);
+    
+    // 添加分享按钮事件
+    shareButton.addEventListener('click', function() {
+        if (url) {
+            copyToClipboard(url, function(success) {
+                if (success) {
+                    // 显示复制成功提示
+                    copyToast.classList.add('show');
+                    setTimeout(() => {
+                        copyToast.classList.remove('show');
+                    }, 2000);
+                } else {
+                    alert('复制链接失败，请手动复制');
+                }
+            });
+        }
+    });
+    
+    // 添加到播放信息容器
+    nowPlayingContainer.appendChild(nowPlaying);
+    nowPlayingContainer.appendChild(shareButton);
+    
     // 将播放器添加到内容区域
     contentArea.appendChild(playerContainer);
-    contentArea.appendChild(nowPlaying);
+    contentArea.appendChild(nowPlayingContainer);
     
     // 组装页面
     detailPage.appendChild(backButton);

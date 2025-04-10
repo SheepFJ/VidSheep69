@@ -16,45 +16,51 @@
     max-width: 100%; /* 防止溢出屏幕 */
 }
 
-/* 返回按钮样式 - 固定在左上角 */
+/* 返回按钮样式 - 固定在左上角，调整为图标 */
 .back-button {
     background-color: #f39c12;
     color: #fff;
     border: none;
-    padding: 8px 15px;
-    border-radius: 4px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
     font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
     position: fixed;
-    top: 10px;
-    left: 10px;
+    top: 20px; /* 向下移动一点距离 */
+    left: 15px;
     z-index: 100;
-    font-size: 0.9rem;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    font-size: 1.2rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .back-button:hover {
     background-color: #e67e22;
+    transform: scale(1.05);
 }
 
-/* 视频头部区域样式 - 修改为固定位置 */
+/* 改进的视频头部区域样式 */
 .video-header {
     display: flex;
-    margin: 40px 0 20px; /* 增加顶部边距，为固定的返回按钮留出空间 */
+    margin: 60px 0 20px; /* 增加顶部边距，为固定的返回按钮留出空间 */
     gap: 15px;
     background-color: #1a1a1a; 
-    padding: 10px 0;
-    position: sticky;
-    top: 0;
-    z-index: 5;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    position: relative;
     width: 100%;
+    box-sizing: border-box;
 }
 
-/* 视频封面图片样式 - 调整尺寸更小 */
+/* 视频封面图片样式 - 调整为左侧固定尺寸 */
 .video-image {
-    width: 100px; /* 减小宽度 */
-    height: 150px; /* 减小高度 */
+    width: 120px; /* 固定宽度 */
+    height: 180px; /* 固定高度，与右侧内容总高度匹配 */
     object-fit: cover;
     border-radius: 6px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
@@ -67,7 +73,7 @@
     display: flex;
     flex-direction: column;
     overflow-y: auto; /* 添加垂直滚动 */
-    max-height: 150px; /* 与图片高度一致 */
+    max-height: 180px; /* 与图片高度匹配 */
 }
 
 /* 视频标题样式 */
@@ -85,6 +91,7 @@
     margin-bottom: 15px;
     padding-right: 10px;
     overflow-y: auto; /* 保留滚动 */
+    flex: 1; /* 占用剩余空间 */
 }
 
 /* 内容区域样式 - 可滚动区域 */
@@ -177,7 +184,7 @@
 
 /* 选集按钮样式 */
 .select-episodes-button {
-    display: block;
+    display: flex;
     width: 100%;
     padding: 12px;
     background-color: #f39c12;
@@ -186,6 +193,8 @@
     border-radius: 6px;
     font-weight: bold;
     text-align: center;
+    justify-content: center;
+    align-items: center;
     cursor: pointer;
     margin: 15px 0;
     transition: all 0.3s ease;
@@ -195,6 +204,10 @@
 .select-episodes-button:hover {
     background-color: #e67e22;
     transform: translateY(-2px);
+}
+
+.select-episodes-button i {
+    margin-right: 8px;
 }
 
 /* 剧集容器样式 - 初始隐藏 */
@@ -215,7 +228,7 @@
 
 @keyframes fadeIn {
     from { opacity: 0; }
-    to { opacity: al; }
+    to { opacity: 1; }
 }
 
 /* 剧集标题样式 */
@@ -311,33 +324,83 @@
     border-radius: 5px;
 }
 
+/* 当前播放信息和分享区域 */
+.now-playing-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #222;
+    border-radius: 6px;
+    padding: 10px 15px;
+    margin: 10px 0;
+}
+
 /* 当前播放信息 */
 .now-playing {
     color: #ccc;
     font-size: 0.9rem;
-    text-align: center;
-    padding: 10px;
-    background-color: #222;
-    border-radius: 4px;
-    margin: 10px 0;
+    flex: 1;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
+/* 分享按钮 */
+.share-button {
+    background: none;
+    border: none;
+    color: #f39c12;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 5px 10px;
+    margin-left: 10px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.share-button:hover {
+    color: #e67e22;
+    transform: scale(1.1);
+}
+
+/* 复制成功提示 */
+.copy-toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+.copy-toast.show {
+    opacity: 1;
+    visibility: visible;
+}
+
 /* 响应式设计 */
 @media (max-width: 480px) {
     .video-header {
-        margin-top: 50px; /* 为固定返回按钮留出更多空间 */
+        margin-top: 70px; /* 为固定返回按钮留出更多空间 */
+        padding: 10px;
     }
     
     .video-image {
-        width: 80px; /* 移动端更小的图片 */
-        height: 120px;
+        width: 100px; /* 移动端更小的图片 */
+        height: 150px;
     }
     
     .video-info {
-        max-height: 120px; /* 调整移动端高度 */
+        max-height: 150px; /* 调整移动端高度 */
     }
     
     .video-title {
