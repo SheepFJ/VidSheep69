@@ -1,159 +1,98 @@
-// 通用工具函数和环境检测 - 改进环境检测方式
-const isLoon = typeof $loon !== "undefined";
-const isQuanX = typeof $task !== "undefined";
-const isSurge = typeof $httpClient !== "undefined" && !isLoon && !isQuanX;
+// 通用工具函数和环境检测 - 采用与mainlogic.js相同的检测方式
+const isLoon = typeof $persistentStore !== "undefined";
+const isQuanX = typeof $prefs !== "undefined";
+const isSurge = !isLoon && !isQuanX; // 其他环境按Surge处理
 
 // 添加日志函数
 function log(message) {
     console.log(`[VidSheep] ${message}`);
-    // 如果在开发模式下，也可以通知
-    // notify("调试信息", "", message);
 }
 
-// 统一存储方法 - 增加错误处理
+// 统一存储方法 - 复用mainlogic.js的方式
 const storage = {
     get: key => {
-        try {
-            if (isLoon) {
-                return $persistentStore.read(key);
-            } else if (isQuanX) {
-                return $prefs.valueForKey(key);
-            } else if (isSurge) {
-                return $persistentStore.read(key);
-            }
-            return null;
-        } catch (e) {
-            log(`读取存储失败: ${e.message}`);
-            return null;
-        }
+        if (isLoon || isSurge) return $persistentStore.read(key);
+        if (isQuanX) return $prefs.valueForKey(key);
+        return null;
     },
     set: (key, value) => {
-        try {
-            if (isLoon) {
-                return $persistentStore.write(value, key);
-            } else if (isQuanX) {
-                return $prefs.setValueForKey(value, key);
-            } else if (isSurge) {
-                return $persistentStore.write(value, key);
-            }
-            return false;
-        } catch (e) {
-            log(`写入存储失败: ${e.message}`);
-            return false;
-        }
+        if (isLoon || isSurge) return $persistentStore.write(value, key);
+        if (isQuanX) return $prefs.setValueForKey(value, key);
+        return false;
     }
 };
 
-// 统一通知方法 - 增加错误处理
+// 统一通知方法 - 复用mainlogic.js的方式
 const notify = (title, subtitle, message) => {
-    try {
-        if (isLoon) {
-            $notification.post(title, subtitle, message);
-        } else if (isQuanX) {
-            $notify(title, subtitle, message);
-        } else if (isSurge) {
-            $notification.post(title, subtitle, message);
-        }
-    } catch (e) {
-        log(`发送通知失败: ${e.message}`);
+    if (isLoon || isSurge) {
+        $notification.post(title, subtitle, message);
+    } else if (isQuanX) {
+        $notify(title, subtitle, message);
     }
 };
 
-// 统一 HTTP 请求方法 - 改进请求格式
+// 统一 HTTP 请求方法 - 复用mainlogic.js的方式
 function fetchWithCallback(options, callback) {
-    try {
-        if (isLoon || isSurge) {
-            // 确保options格式正确
-            let requestOptions = {
-                url: options.url,
-                headers: options.headers || {}
-            };
-            
-            // 添加额外选项
-            if (options.body) {
-                requestOptions.body = options.body;
-            }
-            
-            if (options.method === "POST") {
-                $httpClient.post(requestOptions, (error, response, data) => {
-                    callback(error, response, data);
-                });
-            } else {
-                $httpClient.get(requestOptions, (error, response, data) => {
-                    callback(error, response, data);
-                });
-            }
-        } else if (isQuanX) {
-            $task.fetch(options).then(response => {
-                callback(null, response, response.body);
-            }).catch(error => {
-                notify("请求失败", "", JSON.stringify(error));
-                callback(error, null, null);
-            });
+    if (isLoon || isSurge) {
+        if (options.method === "POST") {
+            $httpClient.post(options, callback);
         } else {
-            // 不支持的环境
-            callback(new Error("不支持的环境"), null, null);
+            $httpClient.get(options, callback);
         }
-    } catch (e) {
-        log(`HTTP请求失败: ${e.message}`);
-        callback(e, null, null);
+    } else if (isQuanX) {
+        $task.fetch(options).then(response => {
+            callback(null, response, response.body);
+        }).catch(error => {
+            notify("请求失败", "", JSON.stringify(error));
+            callback(error, null, null);
+        });
     }
 }
 
-// 尝试获取本地存储的 userData
+// 获取本地存储的 userData，确保是对象
 let userData = {};
 try {
     const rawData = storage.get("sheep_userdata");
-    if (rawData) {
-        try {
-            userData = JSON.parse(rawData);
-        } catch (e) {
-            log(`解析userData失败: ${e.message}`);
-            userData = {};
-        }
-    }
+    userData = rawData ? JSON.parse(rawData) : {};
 } catch (e) {
-    log(`获取userData失败: ${e.message}`);
+    log(`解析userData失败: ${e.message}`);
+    userData = {};
 }
 
-// 检查请求对象是否存在
-if (typeof $request === "undefined") {
-    $done({});
-} else {
-    const url = $request.url;
-    log(`处理请求: ${url}`);
+// 检查请求URL并处理
+const url = $request.url;
+log(`处理请求: ${url}`);
 
-    // 处理 userinfo 相关请求
-    if (url.includes('/userinfo/')) {
-        try {
-            // 处理 username 相关请求
-            if (url.includes('/username/')) {
-                const match = url.match(/\/videoPolymerization\/userinfo\/username\/([^\/\?]+)/);
-                if (match && match[1]) {
-                    // url编码转换
-                    const username = decodeURIComponent(match[1]);
-                    userData.username = username;
-                    const saved = storage.set("sheep_userdata", JSON.stringify(userData));
-                    log(`保存用户名结果: ${saved ? '成功' : '失败'}`);
-                }
-                // 以json格式响应
-                $done({
-                    body: JSON.stringify(userData)
-                });
-            } else {
-                $done({});
+// 处理 userinfo 相关请求
+if (url.includes('/userinfo/')) {
+    try {
+        // 处理 username 相关请求
+        if (url.includes('/username/')) {
+            const match = url.match(/\/videoPolymerization\/userinfo\/username\/([^\/\?]+)/);
+            if (match && match[1]) {
+                // url编码转换
+                const username = decodeURIComponent(match[1]);
+                userData.username = username;
+                const saved = storage.set("sheep_userdata", JSON.stringify(userData));
+                log(`保存用户名结果: ${saved ? '成功' : '失败'}`);
             }
-        } catch (e) {
-            log(`处理userinfo请求失败: ${e.message}`);
-            $done({ body: JSON.stringify({ error: e.message }) });
+            // 以json格式响应
+            $done({
+                body: JSON.stringify(userData)
+            });
+        } else {
+            $done({});
         }
-    } else if (url.includes('/videoword/')) {
-        handleSearchRequest();
-    } else if (url.includes('/videolist/')) {
-        handleVideoDetailRequest();
-    } else {
-        $done({});
+    } catch (e) {
+        log(`处理userinfo请求失败: ${e.message}`);
+        $done({ body: JSON.stringify({ error: e.message }) });
     }
+} else if (url.includes('/videoword/')) {
+    handleSearchRequest();
+} else if (url.includes('/videolist/')) {
+    handleVideoDetailRequest();
+} else {
+    $done({});
 }
 
 // 搜索获取数据
@@ -188,15 +127,14 @@ function handleSearchRequest() {
         const requestUrl = baseUrl + encodeURIComponent(wd);
         log(`请求URL: ${requestUrl}`);
 
-        // 使用封装的 fetchWithCallback 方法发送请求
+        // 使用封装的 fetchWithCallback 方法发送请求 - 简化请求头
         fetchWithCallback({
             url: requestUrl,
             method: "GET",
             headers: {
-                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Safari/605.1.15",
-                "Accept": "*/*",
-                "Accept-Language": "zh-CN,zh-Hans;q=0.9",
-                "Connection": "keep-alive"
+                "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Mobile/15E148 Safari/604.1",
+                "Accept": "application/json",
+                "Accept-Language": "zh-CN,zh-Hans;q=0.9"
             }
         }, (error, response, body) => {
             if (error) {
@@ -211,6 +149,7 @@ function handleSearchRequest() {
                     throw new Error("响应内容为空");
                 }
                 
+                // 解析JSON响应
                 const json = JSON.parse(body);
                 if (!json || !json.list) {
                     throw new Error("返回结果格式不正确");
