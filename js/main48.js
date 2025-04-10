@@ -474,6 +474,26 @@ function renderVideoDetail(detailData) {
     header.appendChild(movieImage);
     header.appendChild(movieInfo);
     
+    // 创建播放器容器（初始隐藏）
+    const playerContainer = document.createElement('div');
+    playerContainer.className = 'player-container';
+    playerContainer.style.display = 'none';
+    playerContainer.id = 'player-container';
+    
+    // 创建播放器标题
+    const playerTitle = document.createElement('h2');
+    playerTitle.className = 'player-title';
+    playerTitle.textContent = '正在播放';
+    
+    // 创建播放器iframe容器
+    const playerFrame = document.createElement('div');
+    playerFrame.className = 'player-frame';
+    playerFrame.id = 'player-frame';
+    
+    // 添加播放器元素
+    playerContainer.appendChild(playerTitle);
+    playerContainer.appendChild(playerFrame);
+    
     // 创建剧集列表
     const episodesContainer = document.createElement('div');
     episodesContainer.className = 'episodes-container';
@@ -499,13 +519,60 @@ function renderVideoDetail(detailData) {
             episodeItem.className = 'episode-item';
             episodeItem.textContent = episodeName || `第${index + 1}集`;
             
-            // 添加点击播放功能
+            // 添加点击播放功能 - 修改为内嵌播放
             episodeItem.addEventListener('click', function() {
-                renderVideoPlayer(episodeUrl, videoData.title, episodeName);
+                // 高亮当前选中剧集
+                document.querySelectorAll('.episode-item.active').forEach(item => {
+                    item.classList.remove('active');
+                });
+                episodeItem.classList.add('active');
+                
+                // 显示播放器容器
+                playerContainer.style.display = 'block';
+                
+                // 更新播放器标题
+                playerTitle.textContent = `正在播放：${videoData.title} - ${episodeName || `第${index + 1}集`}`;
+                
+                // 创建或更新视频播放器
+                const playerFrame = document.getElementById('player-frame');
+                playerFrame.innerHTML = '';  // 清空播放器
+                
+                // 创建视频播放器iframe
+                const videoPlayer = document.createElement('iframe');
+                videoPlayer.className = 'video-player-iframe';
+                videoPlayer.src = episodeUrl;
+                videoPlayer.allowFullscreen = true;
+                
+                // 创建加载提示
+                const playerLoading = document.createElement('div');
+                playerLoading.className = 'player-loading';
+                playerLoading.innerHTML = '<div class="loading-spinner"></div><div>视频加载中...</div>';
+                
+                // 视频加载完成时隐藏加载提示
+                videoPlayer.addEventListener('load', function() {
+                    playerLoading.style.display = 'none';
+                });
+                
+                // 添加到播放器框架
+                playerFrame.appendChild(videoPlayer);
+                
+                // 平滑滚动到播放器位置
+                playerContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
             });
             
             episodesList.appendChild(episodeItem);
         });
+        
+        // 默认选中第一集(如果有)
+        if (videoData.episodes.length > 0) {
+            const firstEpisode = episodesList.querySelector('.episode-item');
+            if (firstEpisode) {
+                // 模拟点击第一集
+                setTimeout(() => {
+                    firstEpisode.click();
+                }, 100);
+            }
+        }
     } else {
         const noEpisodes = document.createElement('p');
         noEpisodes.className = 'no-episodes';
@@ -516,9 +583,10 @@ function renderVideoDetail(detailData) {
     episodesContainer.appendChild(episodesTitle);
     episodesContainer.appendChild(episodesList);
     
-    // 组装页面
+    // 组装页面 - 修改顺序：返回按钮，影片信息，播放器，剧集列表
     detailPage.appendChild(backButton);
     detailPage.appendChild(header);
+    detailPage.appendChild(playerContainer);  // 添加播放器容器
     detailPage.appendChild(episodesContainer);
     
     // 添加到主容器 - 确保添加到正确的容器
