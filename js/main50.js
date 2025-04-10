@@ -498,16 +498,50 @@ function renderVideoDetail(detailData) {
     playerContainer.appendChild(playerTitle);
     playerContainer.appendChild(playerFrame);
     
+    // 创建当前播放信息显示
+    const nowPlaying = document.createElement('div');
+    nowPlaying.className = 'now-playing';
+    nowPlaying.style.display = 'none';
+    nowPlaying.id = 'now-playing';
+    
+    // 创建选集按钮
+    const selectEpisodesButton = document.createElement('button');
+    selectEpisodesButton.className = 'select-episodes-button';
+    selectEpisodesButton.textContent = '点击选择剧集';
+    selectEpisodesButton.id = 'select-episodes-button';
+    
     // 创建剧集列表
     const episodesContainer = document.createElement('div');
     episodesContainer.className = 'episodes-container';
+    episodesContainer.id = 'episodes-container';
     
-    const episodesTitle = document.createElement('h2');
-    episodesTitle.className = 'episodes-title';
+    // 创建剧集标题行
+    const episodesTitleRow = document.createElement('div');
+    episodesTitleRow.className = 'episodes-title';
+    
+    // 创建剧集标题
+    const episodesTitle = document.createElement('span');
     episodesTitle.textContent = '选集';
+    
+    // 创建关闭按钮
+    const closeEpisodesBtn = document.createElement('button');
+    closeEpisodesBtn.className = 'close-episodes';
+    closeEpisodesBtn.innerHTML = '×';
+    closeEpisodesBtn.addEventListener('click', function() {
+        episodesContainer.classList.remove('show');
+    });
+    
+    // 组装标题行
+    episodesTitleRow.appendChild(episodesTitle);
+    episodesTitleRow.appendChild(closeEpisodesBtn);
     
     const episodesList = document.createElement('div');
     episodesList.className = 'episodes-list';
+    
+    // 添加选集按钮点击事件
+    selectEpisodesButton.addEventListener('click', function() {
+        episodesContainer.classList.add('show');
+    });
     
     // 添加剧集
     if (videoData.episodes && videoData.episodes.length > 0) {
@@ -560,6 +594,13 @@ function renderVideoDetail(detailData) {
                 // 添加到播放器框架
                 playerFrame.appendChild(videoPlayer);
                 
+                // 更新当前播放信息
+                nowPlaying.textContent = `当前播放: ${episodeName || `第${index + 1}集`}`;
+                nowPlaying.style.display = 'block';
+                
+                // 隐藏剧集列表
+                episodesContainer.classList.remove('show');
+                
                 // 平滑滚动到播放器位置
                 playerContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
             });
@@ -582,13 +623,19 @@ function renderVideoDetail(detailData) {
         noEpisodes.className = 'no-episodes';
         noEpisodes.textContent = '暂无可播放剧集';
         episodesList.appendChild(noEpisodes);
+        
+        // 如果没有剧集，隐藏选集按钮
+        selectEpisodesButton.style.display = 'none';
     }
     
-    episodesContainer.appendChild(episodesTitle);
+    // 组装剧集容器
+    episodesContainer.appendChild(episodesTitleRow);
     episodesContainer.appendChild(episodesList);
     
-    // 将播放器和剧集添加到内容区域
+    // 将播放器和剧集控件添加到内容区域
     contentArea.appendChild(playerContainer);
+    contentArea.appendChild(nowPlaying);
+    contentArea.appendChild(selectEpisodesButton);
     contentArea.appendChild(episodesContainer);
     
     // 组装页面 - 修改顺序：返回按钮，固定头部，可滚动内容区域
@@ -720,6 +767,7 @@ function renderVideoPlayer(url, title, episodeName) {
     // 创建可滚动的内容区域
     const contentArea = document.createElement('div');
     contentArea.className = 'video-content-area';
+    contentArea.style.marginTop = '50px'; // 为固定返回按钮留出空间
     
     // 创建播放器容器
     const playerContainer = document.createElement('div');
@@ -756,8 +804,14 @@ function renderVideoPlayer(url, title, episodeName) {
     playerContainer.appendChild(playerFrame);
     playerFrame.appendChild(playerLoading);
     
+    // 创建当前播放信息
+    const nowPlaying = document.createElement('div');
+    nowPlaying.className = 'now-playing';
+    nowPlaying.textContent = `当前播放: ${title} ${episodeName ? '- ' + episodeName : ''}`;
+    
     // 将播放器添加到内容区域
     contentArea.appendChild(playerContainer);
+    contentArea.appendChild(nowPlaying);
     
     // 组装页面
     detailPage.appendChild(backButton);
