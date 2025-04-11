@@ -162,12 +162,17 @@ function finishScript() {
         
     </style>
     <body>
+    
         <div id="main-container">
         </div>
 
         <div id="play-container">
 
         </div>
+        <div id="recent-container"></div>
+
+        
+        <div id="discover-container"></div>
 
         <div id="loading-results"></div>
 
@@ -199,7 +204,9 @@ function finishScript() {
     <script>
         const username = "${username}";
     </script>   
-    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/main54.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/main55.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/zuijin.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/faxian.js"></script>
     </html>`;
 
     $done({ 
