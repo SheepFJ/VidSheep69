@@ -58,12 +58,7 @@ function showProfile() {
     const playContainer = document.getElementById('play-container');
     if (playContainer) {
         playContainer.style.display = 'none';
-    }
-    
-    // 隐藏最近容器
-    const recentContainer = document.getElementById('recent-container');
-    if (recentContainer) {
-        recentContainer.style.display = 'none';
+        playContainer.innerHTML = '';
     }
     
     const mainContainer = document.getElementById("main-container");
@@ -175,24 +170,19 @@ function disCover() {
     const playContainer = document.getElementById('play-container');
     if (playContainer) {
         playContainer.style.display = 'none';
+        playContainer.innerHTML = '';
     }
-    
-    // 隐藏最近容器
-    const recentContainer = document.getElementById('recent-container');
-    if (recentContainer) {
-        recentContainer.style.display = 'none';
-    }
-    
-    // 显示主容器
-    const mainContainer = document.getElementById("main-container");
-    mainContainer.innerHTML = `hello world`;
-    mainContainer.style.display = 'block';
     
     // 清空loading-results
     const loadingResults = document.getElementById("loading-results");
     if (loadingResults) {
         loadingResults.innerHTML = "";
     }
+    
+    const mainContainer = document.getElementById("main-container");
+    mainContainer.innerHTML = `hello world`;
+    // 显示主容器
+    mainContainer.style.display = 'block';
 }
 
 // 等待动画加载
@@ -211,12 +201,7 @@ function showSearch() {
     const playContainer = document.getElementById('play-container');
     if (playContainer) {
         playContainer.style.display = 'none';
-    }
-    
-    // 隐藏最近容器
-    const recentContainer = document.getElementById('recent-container');
-    if (recentContainer) {
-        recentContainer.style.display = 'none';
+        playContainer.innerHTML = '';
     }
     
     // 清空loading-results
@@ -479,12 +464,6 @@ function renderVideoDetail(detailData) {
     playContainer.innerHTML = '';
     playContainer.style.display = 'block'; // 确保播放容器可见
     
-    // 隐藏recent-container和main-container
-    const recentContainer = document.getElementById('recent-container');
-    if (recentContainer) {
-        recentContainer.style.display = 'none';
-    }
-    
     // 清空loading-results（但保留main-container内容）
     const loadingResults = document.getElementById('loading-results');
     if (loadingResults) loadingResults.innerHTML = '';
@@ -494,11 +473,6 @@ function renderVideoDetail(detailData) {
     
     // 保存当前电影信息到本地存储
     localStorage.setItem('currentMovie', JSON.stringify(videoData));
-    
-    // 添加到最近观看列表（如果zuijin.js中的函数可用）
-    if (typeof addToRecentList === 'function') {
-        addToRecentList(videoData);
-    }
     
     // 创建详情页容器
     const detailPage = document.createElement('div');
@@ -513,12 +487,7 @@ function renderVideoDetail(detailData) {
         // 隐藏播放容器而不是清空它
         if (playContainer) {
             playContainer.style.display = 'none';
-        }
-        
-        // 显示main-container (保持其内容不变)
-        const mainContainer = document.getElementById('main-container');
-        if (mainContainer) {
-            mainContainer.style.display = 'block';
+            playContainer.innerHTML = '';
         }
     });
     
@@ -713,6 +682,7 @@ function renderVideoDetail(detailData) {
                 // 更新当前播放URL (用于分享)
                 currentEpisodeUrl = episodeUrl;
                 
+                
                 // 添加到播放器框架
                 playerFrame.appendChild(videoPlayer);
                 
@@ -725,17 +695,6 @@ function renderVideoDetail(detailData) {
                 
                 // 平滑滚动到播放器位置
                 playerContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                
-                // 添加到最近观看列表
-                if (typeof addToRecentList === 'function') {
-                    // 更新视频信息添加当前播放的集数
-                    const videoInfoWithEpisode = { 
-                        ...videoData,
-                        currentEpisode: episodeName || `第${index + 1}集`,
-                        currentEpisodeUrl: episodeUrl
-                    };
-                    addToRecentList(videoInfoWithEpisode);
-                }
             });
             
             episodesList.appendChild(episodeItem);
@@ -789,12 +748,6 @@ function renderVideoPlayer(url, title, episodeName) {
     // 清空播放容器（不清空main-container）
     playContainer.innerHTML = '';
     playContainer.style.display = 'block'; // 确保播放容器可见
-    
-    // 隐藏recent-container和main-container
-    const recentContainer = document.getElementById('recent-container');
-    if (recentContainer) {
-        recentContainer.style.display = 'none';
-    }
     
     // 清空loading-results
     const loadingResults = document.getElementById('loading-results');
@@ -981,6 +934,29 @@ function renderVideoPlayer(url, title, episodeName) {
     playContainer.appendChild(detailPage);
 }
 
+// 最近
+function showList() {
+    // 隐藏播放容器
+    const playContainer = document.getElementById('play-container');
+    if (playContainer) {
+        playContainer.style.display = 'none';
+        playContainer.innerHTML = '';
+    }
+    
+    // 显示加载动画
+    const loadingResults = document.getElementById("loading-results");
+    if (loadingResults) {
+        loadAnimation(loadingResults);
+        setTimeout(() => {
+            loadingResults.innerHTML = "";
+        }, 3000);
+    }
+    
+    // 显示主容器
+    const mainContainer = document.getElementById("main-container");
+    mainContainer.style.display = 'block';
+}
+
 // 添加容器样式操作函数
 function addContainersStyle() {
     // 检查是否已存在样式
@@ -990,7 +966,7 @@ function addContainersStyle() {
     const style = document.createElement('style');
     style.id = 'containers-style';
     style.textContent = `
-        #play-container, #recent-container {
+        #play-container {
             position: fixed;
             top: 0;
             left: 0;
@@ -1002,35 +978,13 @@ function addContainersStyle() {
             display: none;
         }
         
-        #play-container.visible, #recent-container.visible {
+        #play-container.visible {
             display: block;
         }
         
         #main-container {
             min-height: calc(100vh - 60px);
             padding-bottom: 60px;
-        }
-        
-        .recent-header {
-            padding: 15px;
-            text-align: center;
-            color: #fff;
-            background: rgba(0,0,0,0.5);
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-        
-        .recent-content {
-            padding: 15px;
-            color: #fff;
-        }
-        
-        #recent-container .results-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 15px;
-            padding: 15px;
         }
     `;
     
@@ -1054,27 +1008,11 @@ function initializeApp() {
         });
     });
     
-    // 确保所有容器初始为空并隐藏
+    // 确保播放容器初始为空并隐藏
     const playContainer = document.getElementById('play-container');
     if (playContainer) {
         playContainer.innerHTML = '';
         playContainer.style.display = 'none';
-    }
-    
-    const recentContainer = document.getElementById('recent-container');
-    if (recentContainer) {
-        // 如果是第一次加载，初始化内容
-        if (!recentContainer.innerHTML.trim()) {
-            recentContainer.innerHTML = `
-                <div class="recent-header">
-                    <h1>最近观看</h1>
-                </div>
-                <div class="recent-content">
-                    <p>Hello World - 最近观看记录将显示在这里</p>
-                </div>
-            `;
-        }
-        recentContainer.style.display = 'none';
     }
     
     // 清空loading-results容器
@@ -1085,15 +1023,6 @@ function initializeApp() {
     
     // 设置通用事件委托
     setupEventDelegation();
-    
-    // 如果有zuijin.js中的更新最近观看列表函数，先尝试调用一次
-    if (typeof updateRecentContainer === 'function') {
-        try {
-            updateRecentContainer();
-        } catch (e) {
-            console.error('初始化最近观看列表失败:', e);
-        }
-    }
     
     // 默认显示个人资料页
     showProfile();
