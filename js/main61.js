@@ -493,24 +493,12 @@ function renderVideoDetail(detailData) {
     const backButton = document.createElement('button');
     backButton.className = 'back-button';
     backButton.innerHTML = '<i class="iconfont icon-fanhui"></i>';
-    backButton.title = '返回';
+    backButton.title = '返回搜索';
     backButton.addEventListener('click', function() {
-        // 检查当前是否从最近观看页面打开的
-        const recentContainer = document.getElementById('recent-container');
-        if (recentContainer && recentContainer.style.display !== 'none') {
-            // 从最近观看页面打开的，返回到最近观看页面
-            if (playContainer) {
-                playContainer.style.display = 'none';
-                playContainer.innerHTML = '';
-            }
-            // 更新导航按钮状态为"最近"
-            updateNavButtonStatus('listBtn');
-        } else {
-            // 从搜索页面打开的，返回到搜索页面
-            if (playContainer) {
-                playContainer.style.display = 'none';
-                playContainer.innerHTML = '';
-            }
+        // 隐藏播放容器而不是清空它
+        if (playContainer) {
+            playContainer.style.display = 'none';
+            playContainer.innerHTML = '';
         }
     });
     
@@ -963,6 +951,7 @@ function renderVideoPlayer(url, title, episodeName) {
 }
 
 // 最近
+// 最近
 function showList() {
     // 隐藏播放容器
     const playContainer = document.getElementById('play-container');
@@ -973,157 +962,49 @@ function showList() {
         mainContainer.style.display = 'none';
     }
 
-    // 更新导航按钮状态
-    updateNavButtonStatus('listBtn');
+    document.getElementById('recent-container').style.display = 'block';
+    document.getElementById('recent-container').innerHTML = '这是最近页面';
     
-    // 获取最近观看容器
-    const recentContainer = document.getElementById('recent-container');
-    if (!recentContainer) return;
+
+}   
+// 添加容器样式操作函数
+function addContainersStyle() {
+    // 检查是否已存在样式
+    if (document.getElementById('containers-style')) return;
     
-    // 清空容器并创建基本结构
-    recentContainer.innerHTML = `
-        <div class="recent-header">
-            <button class="back-button" onclick="closeRecentContainer()">
-                <i class="iconfont icon-fanhui"></i>
-            </button>
-            <h1 class="recent-title">最近观看</h1>
-        </div>
-        <div class="recent-content" id="recent-content">
-            <div class="loading-all">
-                <div class="loading-animation"></div>
-                <div class="loading-text">加载中...</div>
-            </div>
-        </div>
+    // 创建style元素
+    const style = document.createElement('style');
+    style.id = 'containers-style';
+    style.textContent = `
+        #play-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            background-color: rgba(0, 0, 0, 0.95);
+            overflow-y: auto;
+            display: none;
+        }
+        
+        #play-container.visible {
+            display: block;
+        }
+        
+        #main-container {
+            min-height: calc(100vh - 60px);
+            padding-bottom: 60px;
+        }
     `;
     
-    // 显示容器
-    recentContainer.style.display = 'block';
-    
-    // 发送请求获取所有影片信息
-    fetch('https://api.sheep.com/sheep/videoPolymerization/videolist/999')
-        .then(res => res.json())
-        .then(response => {
-            const recentContent = document.getElementById('recent-content');
-            
-            // 如果没有找到容器或请求失败，显示错误信息
-            if (!recentContent || !response.success || response.total === 0 || !response.data) {
-                if (recentContent) {
-                    recentContent.innerHTML = '<div class="no-recent">还没有观看记录~</div>';
-                }
-                return;
-            }
-            
-            // 创建结果容器
-            const resultsContainer = document.createElement('div');
-            resultsContainer.className = 'results-grid';
-            
-            // 获取所有条目并转换为数组
-            const entries = Object.entries(response.data);
-            
-            // 反向排序，使最新的记录显示在前面（假设索引越大表示越新）
-            const sortedEntries = entries.sort((a, b) => {
-                // 从键名中提取索引值
-                const indexA = parseInt(a[0].split('_').pop());
-                const indexB = parseInt(b[0].split('_').pop());
-                // 降序排序
-                return indexB - indexA;
-            });
-            
-            // 遍历返回的数据
-            sortedEntries.forEach(([key, value], index) => {
-                // 使用通用函数解析数据
-                const videoData = parseVideoData(value);
-                
-                // 跳过没有标题的数据
-                if (!videoData.title || videoData.title === '未知标题') return;
-                
-                // 创建电影容器
-                const container = document.createElement("div");
-                container.className = "movie-container";
-                
-                // 创建图片
-                const img = document.createElement("img");
-                img.src = videoData.image;
-                img.onerror = function() { 
-                    this.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgMTAwIDE1MCIgZmlsbD0iIzMzMyI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxNTAiIGZpbGw9IiMyMjIiLz48dGV4dCB4PSI1MCIgeT0iNzUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2FhYSI+无图片</dGV4dD48L3N2Zz4='; 
-                };
-                
-                // 创建标题
-                const title = document.createElement("div");
-                title.className = "movie-title";
-                title.textContent = videoData.title;
-                
-                // 获取实际存储索引值
-                const actualIndex = parseInt(key.split('_').pop());
-                
-                // 添加点击事件 - 直接请求详情
-                container.addEventListener('click', function() {
-                    // 保存当前实际索引到localStorage
-                    localStorage.setItem('currentMovieActualIndex', actualIndex);
-                    
-                    // 渲染详情页面
-                    renderVideoDetail({ [key]: value });
-                });
-                
-                // 组装元素
-                container.appendChild(img);
-                container.appendChild(title);
-                resultsContainer.appendChild(container);
-            });
-            
-            // 如果没有有效数据，显示提示
-            if (resultsContainer.children.length === 0) {
-                recentContent.innerHTML = '<div class="no-recent">还没有观看记录~</div>';
-                return;
-            }
-            
-            // 替换加载动画为结果
-            recentContent.innerHTML = '';
-            recentContent.appendChild(resultsContainer);
-        })
-        .catch(err => {
-            console.error("获取最近观看记录失败", err);
-            const recentContent = document.getElementById('recent-content');
-            if (recentContent) {
-                recentContent.innerHTML = '<div class="no-recent">加载失败，请稍后重试</div>';
-            }
-        });
-}
-
-// 关闭最近观看容器
-function closeRecentContainer() {
-    const recentContainer = document.getElementById('recent-container');
-    const mainContainer = document.getElementById('main-container');
-    
-    if (recentContainer) {
-        recentContainer.style.display = 'none';
-    }
-    
-    if (mainContainer) {
-        mainContainer.style.display = 'block';
-    }
-    
-    // 更新导航按钮状态
-    updateNavButtonStatus('profileBtn');
-}
-
-// 更新底部导航按钮状态
-function updateNavButtonStatus(activeButtonId) {
-    const navButtons = document.querySelectorAll('#bottom-nav .nav-button');
-    navButtons.forEach(button => {
-        button.classList.remove('nav-active');
-    });
-    
-    // 激活指定的按钮
-    const activeButton = document.getElementById(activeButtonId);
-    if (activeButton) {
-        activeButton.classList.add('nav-active');
-    }
+    // 添加到文档头部
+    document.head.appendChild(style);
 }
 
 // 初始化函数，在DOMContentLoaded时执行
 function initializeApp() {
-    // 添加容器样式（保留此调用以维持兼容性）
+    // 添加容器样式
     addContainersStyle();
     
     // 设置导航栏按钮点击事件
@@ -1220,22 +1101,6 @@ function showUsernamePopup() {
 
 // 页面加载完成后执行初始化
 document.addEventListener('DOMContentLoaded', initializeApp);
-
-// 添加容器样式操作函数
-function addContainersStyle() {
-    // 检查是否已存在样式（但样式已移至videolist9.css，此处只保留函数以避免错误）
-    if (document.getElementById('containers-style')) return;
-    
-    // 创建style元素用于额外的动态样式（如果需要）
-    const style = document.createElement('style');
-    style.id = 'containers-style';
-    style.textContent = `
-        /* 保留一个空样式块，因为样式已移至videolist9.css */
-    `;
-    
-    // 添加到文档头部
-    document.head.appendChild(style);
-}
 
 
 
