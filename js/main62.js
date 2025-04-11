@@ -61,6 +61,13 @@ function showProfile() {
         playContainer.innerHTML = '';
     }
     
+    // 隐藏最近观看容器
+    const recentContainer = document.getElementById('recent-container');
+    if (recentContainer) {
+        recentContainer.classList.remove('visible');
+        recentContainer.style.display = 'none';
+    }
+    
     const mainContainer = document.getElementById("main-container");
     mainContainer.innerHTML = `
 <div class="user-container">
@@ -173,6 +180,13 @@ function disCover() {
         playContainer.innerHTML = '';
     }
     
+    // 隐藏最近观看容器
+    const recentContainer = document.getElementById('recent-container');
+    if (recentContainer) {
+        recentContainer.classList.remove('visible');
+        recentContainer.style.display = 'none';
+    }
+    
     // 清空loading-results
     const loadingResults = document.getElementById("loading-results");
     if (loadingResults) {
@@ -202,6 +216,13 @@ function showSearch() {
     if (playContainer) {
         playContainer.style.display = 'none';
         playContainer.innerHTML = '';
+    }
+    
+    // 隐藏最近观看容器
+    const recentContainer = document.getElementById('recent-container');
+    if (recentContainer) {
+        recentContainer.classList.remove('visible');
+        recentContainer.style.display = 'none';
     }
     
     // 清空loading-results

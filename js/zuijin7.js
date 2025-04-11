@@ -7,24 +7,19 @@ function showList() {
         playContainer.innerHTML = '';
     }
     
-    // 隐藏主容器，但保留导航栏
+    // 显示主容器
     const mainContainer = document.getElementById("main-container");
     if (mainContainer) {
-        mainContainer.style.display = 'none';
+        mainContainer.style.display = 'block';
     }
     
     // 获取最近观看容器
     const recentContainer = document.getElementById('recent-container');
     if (!recentContainer) return;
     
-    // 清空容器并创建基本结构
+    // 清空容器并创建基本结构（简单的标题）
     recentContainer.innerHTML = `
-        <div class="recent-header">
-            <button class="back-button" onclick="closeRecentContainer()">
-                <i class="iconfont icon-fanhui"></i>
-            </button>
-            <h1 class="recent-title">最近观看</h1>
-        </div>
+        <h2 class="recent-simple-title">最近观看</h2>
         <div class="recent-content" id="recent-content">
             <div class="loading-all">
                 <div class="loading-animation"></div>
@@ -151,7 +146,6 @@ function showList() {
 // 关闭最近观看容器
 function closeRecentContainer() {
     const recentContainer = document.getElementById('recent-container');
-    const mainContainer = document.getElementById('main-container');
     
     if (recentContainer) {
         // 移除可见性类，触发过渡效果
@@ -160,24 +154,7 @@ function closeRecentContainer() {
         // 等待过渡完成后隐藏容器
         setTimeout(() => {
             recentContainer.style.display = 'none';
-            // 显示主容器
-            if (mainContainer) {
-                mainContainer.style.display = 'block';
-            }
         }, 300); // 等待过渡完成
-    } else if (mainContainer) {
-        // 如果没有找到最近容器，直接显示主容器
-        mainContainer.style.display = 'block';
-    }
-    
-    // 更新导航按钮状态 - 设置"我的"为活跃
-    const navButtons = document.querySelectorAll('#bottom-nav .nav-button');
-    navButtons.forEach(button => {
-        button.classList.remove('nav-active');
-    });
-    const profileBtn = document.getElementById('profileBtn');
-    if (profileBtn) {
-        profileBtn.classList.add('nav-active');
     }
 }
 
@@ -189,4 +166,16 @@ function loadAnimation(container) {
          <div class="loading-text">加载中...</div>
      </div>
  `;
-}   
+}
+
+// 添加监听器到底部导航栏，确保在切换时关闭最近观看列表
+document.addEventListener('DOMContentLoaded', function() {
+    const navButtons = document.querySelectorAll('#bottom-nav .nav-button');
+    navButtons.forEach(button => {
+        if (button.id !== 'listBtn') { // 除了"最近"按钮之外的所有按钮
+            button.addEventListener('click', function() {
+                closeRecentContainer();
+            });
+        }
+    });
+});   

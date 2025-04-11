@@ -2,16 +2,17 @@
 
 /* 最近观看容器的主样式 */
 #recent-container {
-    position: absolute; /* 改为absolute而不是fixed */
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: calc(100% - 60px); /* 减去底部导航栏高度 */
-    z-index: 10; /* 降低z-index值，确保不会盖住导航栏 */
-    background-color: rgba(0, 0, 0, 0.8); /* 半透明背景 */
+    z-index: 1; /* 降低z-index，确保不覆盖其他内容 */
+    background-color: transparent; /* 透明背景 */
     overflow-y: auto;
     display: none;
-    padding-bottom: 60px; /* 为底部导航栏预留空间 */
+    padding: 15px; /* 添加内边距 */
+    padding-bottom: 80px; /* 为底部导航栏预留空间 */
     box-sizing: border-box;
     opacity: 0;
     transition: opacity 0.3s ease;
@@ -63,8 +64,8 @@
 
 /* 最近观看内容区域样式 */
 .recent-content {
-    padding: 15px;
-    padding-bottom: 80px; /* 确保内容不被底部导航栏遮挡 */
+    padding: 10px 0; /* 减少内边距 */
+    margin-top: 10px; /* 添加顶部边距 */
 }
 
 /* 没有观看记录的提示样式 */
@@ -73,13 +74,15 @@
     text-align: center;
     padding: 30px 15px;
     font-size: 16px;
-    margin-top: 100px;
+    margin-top: 30px;
+    background-color: rgba(0, 0, 0, 0.5); /* 半透明背景 */
+    border-radius: 8px;
 }
 
-/* 电影容器网格布局 - 复用搜索结果布局 */
+/* 电影容器网格布局 - 固定为三列 */
 .results-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    grid-template-columns: repeat(3, 1fr); /* 固定三列 */
     gap: 15px;
     margin-top: 15px;
 }
@@ -87,17 +90,19 @@
 /* 电影容器样式 */
 .movie-container {
     cursor: pointer;
-    border-radius: 8px;
+    border-radius: 10px;
     overflow: hidden;
     background-color: #1e1e1e;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     position: relative;
+    width: 100%; /* 确保宽度占满网格单元 */
+    margin-bottom: 5px;
 }
 
 .movie-container:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
 }
 
 /* 电影图片样式 */
@@ -106,18 +111,20 @@
     aspect-ratio: 2/3;
     object-fit: cover;
     display: block;
+    min-height: 180px; /* 设置最小高度 */
 }
 
 /* 电影标题样式 */
 .movie-title {
-    font-size: 14px;
+    font-size: 15px;
     color: #fff;
     text-align: center;
-    padding: 10px;
+    padding: 12px 8px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     background-color: #1e1e1e;
+    font-weight: 500;
 }
 
 /* 加载动画样式 */
@@ -166,7 +173,7 @@
 /* 响应式设计调整 */
 @media (max-width: 480px) {
     .results-grid {
-        grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+        grid-template-columns: repeat(3, 1fr); /* 保持移动端也是3列 */
         gap: 10px;
     }
     
@@ -183,14 +190,15 @@
 /* 平板和中等屏幕 */
 @media (min-width: 481px) and (max-width: 768px) {
     .results-grid {
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        grid-template-columns: repeat(3, 1fr); /* 保持3列布局 */
+        gap: 15px;
     }
 }
 
 /* 大屏幕 */
 @media (min-width: 769px) {
     .results-grid {
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        grid-template-columns: repeat(3, 1fr); /* 保持3列布局 */
         gap: 20px;
     }
     
@@ -198,4 +206,13 @@
         font-size: 15px;
         padding: 12px;
     }
+}
+
+/* 最近观看简单标题样式 */
+.recent-simple-title {
+    color: #f39c12;
+    font-size: 20px;
+    text-align: center;
+    margin: 15px 0 5px 0;
+    font-weight: bold;
 }
