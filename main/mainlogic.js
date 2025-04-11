@@ -77,7 +77,11 @@ const defaultUserData = {
     "theme": "true",
     "initial": "false",
     "currentTimestamp":0,
-    "oldTimestamp":0
+    "oldTimestamp":0,
+    "historical_storage": {
+        "current_index": 0,
+        "max_storage": 20
+    }
 };
 
 // 获取用户数据，初始化信息
@@ -204,7 +208,7 @@ function finishScript() {
     <script>
         const username = "${username}";
     </script>   
-    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/main57.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/main58.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/zuijin1.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/faxian.js"></script>
     </html>`;

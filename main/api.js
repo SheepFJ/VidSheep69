@@ -54,9 +54,24 @@ let userData = {};
 try {
     const rawData = storage.get("sheep_userdata");
     userData = rawData ? JSON.parse(rawData) : {};
+    
+    // 确保historical_storage字段存在
+    if (!userData.historical_storage) {
+        userData.historical_storage = {
+            current_index: 0,
+            max_storage: 20
+        };
+        storage.set("sheep_userdata", JSON.stringify(userData));
+    }
 } catch (e) {
     log(`解析userData失败: ${e.message}`);
-    userData = {};
+    userData = {
+        historical_storage: {
+            current_index: 0,
+            max_storage: 20
+        }
+    };
+    storage.set("sheep_userdata", JSON.stringify(userData));
 }
 
 // 检查请求URL并处理
@@ -68,6 +83,7 @@ if (url.includes('/userinfo/')) {
     try {
         // 处理 username 相关请求
         if (url.includes('/username/')) {
+            // 修改用户名
             const match = url.match(/\/videoPolymerization\/userinfo\/username\/([^\/\?]+)/);
             if (match && match[1]) {
                 // url编码转换
@@ -185,6 +201,10 @@ function storeVodData(vodList) {
     let storedData = {};  // 用于存储所有视频数据的对象
     let successCount = 0;
 
+    // 获取当前存储索引
+    let currentIndex = userData.historical_storage.current_index || 0;
+    const maxStorage = userData.historical_storage.max_storage || 20;
+
     for (let i = 0; i < vodList.length; i++) {
         try {
             let vod = vodList[i];
@@ -217,8 +237,15 @@ function storeVodData(vodList) {
             // 拼接存储格式
             let storeValue = [vodName, vodPic, vodContent, ...episodes].join(",");
 
+            // 使用循环索引存储，当超过maxStorage时从0开始重新存储
+            let key = `sheep_vod_info_${currentIndex}`;
+            currentIndex = (currentIndex + 1) % maxStorage;
+            
+            // 更新存储索引
+            userData.historical_storage.current_index = currentIndex;
+            storage.set("sheep_userdata", JSON.stringify(userData));
+            
             // 存储到本地
-            let key = `sheep_vod_info_${i}`; // 例如：sheep_vod_info_0, sheep_vod_info_1 ...
             let storeResult = storage.set(key, storeValue);
             
             if (storeResult) {
@@ -226,14 +253,14 @@ function storeVodData(vodList) {
                 storedData[key] = storeValue;
                 successCount++;
             } else {
-                log(`存储第${i}项数据失败`);
+                log(`存储第${i}项数据失败，键：${key}`);
             }
         } catch (e) {
             log(`处理第${i}项数据失败: ${e.message}`);
         }
     }
 
-    log(`成功存储 ${successCount}/${vodList.length} 条数据`);
+    log(`成功存储 ${successCount}/${vodList.length} 条数据，当前索引：${userData.historical_storage.current_index}`);
     return storedData;  // 返回存储的数据对象
 }
 
@@ -248,6 +275,7 @@ function handleVideoDetailRequest() {
         }
 
         const index = urlMatch[1];
+        // 构建存储键
         const key = `sheep_vod_info_${index}`;
         log(`获取详情, 索引: ${index}, 键: ${key}`);
         
@@ -256,7 +284,40 @@ function handleVideoDetailRequest() {
         
         if (!storedVodInfo) {
             log(`未找到对应影片信息, 索引: ${index}`);
-            $done({ body: JSON.stringify({ error: "未找到对应影片信息", index: index }) });
+            
+            // 尝试搜索所有可能的索引
+            const maxStorage = userData.historical_storage?.max_storage || 20;
+            let foundInfo = null;
+            let foundKey = null;
+            
+            // 遍历所有可能的索引查找数据
+            for (let i = 0; i < maxStorage; i++) {
+                const tempKey = `sheep_vod_info_${i}`;
+                const tempInfo = storage.get(tempKey);
+                if (tempInfo) {
+                    // 存储最后一个找到的信息作为备用
+                    foundInfo = tempInfo;
+                    foundKey = tempKey;
+                    // 如果我们有一个更好的方式来匹配索引和实际电影，可以在这里实现
+                }
+            }
+            
+            // 如果找到了任何信息，使用最后找到的作为响应
+            if (foundInfo) {
+                log(`未找到索引${index}，但找到备选数据，键: ${foundKey}`);
+                const responseData = {
+                    success: "剧集信息获取成功(备选)",
+                    total: 1,
+                    data: {
+                        [foundKey]: foundInfo
+                    }
+                };
+                $done({ body: JSON.stringify(responseData) });
+                return;
+            }
+            
+            // 如果完全没有找到数据，返回错误
+            $done({ body: JSON.stringify({ error: "未找到任何影片信息", index: index }) });
             return;
         }
         
