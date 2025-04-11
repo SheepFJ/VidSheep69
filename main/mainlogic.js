@@ -208,8 +208,8 @@ function finishScript() {
     <script>
         const username = "${username}";
     </script>   
-    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/main60.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/zuijin3.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/main61.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/zuijin4.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/faxian.js"></script>
     </html>`;
 
