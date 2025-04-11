@@ -127,6 +127,12 @@ function showList() {
                     // 保存当前状态，表示是从最近观看列表进入的详情页
                     localStorage.setItem('fromRecentList', 'true');
                     
+                    // 获取播放容器并显示它（不清空内容）
+                    const playContainer = document.getElementById('play-container');
+                    if (playContainer) {
+                        playContainer.style.display = 'block';
+                    }
+                    
                     // 渲染详情页面
                     renderVideoDetail({ [key]: value });
                     

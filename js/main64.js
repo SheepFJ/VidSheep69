@@ -489,14 +489,20 @@ function search() {
 
 // 新的详情页面渲染函数
 function renderVideoDetail(detailData) {
-    // 清空播放容器（不清空main-container）
+    // 获取播放容器，但不清空它，只确保它可见
     const playContainer = document.getElementById('play-container');
     if (!playContainer) return;
     
-    playContainer.innerHTML = '';
-    playContainer.style.display = 'block'; // 确保播放容器可见
+    // 不完全清空播放容器，只确保播放容器可见
+    playContainer.style.display = 'block';
     
-    // 清空loading-results（但保留main-container内容）
+    // 清空之前的video-detail元素而不是整个容器
+    const oldDetailPage = playContainer.querySelector('.video-detail');
+    if (oldDetailPage) {
+        playContainer.removeChild(oldDetailPage);
+    }
+    
+    // 清空loading-results
     const loadingResults = document.getElementById('loading-results');
     if (loadingResults) loadingResults.innerHTML = '';
     
@@ -516,10 +522,9 @@ function renderVideoDetail(detailData) {
     backButton.innerHTML = '<i class="iconfont icon-fanhui"></i>';
     backButton.title = '返回';
     backButton.addEventListener('click', function() {
-        // 隐藏播放容器
+        // 隐藏播放容器，但不清空内容
         if (playContainer) {
             playContainer.style.display = 'none';
-            playContainer.innerHTML = '';
         }
         
         // 检查是否是从最近观看列表进入的详情页
@@ -528,7 +533,7 @@ function renderVideoDetail(detailData) {
             // 清除标记
             localStorage.removeItem('fromRecentList');
             
-            // 重新显示最近观看列表
+            // 直接调用 showList 函数显示最近观看列表
             showList();
         } else {
             // 不是从最近观看列表进入，显示主容器
@@ -793,9 +798,15 @@ function renderVideoPlayer(url, title, episodeName) {
     const playContainer = document.getElementById('play-container');
     if (!playContainer) return;
     
-    // 清空播放容器（不清空main-container）
-    playContainer.innerHTML = '';
-    playContainer.style.display = 'block'; // 确保播放容器可见
+    // 不完全清空播放容器，只确保播放容器可见
+    playContainer.style.display = 'block';
+    
+    // 清空之前的播放器内容而不是整个容器
+    // 查找之前的video-detail元素并移除
+    const oldDetailPage = playContainer.querySelector('.video-detail');
+    if (oldDetailPage) {
+        playContainer.removeChild(oldDetailPage);
+    }
     
     // 清空loading-results
     const loadingResults = document.getElementById('loading-results');
@@ -846,12 +857,12 @@ function renderVideoPlayer(url, title, episodeName) {
                                 renderVideoDetail(movieData);
                             } catch (e) {
                                 console.error("解析保存的电影数据失败", e);
-                                // 隐藏播放容器，显示main-container的内容
+                                // 不清空播放容器，只隐藏它
                                 if (playContainer) playContainer.style.display = 'none';
                             }
                         } else {
                             alert("获取影片详情失败，请稍后重试");
-                            // 隐藏播放容器，显示main-container的内容
+                            // 不清空播放容器，只隐藏它
                             if (playContainer) playContainer.style.display = 'none';
                         }
                     }
@@ -868,12 +879,12 @@ function renderVideoPlayer(url, title, episodeName) {
                             renderVideoDetail(movieData);
                         } catch (e) {
                             console.error("解析保存的电影数据失败", e);
-                            // 隐藏播放容器，显示main-container的内容
+                            // 不清空播放容器，只隐藏它
                             if (playContainer) playContainer.style.display = 'none';
                         }
                     } else {
                         alert("网络错误，请稍后重试");
-                        // 隐藏播放容器，显示main-container的内容
+                        // 不清空播放容器，只隐藏它
                         if (playContainer) playContainer.style.display = 'none';
                     }
                 });
@@ -887,12 +898,12 @@ function renderVideoPlayer(url, title, episodeName) {
                     if (loadingResults) loadingResults.innerHTML = "";
                 } catch (e) {
                     console.error("解析保存的电影数据失败", e);
-                    // 隐藏播放容器，显示main-container的内容
+                    // 不清空播放容器，只隐藏它
                     if (playContainer) playContainer.style.display = 'none';
                 }
             } else {
                 alert("无法找到原页面信息");
-                // 隐藏播放容器，显示main-container的内容
+                // 不清空播放容器，只隐藏它
                 if (playContainer) playContainer.style.display = 'none';
             }
         }

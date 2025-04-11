@@ -7,7 +7,7 @@
     left: 0;
     width: 100%;
     height: calc(100% - 60px); /* 减去底部导航栏高度 */
-    z-index: 999; /* 增加z-index值，确保显示在详情页上方 */
+    z-index: 950; /* 增加z-index值，确保显示在详情页上方 */
     background-color: rgba(0, 0, 0, 0); /* 添加半透明黑色背景，让背景图可见但不影响内容辨识 */
     overflow-y: auto;
     display: none;
@@ -217,7 +217,7 @@
     color: #f39c12;
     font-size: 20px;
     text-align: center;
-    margin: 15px 0 15px 0;
+    margin: 28px 0 8px 0;
     font-weight: bold;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
     background-color: rgba(0, 0, 0, 0.6);
