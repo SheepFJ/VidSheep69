@@ -982,7 +982,7 @@ function addContainersStyle() {
     const style = document.createElement('style');
     style.id = 'containers-style';
     style.textContent = `
-        #play-container {
+        #play-container, #recent-container {
             position: fixed;
             top: 0;
             left: 0;
@@ -994,7 +994,7 @@ function addContainersStyle() {
             display: none;
         }
         
-        #play-container.visible {
+        #play-container.visible, #recent-container.visible {
             display: block;
         }
         
@@ -1002,10 +1002,89 @@ function addContainersStyle() {
             min-height: calc(100vh - 60px);
             padding-bottom: 60px;
         }
+        
+        .recent-header {
+            padding: 15px;
+            text-align: center;
+            position: relative;
+            color: #fff;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .recent-header h1 {
+            margin: 0;
+            font-size: 18px;
+        }
+        
+        .recent-header .back-button {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        
+        .recent-content {
+            padding: 15px;
+            color: #fff;
+        }
+        
+        #recent-container .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            padding: 10px;
+        }
+        
+        #recent-container .movie-container {
+            cursor: pointer;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.2s;
+            background-color: #222;
+        }
+        
+        #recent-container .movie-container:hover {
+            transform: scale(1.05);
+        }
+        
+        #recent-container .movie-container img {
+            width: 100%;
+            aspect-ratio: 2/3;
+            object-fit: cover;
+        }
+        
+        #recent-container .movie-title {
+            padding: 8px;
+            font-size: 14px;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #fff;
+        }
     `;
     
     // 添加到文档头部
     document.head.appendChild(style);
+}
+
+// 更新底部导航按钮状态
+function updateNavButtonStatus(activeButtonId) {
+    const navButtons = document.querySelectorAll('#bottom-nav .nav-button');
+    navButtons.forEach(button => {
+        button.classList.remove('nav-active');
+    });
+    
+    // 激活指定的按钮
+    const activeButton = document.getElementById(activeButtonId);
+    if (activeButton) {
+        activeButton.classList.add('nav-active');
+    }
 }
 
 // 初始化函数，在DOMContentLoaded时执行

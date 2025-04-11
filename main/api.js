@@ -300,9 +300,43 @@ function handleVideoDetailRequest() {
             $done({ body: JSON.stringify({ error: "无效的请求格式" }) });
             return;
         }
-
+        
         // 获取请求的视频索引（即前端列表中的位置）
         const listIndex = parseInt(urlMatch[1]);
+
+        // 如果listIndex为999，则返回sheep_vod_info_0 到maxStorage的所有信息到前端
+        if (listIndex === 999) {
+            log("请求所有已存储的影片信息");
+            const maxStorage = userData.historical_storage?.max_storage || 20;
+            const allStoredData = {};
+            let totalFound = 0;
+            
+            // 遍历所有可能的索引查找数据
+            for (let i = 0; i < maxStorage; i++) {
+                const tempKey = `sheep_vod_info_${i}`;
+                const tempInfo = storage.get(tempKey);
+                if (tempInfo) {
+                    allStoredData[tempKey] = tempInfo;
+                    totalFound++;
+                }
+            }
+            
+            if (totalFound > 0) {
+                log(`找到${totalFound}条存储的影片信息`);
+                const responseData = {
+                    success: "获取所有影片信息成功",
+                    total: totalFound,
+                    data: allStoredData
+                };
+                $done({ body: JSON.stringify(responseData) });
+                return;
+            } else {
+                log("未找到任何存储的影片信息");
+                $done({ body: JSON.stringify({ error: "未找到任何存储的影片信息" }) });
+                return;
+            }
+        }
+
         log(`获取详情, 列表索引: ${listIndex}`);
         
         // 尝试从索引映射中查找实际存储键
