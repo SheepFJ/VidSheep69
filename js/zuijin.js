@@ -122,10 +122,15 @@ function updateRecentContainer() {
         html += `<div class="results-grid">`;
         
         recentList.forEach((item, index) => {
+            const episodeInfo = item.currentEpisode ? `<div class="movie-episode">正在看: ${item.currentEpisode}</div>` : '';
+            const lastWatched = item.lastWatched ? `<div class="movie-time">上次播放: ${item.lastWatched}</div>` : '';
+            
             html += `
-                <div class="movie-container" data-index="${item.index}">
+                <div class="movie-container" data-index="${item.index}" data-episode-url="${item.currentEpisodeUrl || ''}">
                     <img src="${item.image}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgMTAwIDE1MCIgZmlsbD0iIzMzMyI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxNTAiIGZpbGw9IiMyMjIiLz48dGV4dCB4PSI1MCIgeT0iNzUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2FhYSI+无图片</dGV4dD48L3N2Zz4='">
                     <div class="movie-title">${item.title}</div>
+                    ${episodeInfo}
+                    ${lastWatched}
                 </div>
             `;
         });
@@ -140,6 +145,8 @@ function updateRecentContainer() {
     movieContainers.forEach(container => {
         container.addEventListener('click', function() {
             const movieIndex = this.getAttribute('data-index');
+            const episodeUrl = this.getAttribute('data-episode-url');
+            
             if (movieIndex) {
                 // 显示加载动画
                 const loadingResults = document.getElementById("loading-results");
@@ -164,6 +171,33 @@ function updateRecentContainer() {
                             
                             // 渲染详情
                             renderVideoDetail(detailResponse.data);
+                            
+                            // 如果有保存的剧集链接，直接播放该剧集
+                            if (episodeUrl) {
+                                // 我们需要等待详情页渲染完成再播放
+                                setTimeout(() => {
+                                    // 找到匹配的剧集并点击
+                                    const playerContainer = document.getElementById('player-container');
+                                    if (playerContainer) {
+                                        const episodes = document.querySelectorAll('.episode-item');
+                                        if (episodes.length > 0) {
+                                            // 尝试找到匹配的剧集
+                                            let episodeFound = false;
+                                            episodes.forEach(ep => {
+                                                if (ep.getAttribute('data-url') === episodeUrl) {
+                                                    ep.click();
+                                                    episodeFound = true;
+                                                }
+                                            });
+                                            
+                                            // 如果没找到匹配的，默认播放第一集
+                                            if (!episodeFound) {
+                                                episodes[0].click();
+                                            }
+                                        }
+                                    }
+                                }, 500);
+                            }
                         } else {
                             alert("获取影片详情失败，请稍后重试");
                         }
