@@ -200,8 +200,7 @@ function showSearch() {
     // 隐藏播放容器
     const playContainer = document.getElementById('play-container');
     if (playContainer) {
-        playContainer.style.display = 'none';
-        playContainer.innerHTML = '';
+        playContainer.style.display = 'block';
     }
     
     // 清空loading-results
