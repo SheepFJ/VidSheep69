@@ -7,11 +7,10 @@ function showList() {
         playContainer.innerHTML = '';
     }
     
-    // 保持主容器可见，不隐藏
+    // 直接隐藏主容器，而不是调整不透明度
     const mainContainer = document.getElementById("main-container");
     if (mainContainer) {
-        // 只是减低不透明度，而不完全隐藏
-        mainContainer.style.opacity = '0.3';
+        mainContainer.style.display = 'none';
     }
     
     // 获取最近观看容器
@@ -105,12 +104,28 @@ function showList() {
                 
                 // 添加点击事件 - 直接请求详情
                 container.addEventListener('click', function() {
+                    // 先隐藏最近观看容器，确保详情页正确显示
+                    const recentContainer = document.getElementById('recent-container');
+                    if (recentContainer) {
+                        recentContainer.classList.remove('visible');
+                        recentContainer.style.display = 'none';
+                    }
+                    
+                    // 显示主容器，防止详情页无地方显示
+                    const mainContainer = document.getElementById("main-container");
+                    if (mainContainer) {
+                        mainContainer.style.display = 'block';
+                    }
+                    
                     // 显示加载动画
                     const loadingResults = document.getElementById("loading-results");
                     if (loadingResults) loadAnimation(loadingResults);
                     
                     // 保存当前实际索引到localStorage
                     localStorage.setItem('currentMovieActualIndex', actualIndex);
+                    
+                    // 保存当前状态，表示是从最近观看列表进入的详情页
+                    localStorage.setItem('fromRecentList', 'true');
                     
                     // 渲染详情页面
                     renderVideoDetail({ [key]: value });
@@ -152,10 +167,10 @@ function closeRecentContainer() {
         // 移除可见性类，触发过渡效果
         recentContainer.classList.remove('visible');
         
-        // 恢复主容器的不透明度
+        // 显示主容器，而不是调整透明度
         const mainContainer = document.getElementById("main-container");
         if (mainContainer) {
-            mainContainer.style.opacity = '1';
+            mainContainer.style.display = 'block';
         }
         
         // 等待过渡完成后隐藏容器

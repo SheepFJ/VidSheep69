@@ -7,8 +7,8 @@
     left: 0;
     width: 100%;
     height: calc(100% - 60px); /* 减去底部导航栏高度 */
-    z-index: 900; /* 保持高z-index值 */
-    background-color: transparent; /* 完全透明背景，让背景图可见 */
+    z-index: 999; /* 增加z-index值，确保显示在详情页上方 */
+    background-color: rgba(0, 0, 0, 0); /* 添加半透明黑色背景，让背景图可见但不影响内容辨识 */
     overflow-y: auto;
     display: none;
     padding: 15px;

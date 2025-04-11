@@ -514,12 +514,28 @@ function renderVideoDetail(detailData) {
     const backButton = document.createElement('button');
     backButton.className = 'back-button';
     backButton.innerHTML = '<i class="iconfont icon-fanhui"></i>';
-    backButton.title = '返回搜索';
+    backButton.title = '返回';
     backButton.addEventListener('click', function() {
-        // 隐藏播放容器而不是清空它
+        // 隐藏播放容器
         if (playContainer) {
             playContainer.style.display = 'none';
             playContainer.innerHTML = '';
+        }
+        
+        // 检查是否是从最近观看列表进入的详情页
+        const fromRecentList = localStorage.getItem('fromRecentList');
+        if (fromRecentList === 'true') {
+            // 清除标记
+            localStorage.removeItem('fromRecentList');
+            
+            // 重新显示最近观看列表
+            showList();
+        } else {
+            // 不是从最近观看列表进入，显示主容器
+            const mainContainer = document.getElementById('main-container');
+            if (mainContainer) {
+                mainContainer.style.display = 'block';
+            }
         }
     });
     
