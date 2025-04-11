@@ -7,10 +7,10 @@ function showList() {
         playContainer.innerHTML = '';
     }
     
-    // 显示主容器
+    // 保持主容器可见
     const mainContainer = document.getElementById("main-container");
     if (mainContainer) {
-        mainContainer.style.display = 'block';
+        mainContainer.style.display = 'none';
     }
     
     // 获取最近观看容器
@@ -154,6 +154,9 @@ function closeRecentContainer() {
         // 等待过渡完成后隐藏容器
         setTimeout(() => {
             recentContainer.style.display = 'none';
+            
+            // 恢复"我的"页面内容
+            showProfile();
         }, 300); // 等待过渡完成
     }
 }
@@ -168,14 +171,3 @@ function loadAnimation(container) {
  `;
 }
 
-// 添加监听器到底部导航栏，确保在切换时关闭最近观看列表
-document.addEventListener('DOMContentLoaded', function() {
-    const navButtons = document.querySelectorAll('#bottom-nav .nav-button');
-    navButtons.forEach(button => {
-        if (button.id !== 'listBtn') { // 除了"最近"按钮之外的所有按钮
-            button.addEventListener('click', function() {
-                closeRecentContainer();
-            });
-        }
-    });
-});   

@@ -2,13 +2,13 @@
 
 /* 最近观看容器的主样式 */
 #recent-container {
-    position: absolute;
+    position: fixed; /* 改为fixed定位，确保覆盖在内容上方 */
     top: 0;
     left: 0;
     width: 100%;
     height: calc(100% - 60px); /* 减去底部导航栏高度 */
-    z-index: 1; /* 降低z-index，确保不覆盖其他内容 */
-    background-color: transparent; /* 透明背景 */
+    z-index: 900; /* 提高z-index值，确保覆盖其他内容 */
+    background-color: rgba(0, 0, 0, 0.85); /* 添加半透明背景 */
     overflow-y: auto;
     display: none;
     padding: 15px; /* 添加内边距 */
@@ -94,15 +94,17 @@
     overflow: hidden;
     background-color: #1e1e1e;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.7);
     position: relative;
     width: 100%; /* 确保宽度占满网格单元 */
-    margin-bottom: 5px;
+    margin-bottom: 10px;
+    border: 1px solid rgba(50, 50, 50, 0.5);
 }
 
 .movie-container:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8);
+    border-color: rgba(243, 156, 18, 0.5);
 }
 
 /* 电影图片样式 */
@@ -213,6 +215,7 @@
     color: #f39c12;
     font-size: 20px;
     text-align: center;
-    margin: 15px 0 5px 0;
+    margin: 15px 0 15px 0;
     font-weight: bold;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
