@@ -2,16 +2,16 @@
 
 /* 最近观看容器的主样式 */
 #recent-container {
-    position: fixed; /* 改为fixed定位，确保覆盖在内容上方 */
+    position: fixed; /* 保持fixed定位，确保覆盖在内容上方 */
     top: 0;
     left: 0;
     width: 100%;
     height: calc(100% - 60px); /* 减去底部导航栏高度 */
-    z-index: 900; /* 提高z-index值，确保覆盖其他内容 */
-    background-color: rgba(0, 0, 0, 0.85); /* 添加半透明背景 */
+    z-index: 900; /* 保持高z-index值 */
+    background-color: transparent; /* 完全透明背景，让背景图可见 */
     overflow-y: auto;
     display: none;
-    padding: 15px; /* 添加内边距 */
+    padding: 15px;
     padding-bottom: 80px; /* 为底部导航栏预留空间 */
     box-sizing: border-box;
     opacity: 0;
@@ -75,8 +75,10 @@
     padding: 30px 15px;
     font-size: 16px;
     margin-top: 30px;
-    background-color: rgba(0, 0, 0, 0.5); /* 半透明背景 */
+    background-color: rgba(0, 0, 0, 0.7); /* 半透明背景 */
     border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(80, 80, 80, 0.3);
 }
 
 /* 电影容器网格布局 - 固定为三列 */
@@ -92,19 +94,19 @@
     cursor: pointer;
     border-radius: 10px;
     overflow: hidden;
-    background-color: #1e1e1e;
+    background-color: rgba(20, 20, 20, 0.9); /* 半透明深色背景 */
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.7);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
     position: relative;
     width: 100%; /* 确保宽度占满网格单元 */
     margin-bottom: 10px;
-    border: 1px solid rgba(50, 50, 50, 0.5);
+    border: 1px solid rgba(80, 80, 80, 0.5);
 }
 
 .movie-container:hover {
     transform: translateY(-5px) scale(1.02);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8);
-    border-color: rgba(243, 156, 18, 0.5);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+    border-color: rgba(243, 156, 18, 0.8);
 }
 
 /* 电影图片样式 */
@@ -125,7 +127,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    background-color: #1e1e1e;
+    background-color: rgba(20, 20, 20, 0.9); /* 与卡片背景一致 */
     font-weight: 500;
 }
 
@@ -217,5 +219,9 @@
     text-align: center;
     margin: 15px 0 15px 0;
     font-weight: bold;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 12px 0;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }

@@ -7,10 +7,11 @@ function showList() {
         playContainer.innerHTML = '';
     }
     
-    // 保持主容器可见
+    // 保持主容器可见，不隐藏
     const mainContainer = document.getElementById("main-container");
     if (mainContainer) {
-        mainContainer.style.display = 'none';
+        // 只是减低不透明度，而不完全隐藏
+        mainContainer.style.opacity = '0.3';
     }
     
     // 获取最近观看容器
@@ -151,12 +152,15 @@ function closeRecentContainer() {
         // 移除可见性类，触发过渡效果
         recentContainer.classList.remove('visible');
         
+        // 恢复主容器的不透明度
+        const mainContainer = document.getElementById("main-container");
+        if (mainContainer) {
+            mainContainer.style.opacity = '1';
+        }
+        
         // 等待过渡完成后隐藏容器
         setTimeout(() => {
             recentContainer.style.display = 'none';
-            
-            // 恢复"我的"页面内容
-            showProfile();
         }, 300); // 等待过渡完成
     }
 }
@@ -170,4 +174,30 @@ function loadAnimation(container) {
      </div>
  `;
 }
+
+// 添加点击背景关闭最近观看容器的功能
+document.addEventListener('DOMContentLoaded', function() {
+    // 获取最近观看容器
+    const recentContainer = document.getElementById('recent-container');
+    
+    if (recentContainer) {
+        // 添加点击事件，如果点击的是容器本身（不是内部元素），则关闭容器
+        recentContainer.addEventListener('click', function(event) {
+            // 检查点击的是否是容器本身，而不是内部元素
+            if (event.target === recentContainer) {
+                closeRecentContainer();
+            }
+        });
+    }
+    
+    // 为底部导航栏添加事件监听器
+    document.querySelectorAll('#bottom-nav .nav-button').forEach(button => {
+        button.addEventListener('click', function() {
+            // 如果点击的不是最近按钮，则关闭最近观看容器
+            if (button.id !== 'listBtn') {
+                closeRecentContainer();
+            }
+        });
+    });
+});
 
