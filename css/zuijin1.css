@@ -1,0 +1,201 @@
+/* ====== 最近观看容器样式 ====== */
+
+/* 最近观看容器的主样式 */
+#recent-container {
+    position: absolute; /* 改为absolute而不是fixed */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 60px); /* 减去底部导航栏高度 */
+    z-index: 10; /* 降低z-index值，确保不会盖住导航栏 */
+    background-color: rgba(0, 0, 0, 0.8); /* 半透明背景 */
+    overflow-y: auto;
+    display: none;
+    padding-bottom: 60px; /* 为底部导航栏预留空间 */
+    box-sizing: border-box;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* 最近观看容器显示状态 */
+#recent-container.visible,
+#recent-container[style*="display: block"] {
+    display: block;
+    opacity: 1;
+}
+
+/* 最近观看容器的标题栏样式 */
+.recent-header {
+    display: flex;
+    align-items: center;
+    padding: 25px 15px 15px 15px; /* 增加顶部padding，避免被系统状态栏遮挡 */
+    position: sticky;
+    top: 0;
+    z-index: 2; /* 降低z-index */
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* 最近观看标题样式 */
+.recent-title {
+    margin: 0 auto;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* 返回按钮样式 */
+.recent-header .back-button {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.recent-header .back-button:hover {
+    color: #f39c12;
+}
+
+/* 最近观看内容区域样式 */
+.recent-content {
+    padding: 15px;
+    padding-bottom: 80px; /* 确保内容不被底部导航栏遮挡 */
+}
+
+/* 没有观看记录的提示样式 */
+.no-recent {
+    color: #fff;
+    text-align: center;
+    padding: 30px 15px;
+    font-size: 16px;
+    margin-top: 100px;
+}
+
+/* 电影容器网格布局 - 复用搜索结果布局 */
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+/* 电影容器样式 */
+.movie-container {
+    cursor: pointer;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #1e1e1e;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.movie-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* 电影图片样式 */
+.movie-container img {
+    width: 100%;
+    aspect-ratio: 2/3;
+    object-fit: cover;
+    display: block;
+}
+
+/* 电影标题样式 */
+.movie-title {
+    font-size: 14px;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background-color: #1e1e1e;
+}
+
+/* 加载动画样式 */
+.loading-all {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    margin-top: 50px;
+}
+
+.loading-animation {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(243, 156, 18, 0.2);
+    border-radius: 50%;
+    border-top-color: #f39c12;
+    animation: spin 1s ease-in-out infinite;
+    margin: 20px auto;
+}
+
+.loading-text {
+    color: #f39c12;
+    margin-top: 15px;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* 没有结果时的提示样式 */
+.no-results {
+    color: #ccc;
+    text-align: center;
+    padding: 30px;
+    font-size: 16px;
+    grid-column: 1 / -1;
+}
+
+/* 响应式设计调整 */
+@media (max-width: 480px) {
+    .results-grid {
+        grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+        gap: 10px;
+    }
+    
+    .movie-title {
+        font-size: 12px;
+        padding: 8px;
+    }
+    
+    .recent-header {
+        padding-top: 20px; /* 调整移动端的顶部内边距 */
+    }
+}
+
+/* 平板和中等屏幕 */
+@media (min-width: 481px) and (max-width: 768px) {
+    .results-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+}
+
+/* 大屏幕 */
+@media (min-width: 769px) {
+    .results-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 20px;
+    }
+    
+    .movie-title {
+        font-size: 15px;
+        padding: 12px;
+    }
+}
