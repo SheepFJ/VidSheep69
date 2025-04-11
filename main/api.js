@@ -172,7 +172,7 @@ function handleSearchRequest() {
                 }
                 
                 // 存储视频数据并获取存储的数据对象
-                const storedData = storeVodData(json.list || []);
+                const storedResult = storeVodData(json.list || []);
                 log(`数据解析成功, 共找到 ${json.list.length} 个结果`);
                 notify("数据解析成功", "", `共找到 ${json.list.length} 个结果`);
                 
@@ -181,7 +181,8 @@ function handleSearchRequest() {
                     body: JSON.stringify({ 
                         success: "成功获取数据", 
                         total: json.list.length,
-                        data: storedData 
+                        data: storedResult.data,
+                        index_info: storedResult.index_info
                     }) 
                 });
             } catch (e) {
@@ -200,10 +201,15 @@ function handleSearchRequest() {
 function storeVodData(vodList) {
     let storedData = {};  // 用于存储所有视频数据的对象
     let successCount = 0;
+    let indexMapping = {}; // 添加索引映射对象
+    let startIndex = null; // 记录本次存储的起始索引
 
     // 获取当前存储索引
     let currentIndex = userData.historical_storage.current_index || 0;
     const maxStorage = userData.historical_storage.max_storage || 20;
+    
+    // 记录本次存储起始的索引值
+    startIndex = currentIndex;
 
     for (let i = 0; i < vodList.length; i++) {
         try {
@@ -239,6 +245,11 @@ function storeVodData(vodList) {
 
             // 使用循环索引存储，当超过maxStorage时从0开始重新存储
             let key = `sheep_vod_info_${currentIndex}`;
+            
+            // 添加索引映射 - 列表位置i映射到存储索引currentIndex
+            indexMapping[i] = currentIndex;
+            
+            // 更新循环索引
             currentIndex = (currentIndex + 1) % maxStorage;
             
             // 更新存储索引
@@ -260,8 +271,24 @@ function storeVodData(vodList) {
         }
     }
 
+    // 存储索引映射信息到localStorage
+    storage.set("sheep_index_mapping", JSON.stringify({
+        startIndex: startIndex,
+        mapping: indexMapping,
+        timestamp: new Date().getTime()
+    }));
+
     log(`成功存储 ${successCount}/${vodList.length} 条数据，当前索引：${userData.historical_storage.current_index}`);
-    return storedData;  // 返回存储的数据对象
+    log(`存储索引映射：起始索引=${startIndex}, 映射关系=${JSON.stringify(indexMapping)}`);
+    
+    // 返回存储数据对象，并添加映射信息
+    return {
+        data: storedData,
+        index_info: {
+            start_index: startIndex,
+            mapping: indexMapping
+        }
+    };
 }
 
 // 新增处理影片详情请求的函数
@@ -274,16 +301,41 @@ function handleVideoDetailRequest() {
             return;
         }
 
-        const index = urlMatch[1];
-        // 构建存储键
-        const key = `sheep_vod_info_${index}`;
-        log(`获取详情, 索引: ${index}, 键: ${key}`);
+        // 获取请求的视频索引（即前端列表中的位置）
+        const listIndex = parseInt(urlMatch[1]);
+        log(`获取详情, 列表索引: ${listIndex}`);
+        
+        // 尝试从索引映射中查找实际存储键
+        let actualKey = null;
+        const mappingInfo = storage.get("sheep_index_mapping");
+        
+        if (mappingInfo) {
+            try {
+                const mappingData = JSON.parse(mappingInfo);
+                
+                // 检查映射数据中是否有这个索引的映射
+                if (mappingData.mapping && mappingData.mapping[listIndex] !== undefined) {
+                    // 找到实际存储的索引
+                    const storageIndex = mappingData.mapping[listIndex];
+                    actualKey = `sheep_vod_info_${storageIndex}`;
+                    log(`从映射找到实际存储键: ${actualKey}, 原始列表索引: ${listIndex}`);
+                }
+            } catch (e) {
+                log(`解析索引映射数据失败: ${e.message}`);
+            }
+        }
+        
+        // 如果没有找到映射，使用直接索引
+        if (!actualKey) {
+            actualKey = `sheep_vod_info_${listIndex}`;
+            log(`无映射数据，直接使用列表索引作为存储键: ${actualKey}`);
+        }
         
         // 从本地存储中获取对应索引的影片信息
-        const storedVodInfo = storage.get(key);
+        const storedVodInfo = storage.get(actualKey);
         
         if (!storedVodInfo) {
-            log(`未找到对应影片信息, 索引: ${index}`);
+            log(`未找到影片信息, 键: ${actualKey}`);
             
             // 尝试搜索所有可能的索引
             const maxStorage = userData.historical_storage?.max_storage || 20;
@@ -298,37 +350,38 @@ function handleVideoDetailRequest() {
                     // 存储最后一个找到的信息作为备用
                     foundInfo = tempInfo;
                     foundKey = tempKey;
-                    // 如果我们有一个更好的方式来匹配索引和实际电影，可以在这里实现
                 }
             }
             
             // 如果找到了任何信息，使用最后找到的作为响应
             if (foundInfo) {
-                log(`未找到索引${index}，但找到备选数据，键: ${foundKey}`);
+                log(`未找到键${actualKey}，但找到备选数据，键: ${foundKey}`);
                 const responseData = {
                     success: "剧集信息获取成功(备选)",
                     total: 1,
                     data: {
                         [foundKey]: foundInfo
-                    }
+                    },
+                    actual_index: foundKey.replace('sheep_vod_info_', '')
                 };
                 $done({ body: JSON.stringify(responseData) });
                 return;
             }
             
             // 如果完全没有找到数据，返回错误
-            $done({ body: JSON.stringify({ error: "未找到任何影片信息", index: index }) });
+            $done({ body: JSON.stringify({ error: "未找到任何影片信息", request_index: listIndex }) });
             return;
         }
         
-        log(`成功获取影片信息, 长度: ${storedVodInfo.length}`);
+        log(`成功获取影片信息, 键: ${actualKey}, 长度: ${storedVodInfo.length}`);
         // 构建响应对象
         const responseData = {
             success: "剧集信息获取成功",
             total: 1,
             data: {
-                [key]: storedVodInfo
-            }
+                [actualKey]: storedVodInfo
+            },
+            actual_index: actualKey.replace('sheep_vod_info_', '')
         };
         
         $done({ body: JSON.stringify(responseData) });

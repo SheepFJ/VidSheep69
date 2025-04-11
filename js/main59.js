@@ -381,6 +381,12 @@ function search() {
             const resultsContainer = document.createElement('div');
             resultsContainer.className = 'results-grid';
             
+            // 保存索引映射信息到localStorage
+            if (response.index_info) {
+                localStorage.setItem('current_search_index_info', JSON.stringify(response.index_info));
+                console.log("保存索引映射信息:", response.index_info);
+            }
+            
             // 遍历返回的数据
             Object.entries(response.data).forEach(([key, value], index) => {
                 // 使用通用函数解析数据
@@ -408,20 +414,25 @@ function search() {
                     const loadingResults = document.getElementById("loading-results");
                     if (loadingResults) loadAnimation(loadingResults);
                     
-                    // 获取当前索引值
-                    const currentIndex = index;
+                    // 获取当前列表索引（搜索结果中的位置）
+                    const listIndex = index;
                     
-                    // 保存当前索引到localStorage，用于返回时获取
-                    localStorage.setItem('currentMovieIndex', currentIndex);
+                    // 保存当前列表索引到localStorage
+                    localStorage.setItem('currentMovieIndex', listIndex);
                     
                     // 发送请求获取详情
-                    const detailUrl = `https://api.sheep.com/sheep/videoPolymerization/videolist/${currentIndex}`;
+                    const detailUrl = `https://api.sheep.com/sheep/videoPolymerization/videolist/${listIndex}`;
                     
                     fetch(detailUrl)
                         .then(res => res.json())
                         .then(detailResponse => {
                             // 清除加载动画
                             if (loadingResults) loadingResults.innerHTML = "";
+                            
+                            // 如果存在实际索引，保存它
+                            if (detailResponse.actual_index !== undefined) {
+                                localStorage.setItem('currentMovieActualIndex', detailResponse.actual_index);
+                            }
                             
                             // 渲染详情页面
                             if (detailResponse.success && detailResponse.data) {
@@ -768,7 +779,7 @@ function renderVideoPlayer(url, title, episodeName) {
         // 显示加载动画
         if (loadingResults) loadAnimation(loadingResults);
         
-        // 获取保存的索引值
+        // 获取保存的索引值（列表位置）
         const currentMovieIndex = localStorage.getItem('currentMovieIndex');
         
         if (currentMovieIndex) {
@@ -780,6 +791,11 @@ function renderVideoPlayer(url, title, episodeName) {
                 .then(detailResponse => {
                     // 清除加载动画
                     if (loadingResults) loadingResults.innerHTML = "";
+                    
+                    // 如果存在实际索引，更新它
+                    if (detailResponse.actual_index !== undefined) {
+                        localStorage.setItem('currentMovieActualIndex', detailResponse.actual_index);
+                    }
                     
                     // 渲染详情页面
                     if (detailResponse.success && detailResponse.data) {
