@@ -1,57 +1,3 @@
-// 使用事件委托处理所有用户交互
-document.getElementById('main-container').addEventListener('click', function (event) {
-    const target = event.target;
-
-    // 处理折叠面板点击
-    if (target.closest('.user-collapsible-header')) {
-        const header = target.closest('.user-collapsible-header');
-        toggleCollapsible(header);
-    }
-
-    // 处理修改用户名按钮点击
-    if (target.closest('.xiuGaiUserName')) {
-        const popUpWindow = document.getElementById('PopUpWindow');
-        popUpWindow.innerHTML = `
-            <div class="popup-overlay">
-                <div class="popup-content">
-                    <h3 class="popup-title">修改用户名</h3>
-                    <input type="text" id="newUsername" class="popup-input" value="${username}" placeholder="请输入新的用户名">
-                    <div class="popup-buttons">
-                        <button class="popup-button cancel-button" >取消</button>
-                        <button class="popup-button confirm-button">确认</button>
-                    </div>
-                </div>
-            </div>
-        `;
-        popUpWindow.style.display = 'block';
-    }
-
-
-    if (target.closest('.search-button')) {
-        search();
-    }
-});
-
-// 处理弹窗相关的事件委托
-document.getElementById('PopUpWindow').addEventListener('click', function (event) {
-    const target = event.target;
-
-    // 处理点击弹窗外部关闭
-    if (target.classList.contains('popup-overlay')) {
-        closeUsernamePopup();
-    }
-
-    // 处理取消按钮
-    if (target.classList.contains('cancel-button')) {
-        closeUsernamePopup();
-    }
-
-    // 处理确认按钮
-    if (target.classList.contains('confirm-button')) {
-        confirmUsernameEdit();
-    }
-});
-
 // 打开关闭user对话栏
 function toggleCollapsible(element) {
     // 关闭其他折叠项
@@ -108,9 +54,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // 我的页面--关于--历史版本
 function showProfile() {
-    // 清空播放容器
+    // 隐藏播放容器
     const playContainer = document.getElementById('play-container');
-    if (playContainer) playContainer.innerHTML = '';
+    if (playContainer) {
+        playContainer.style.display = 'none';
+        playContainer.innerHTML = '';
+    }
     
     const mainContainer = document.getElementById("main-container");
     mainContainer.innerHTML = `
@@ -211,20 +160,20 @@ function showProfile() {
     </div>
 </div>
 `;
+    // 显示主容器
+    mainContainer.style.display = 'block';
 }
 
 //发现
 function disCover() {
-    // 清空播放容器
+    // 隐藏播放容器
     const playContainer = document.getElementById('play-container');
-    if (playContainer) playContainer.innerHTML = '';
-    
-    // 清空相关元素
-    const searchImgPlay = document.getElementById("search-imgplay");
-    if (searchImgPlay) {
-        searchImgPlay.innerHTML = "";
+    if (playContainer) {
+        playContainer.style.display = 'none';
+        playContainer.innerHTML = '';
     }
     
+    // 清空loading-results
     const loadingResults = document.getElementById("loading-results");
     if (loadingResults) {
         loadingResults.innerHTML = "";
@@ -232,6 +181,8 @@ function disCover() {
     
     const mainContainer = document.getElementById("main-container");
     mainContainer.innerHTML = `hello world`;
+    // 显示主容器
+    mainContainer.style.display = 'block';
 }
 
 // 等待动画加载
@@ -246,28 +197,41 @@ function loadAnimation(loadingResults) {
 
 // 搜素事件
 function showSearch() {
-    // 清空播放容器
+    // 隐藏播放容器
     const playContainer = document.getElementById('play-container');
-    if (playContainer) playContainer.innerHTML = '';
-    
-    document.getElementById("main-container").innerHTML = `
-    <h1 class="search-title">影视搜索</h1>
-    <div class="search-form">
-        <input class="search-input" type="text" id="searchInput" placeholder="输入影视名称">
-        <select class="search-select" id="sourceSelect">
-            <option value="1">源1</option>
-            <option value="2">源2</option>
-        </select>
-        <button  class="search-button">搜索</button>
-    </div>
-    <div id="search-imgplay"></div>
-`;
+    if (playContainer) {
+        playContainer.style.display = 'none';
+        playContainer.innerHTML = '';
+    }
     
     // 清空loading-results
     const loadingResults = document.getElementById("loading-results");
     if (loadingResults) {
         loadingResults.innerHTML = "";
     }
+    
+    // 获取主容器
+    const mainContainer = document.getElementById("main-container");
+    
+    // 检查是否已经有搜索表单，如果有则不重新创建
+    const existingSearchForm = mainContainer.querySelector('.search-form');
+    if (!existingSearchForm) {
+        mainContainer.innerHTML = `
+            <h1 class="search-title">影视搜索</h1>
+            <div class="search-form">
+                <input class="search-input" type="text" id="searchInput" placeholder="输入影视名称">
+                <select class="search-select" id="sourceSelect">
+                    <option value="1">源1</option>
+                    <option value="2">源2</option>
+                </select>
+                <button class="search-button">搜索</button>
+            </div>
+            <div id="search-imgplay"></div>
+        `;
+    }
+    
+    // 显示主容器
+    mainContainer.style.display = 'block';
 }
 
 // 解析视频数据的通用函数
@@ -367,8 +331,20 @@ function copyToClipboard(text, callback) {
 
 // 搜索
 function search() {
-    var wd = encodeURIComponent(document.getElementById("searchInput").value);
-    var source = document.getElementById("sourceSelect").value;
+    const searchInput = document.getElementById("searchInput");
+    if (!searchInput) {
+        console.error("搜索输入框不存在");
+        return;
+    }
+    
+    const wd = encodeURIComponent(searchInput.value);
+    const sourceSelect = document.getElementById("sourceSelect");
+    if (!sourceSelect) {
+        console.error("源选择框不存在");
+        return;
+    }
+    
+    const source = sourceSelect.value;
 
     if (!wd) {
         alert("请输入搜索内容");
@@ -376,18 +352,22 @@ function search() {
     }
 
     // 显示加载提示
-    var results = document.getElementById("loading-results");
-    loadAnimation(results);
+    const results = document.getElementById("loading-results");
+    if (results) loadAnimation(results);
 
-    var apiUrl = "https://api.sheep.com/sheep/videoPolymerization/videoword/" + source + "/?wd=" + wd;
+    const apiUrl = "https://api.sheep.com/sheep/videoPolymerization/videoword/" + source + "/?wd=" + wd;
 
     fetch(apiUrl)
         .then(res => res.json())
         .then(response => {
-            results.innerHTML = "";
+            if (results) results.innerHTML = "";
             
             // 获取搜索结果容器
             const searchImgPlay = document.getElementById("search-imgplay");
+            if (!searchImgPlay) {
+                console.error("搜索结果容器不存在");
+                return;
+            }
             
             // 清空先前的搜索结果
             searchImgPlay.innerHTML = "";
@@ -407,18 +387,18 @@ function search() {
                 const videoData = parseVideoData(value);
                 
                 // 创建电影容器
-                var container = document.createElement("div");
+                const container = document.createElement("div");
                 container.className = "movie-container";
                 
                 // 创建图片
-                var img = document.createElement("img");
+                const img = document.createElement("img");
                 img.src = videoData.image;
                 img.onerror = function() { 
                     this.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgMTAwIDE1MCIgZmlsbD0iIzMzMyI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxNTAiIGZpbGw9IiMyMjIiLz48dGV4dCB4PSI1MCIgeT0iNzUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2FhYSI+无图片</dGV4dD48L3N2Zz4='; 
                 };
                 
                 // 创建标题
-                var title = document.createElement("div");
+                const title = document.createElement("div");
                 title.className = "movie-title";
                 title.textContent = videoData.title;
                 
@@ -426,7 +406,7 @@ function search() {
                 container.addEventListener('click', function() {
                     // 显示加载动画
                     const loadingResults = document.getElementById("loading-results");
-                    loadAnimation(loadingResults);
+                    if (loadingResults) loadAnimation(loadingResults);
                     
                     // 获取当前索引值
                     const currentIndex = index;
@@ -441,7 +421,7 @@ function search() {
                         .then(res => res.json())
                         .then(detailResponse => {
                             // 清除加载动画
-                            loadingResults.innerHTML = "";
+                            if (loadingResults) loadingResults.innerHTML = "";
                             
                             // 渲染详情页面
                             if (detailResponse.success && detailResponse.data) {
@@ -452,7 +432,7 @@ function search() {
                         })
                         .catch(err => {
                             console.error("详情请求失败", err);
-                            loadingResults.innerHTML = "";
+                            if (loadingResults) loadingResults.innerHTML = "";
                             alert("网络错误，请稍后重试");
                         });
                 });
@@ -468,7 +448,10 @@ function search() {
         })
         .catch(err => {
             console.error("请求失败", err);
-            document.getElementById("search-imgplay").innerHTML = '<div class="no-results">搜索失败，请稍后重试</div>';
+            const searchImgPlay = document.getElementById("search-imgplay");
+            if (searchImgPlay) {
+                searchImgPlay.innerHTML = '<div class="no-results">搜索失败，请稍后重试</div>';
+            }
         });
 }
 
@@ -476,15 +459,13 @@ function search() {
 function renderVideoDetail(detailData) {
     // 清空播放容器（不清空main-container）
     const playContainer = document.getElementById('play-container');
-    if (playContainer) playContainer.innerHTML = '';
+    if (!playContainer) return;
     
-    // 清空其他辅助容器（但保留main-container内容）
-    const searchImgList = document.getElementById('search-imglist');
-    const searchImgPlay = document.getElementById('search-imgplay');
+    playContainer.innerHTML = '';
+    playContainer.style.display = 'block'; // 确保播放容器可见
+    
+    // 清空loading-results（但保留main-container内容）
     const loadingResults = document.getElementById('loading-results');
-    
-    if (searchImgList) searchImgList.innerHTML = '';
-    if (searchImgPlay) searchImgPlay.innerHTML = '';
     if (loadingResults) loadingResults.innerHTML = '';
     
     // 使用封装函数处理详情数据
@@ -503,10 +484,11 @@ function renderVideoDetail(detailData) {
     backButton.innerHTML = '<i class="iconfont icon-fanhui"></i>';
     backButton.title = '返回搜索';
     backButton.addEventListener('click', function() {
-        // 清空播放容器
-        if (playContainer) playContainer.innerHTML = '';
-        // 返回搜索页面
-        showSearch();
+        // 隐藏播放容器而不是清空它
+        if (playContainer) {
+            playContainer.style.display = 'none';
+            playContainer.innerHTML = '';
+        }
     });
     
     // 创建头部区域
@@ -753,37 +735,22 @@ function renderVideoDetail(detailData) {
     detailPage.appendChild(header);
     detailPage.appendChild(contentArea);
     
-    // 添加到播放容器而不是主容器
-    if (playContainer) {
-        playContainer.appendChild(detailPage);
-    } else {
-        // 找不到适合的容器，尝试使用searchImgPlay或创建一个新容器
-        if (searchImgPlay && searchImgPlay.parentNode) {
-            searchImgPlay.innerHTML = ''; // 清空容器
-            searchImgPlay.appendChild(detailPage);
-        } else {
-            // 找不到适合的容器，创建一个新的
-            const fallbackContainer = document.createElement('div');
-            fallbackContainer.id = 'play-container';
-            fallbackContainer.appendChild(detailPage);
-            document.body.appendChild(fallbackContainer);
-        }
-    }
+    // 添加到播放容器
+    playContainer.appendChild(detailPage);
 }
 
 // 修改视频播放器渲染函数
 function renderVideoPlayer(url, title, episodeName) {
-    // 清空播放容器（不清空main-container）
+    // 获取播放容器
     const playContainer = document.getElementById('play-container');
-    if (playContainer) playContainer.innerHTML = '';
+    if (!playContainer) return;
     
-    // 清空其他辅助容器
-    const searchImgList = document.getElementById('search-imglist');
-    const searchImgPlay = document.getElementById('search-imgplay');
+    // 清空播放容器（不清空main-container）
+    playContainer.innerHTML = '';
+    playContainer.style.display = 'block'; // 确保播放容器可见
+    
+    // 清空loading-results
     const loadingResults = document.getElementById('loading-results');
-    
-    if (searchImgList) searchImgList.innerHTML = '';
-    if (searchImgPlay) searchImgPlay.innerHTML = '';
     if (loadingResults) loadingResults.innerHTML = '';
 
     // 创建详情页容器
@@ -798,13 +765,8 @@ function renderVideoPlayer(url, title, episodeName) {
     
     // 添加返回按钮点击事件，通过索引重新获取详情
     backButton.addEventListener('click', function() {
-        // 清空播放容器
-        if (playContainer) playContainer.innerHTML = '';
-        
         // 显示加载动画
-        if (loadingResults) {
-            loadAnimation(loadingResults);
-        }
+        if (loadingResults) loadAnimation(loadingResults);
         
         // 获取保存的索引值
         const currentMovieIndex = localStorage.getItem('currentMovieIndex');
@@ -817,9 +779,7 @@ function renderVideoPlayer(url, title, episodeName) {
                 .then(res => res.json())
                 .then(detailResponse => {
                     // 清除加载动画
-                    if (loadingResults) {
-                        loadingResults.innerHTML = "";
-                    }
+                    if (loadingResults) loadingResults.innerHTML = "";
                     
                     // 渲染详情页面
                     if (detailResponse.success && detailResponse.data) {
@@ -833,19 +793,19 @@ function renderVideoPlayer(url, title, episodeName) {
                                 renderVideoDetail(movieData);
                             } catch (e) {
                                 console.error("解析保存的电影数据失败", e);
-                                showSearch(); // 失败则返回搜索页
+                                // 隐藏播放容器，显示main-container的内容
+                                if (playContainer) playContainer.style.display = 'none';
                             }
                         } else {
                             alert("获取影片详情失败，请稍后重试");
-                            showSearch();
+                            // 隐藏播放容器，显示main-container的内容
+                            if (playContainer) playContainer.style.display = 'none';
                         }
                     }
                 })
                 .catch(err => {
                     console.error("详情请求失败", err);
-                    if (loadingResults) {
-                        loadingResults.innerHTML = "";
-                    }
+                    if (loadingResults) loadingResults.innerHTML = "";
                     
                     // 如果API请求出错，尝试使用localStorage缓存的数据
                     const savedMovieData = localStorage.getItem('currentMovie');
@@ -855,11 +815,13 @@ function renderVideoPlayer(url, title, episodeName) {
                             renderVideoDetail(movieData);
                         } catch (e) {
                             console.error("解析保存的电影数据失败", e);
-                            showSearch(); // 失败则返回搜索页
+                            // 隐藏播放容器，显示main-container的内容
+                            if (playContainer) playContainer.style.display = 'none';
                         }
                     } else {
                         alert("网络错误，请稍后重试");
-                        showSearch();
+                        // 隐藏播放容器，显示main-container的内容
+                        if (playContainer) playContainer.style.display = 'none';
                     }
                 });
         } else {
@@ -869,16 +831,16 @@ function renderVideoPlayer(url, title, episodeName) {
                 try {
                     const movieData = JSON.parse(savedMovieData);
                     renderVideoDetail(movieData);
-                    if (loadingResults) {
-                        loadingResults.innerHTML = "";
-                    }
+                    if (loadingResults) loadingResults.innerHTML = "";
                 } catch (e) {
                     console.error("解析保存的电影数据失败", e);
-                    showSearch(); // 失败则返回搜索页
+                    // 隐藏播放容器，显示main-container的内容
+                    if (playContainer) playContainer.style.display = 'none';
                 }
             } else {
-                alert("无法找到原页面信息，返回搜索页");
-                showSearch();
+                alert("无法找到原页面信息");
+                // 隐藏播放容器，显示main-container的内容
+                if (playContainer) playContainer.style.display = 'none';
             }
         }
     });
@@ -968,54 +930,165 @@ function renderVideoPlayer(url, title, episodeName) {
     detailPage.appendChild(backButton);
     detailPage.appendChild(contentArea);
     
-    // 添加到播放容器而不是主容器
-    if (playContainer) {
-        playContainer.appendChild(detailPage);
-    } else {
-        // 找不到适合的容器，尝试使用searchImgPlay或创建一个新容器
-        if (searchImgPlay && searchImgPlay.parentNode) {
-            searchImgPlay.innerHTML = ''; // 清空容器
-            searchImgPlay.appendChild(detailPage);
-        } else {
-            // 找不到适合的容器，创建一个新的
-            const fallbackContainer = document.createElement('div');
-            fallbackContainer.id = 'play-container';
-            fallbackContainer.appendChild(detailPage);
-            document.body.appendChild(fallbackContainer);
-        }
-    }
+    // 添加到播放容器
+    playContainer.appendChild(detailPage);
 }
 
 // 最近
 function showList() {
-    // 清空播放容器
+    // 隐藏播放容器
     const playContainer = document.getElementById('play-container');
-    if (playContainer) playContainer.innerHTML = '';
+    if (playContainer) {
+        playContainer.style.display = 'none';
+        playContainer.innerHTML = '';
+    }
     
-    var loadingResults = document.getElementById("loading-results");
-    loadAnimation(loadingResults);
-    setTimeout(() => {
-        loadingResults.innerHTML = "";
-    }, 3000);
+    // 显示加载动画
+    const loadingResults = document.getElementById("loading-results");
+    if (loadingResults) {
+        loadAnimation(loadingResults);
+        setTimeout(() => {
+            loadingResults.innerHTML = "";
+        }, 3000);
+    }
+    
+    // 显示主容器
+    const mainContainer = document.getElementById("main-container");
+    mainContainer.style.display = 'block';
 }
 
-// 选中样式应用
-const navButtons = document.querySelectorAll('#bottom-nav .nav-button');
-for (let i = 0; i < navButtons.length; i++) {
-    navButtons[i].addEventListener('click', () => {
-        // 先移除所有按钮的active类
-        navButtons.forEach(btn => btn.classList.remove('nav-active'));
-        // 给当前点击的按钮添加active类
-        navButtons[i].classList.add('nav-active');
+// 添加容器样式操作函数
+function addContainersStyle() {
+    // 检查是否已存在样式
+    if (document.getElementById('containers-style')) return;
+    
+    // 创建style元素
+    const style = document.createElement('style');
+    style.id = 'containers-style';
+    style.textContent = `
+        #play-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            background-color: rgba(0, 0, 0, 0.95);
+            overflow-y: auto;
+            display: none;
+        }
+        
+        #play-container.visible {
+            display: block;
+        }
+        
+        #main-container {
+            min-height: calc(100vh - 60px);
+            padding-bottom: 60px;
+        }
+    `;
+    
+    // 添加到文档头部
+    document.head.appendChild(style);
+}
+
+// 初始化函数，在DOMContentLoaded时执行
+function initializeApp() {
+    // 添加容器样式
+    addContainersStyle();
+    
+    // 设置导航栏按钮点击事件
+    const navButtons = document.querySelectorAll('#bottom-nav .nav-button');
+    navButtons.forEach((btn, index) => {
+        btn.addEventListener('click', () => {
+            // 移除所有按钮的active类
+            navButtons.forEach(b => b.classList.remove('nav-active'));
+            // 添加active类到当前按钮
+            btn.classList.add('nav-active');
+        });
+    });
+    
+    // 确保播放容器初始为空并隐藏
+    const playContainer = document.getElementById('play-container');
+    if (playContainer) {
+        playContainer.innerHTML = '';
+        playContainer.style.display = 'none';
+    }
+    
+    // 清空loading-results容器
+    const loadingResults = document.getElementById('loading-results');
+    if (loadingResults) {
+        loadingResults.innerHTML = '';
+    }
+    
+    // 设置通用事件委托
+    setupEventDelegation();
+    
+    // 默认显示个人资料页
+    showProfile();
+}
+
+// 设置事件委托
+function setupEventDelegation() {
+    // 主容器事件委托
+    document.getElementById('main-container').addEventListener('click', function(event) {
+        const target = event.target;
+        
+        // 处理折叠面板点击
+        if (target.closest('.user-collapsible-header')) {
+            toggleCollapsible(target.closest('.user-collapsible-header'));
+        }
+        
+        // 处理修改用户名按钮点击
+        if (target.closest('.xiuGaiUserName')) {
+            showUsernamePopup();
+        }
+        
+        // 处理搜索按钮点击
+        if (target.closest('.search-button')) {
+            search();
+        }
+    });
+    
+    // 弹出窗口事件委托
+    document.getElementById('PopUpWindow').addEventListener('click', function(event) {
+        const target = event.target;
+        
+        // 处理点击弹窗外部关闭
+        if (target.classList.contains('popup-overlay')) {
+            closeUsernamePopup();
+        }
+        
+        // 处理取消按钮
+        if (target.classList.contains('cancel-button')) {
+            closeUsernamePopup();
+        }
+        
+        // 处理确认按钮
+        if (target.classList.contains('confirm-button')) {
+            confirmUsernameEdit();
+        }
     });
 }
 
-// 直接执行showProfile，不需要等待DOM加载
-showProfile();
+// 显示用户名修改弹窗
+function showUsernamePopup() {
+    const popUpWindow = document.getElementById('PopUpWindow');
+    popUpWindow.innerHTML = `
+        <div class="popup-overlay">
+            <div class="popup-content">
+                <h3 class="popup-title">修改用户名</h3>
+                <input type="text" id="newUsername" class="popup-input" value="${username}" placeholder="请输入新的用户名">
+                <div class="popup-buttons">
+                    <button class="popup-button cancel-button">取消</button>
+                    <button class="popup-button confirm-button">确认</button>
+                </div>
+            </div>
+        </div>
+    `;
+    popUpWindow.style.display = 'block';
+}
 
-// 确保页面初始化时play-container为空
-(function() {
-    const playContainer = document.getElementById('play-container');
-    if (playContainer) playContainer.innerHTML = '';
-})();
+// 页面加载完成后执行初始化
+document.addEventListener('DOMContentLoaded', initializeApp);
 
