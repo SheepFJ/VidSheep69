@@ -68,8 +68,20 @@ function showProfile() {
         recentContainer.style.display = 'none';
     }
     
+    // 隐藏发现容器
+    const discoverContainer = document.getElementById('discover-container');
+    if (discoverContainer) {
+        discoverContainer.classList.remove('visible');
+        discoverContainer.style.display = 'none';
+    }
+
     const mainContainer = document.getElementById("main-container");
-    mainContainer.innerHTML = `
+    if (mainContainer) {
+        mainContainer.style.display = 'none';
+    }
+    
+    const userContainer = document.getElementById("user-container");
+    userContainer.innerHTML = `
 <div class="user-container">
     <div class="username-container">
         <h1 class="user-title">${username}</h1>
@@ -168,7 +180,7 @@ function showProfile() {
 </div>
 `;
     // 显示主容器
-    mainContainer.style.display = 'block';
+    userContainer.style.display = 'block';
 }
 
 //发现
@@ -216,6 +228,10 @@ function showSearch() {
     if (playContainer) {
         playContainer.style.display = 'none';
         playContainer.innerHTML = '';
+    }
+    const userContainer = document.getElementById("user-container");
+    if (userContainer) {
+        userContainer.style.display = 'none';
     }
     
     // 隐藏最近观看容器

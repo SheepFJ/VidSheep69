@@ -12,6 +12,10 @@ function showList() {
     if (mainContainer) {
         mainContainer.style.display = 'none';
     }
+    const userContainer = document.getElementById("user-container");
+    if (userContainer) {
+        userContainer.style.display = 'none';
+    }
     
     // 获取最近观看容器
     const recentContainer = document.getElementById('recent-container');
