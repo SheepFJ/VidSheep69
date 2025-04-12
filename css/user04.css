@@ -1,17 +1,33 @@
+#user-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 60px); /* 减去底部导航高度 */
+    /* 去掉背景颜色，保持透明 */
+    overflow-y: auto;
+    padding: 15px;
+    box-sizing: border-box;
+    color: #fff;
+    z-index: 10;
+    display: none;
+    text-align: center; /* 整体居中 */
+}
 
-
+/* 用户内容容器 */
 .user-container {
+    max-width: 400px;
+    margin: 0 auto;
     padding: 20px;
     border-radius: 12px;
     margin-top: 30px;
-    max-width: 400px;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 .user-title {
+    font-size: 24px;
+    margin: 0;
+    color: #f39c12;
     text-align: center;
-    margin-bottom: 25px;
 }
 
 .user-content {
@@ -21,8 +37,31 @@
     padding: 10px;
 }
 
+/* 用户名容器居中显示 */
+.username-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 修改用户名按钮位置 */
+.xiuGaiUserName {
+    cursor: pointer;
+    color: #f39c12;
+    font-size: 22px;
+    margin-left: 10px; /* 离用户名不要太远 */
+}
+
+/* 折叠面板样式 */
 .user-collapsible-container {
     width: 100%;
+    margin-top: 15px;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .user-collapsible-item {
@@ -52,6 +91,7 @@
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease-out;
+    padding: 0 15px;
 }
 
 .arrow {
@@ -63,21 +103,20 @@
 }
 
 .user-active+.user-collapsible-content {
-    max-height: 1000px;
-    /* 足够大的高度以显示内容 */
+    max-height: 1000px; /* 足够大的高度以显示内容 */
 }
 
-.username-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
+/* 链接样式 */
+#user-container a {
+    color: #3498db;
+    text-decoration: none;
 }
-.xiuGaiUserName {
-    cursor: pointer;
-    color: #f39c12;
-    font-size: 38px;
+
+#user-container a:hover {
+    text-decoration: underline;
 }
+
+/* 弹窗样式 */
 #PopUpWindow {
     display: none;
     position: fixed;
@@ -87,6 +126,7 @@
     height: 100%;
     z-index: 1000;
 }
+
 .popup-overlay {
     position: fixed;
     top: 0;
@@ -98,6 +138,7 @@
     justify-content: center;
     align-items: center;
 }
+
 .popup-content {
     background: rgba(30, 30, 30, 0.9);
     padding: 20px;
@@ -105,11 +146,13 @@
     width: 80%;
     max-width: 300px;
 }
+
 .popup-title {
     color: #f39c12;
     margin-bottom: 15px;
     text-align: center;
 }
+
 .popup-input {
     width: 100%;
     padding: 8px;
@@ -120,11 +163,13 @@
     color: #fff;
     box-sizing: border-box;
 }
+
 .popup-buttons {
     display: flex;
     justify-content: space-between;
     gap: 10px;
 }
+
 .popup-button {
     flex: 1;
     padding: 8px;
@@ -133,11 +178,28 @@
     cursor: pointer;
     font-weight: bold;
 }
+
 .cancel-button {
     background: #666;
     color: #fff;
 }
+
 .confirm-button {
     background: #f39c12;
     color: #fff;
+}
+
+/* 标题样式 */
+.version-title, .feedback-title {
+    color: #f39c12;
+    margin-top: 10px;
+}
+
+.feedback-title {
+    margin-top: 20px;
+}
+
+/* 更新列表样式 */
+.update-list {
+    padding-left: 20px;
 }

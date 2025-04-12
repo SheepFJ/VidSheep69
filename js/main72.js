@@ -93,23 +93,18 @@ function showProfile() {
             </div>
             <div class="user-collapsible-content">
                 <div class="user-content">
-                    <h3 style="color: #f39c12; margin-top: 10px;">版本信息</h3>
-                    <p>当前版本:<a href=" https://t.me/sheep_007xiaoyang/43"
-                            style="color: #3498db; text-decoration: none;" target="_blank">v1.0.0</a> </p>
+                    <h3 class="version-title">版本信息</h3>
+                    <p>当前版本:<a href="https://t.me/sheep_007xiaoyang/43" target="_blank">v1.0.0</a></p>
                     <p>更新日期: 2025-03-31</p>
                     <p>更新内容:</p>
-                    <ul style="padding-left: 20px;">
+                    <ul class="update-list">
                         <li>优化了页面布局</li>
                         <li>兼容Loon</li>
                     </ul>
 
-                    <h3 style="color: #f39c12; margin-top: 20px;">关注/反馈</h3>
-                    <p>GitHub: <a href="https://github.com/SheepFJ/QuantumultX"
-                            style="color: #3498db; text-decoration: none;" target="_blank">SheepFJ</a></p>
-                    <p>TG群组: <a href="https://t.me/sheep_007_xiaoyang"
-                            style="color: #3498db; text-decoration: none;" target="_blank">Sheep交流反馈</a></p>
-
-
+                    <h3 class="feedback-title">关注/反馈</h3>
+                    <p>GitHub: <a href="https://github.com/SheepFJ/QuantumultX" target="_blank">SheepFJ</a></p>
+                    <p>TG群组: <a href="https://t.me/sheep_007_xiaoyang" target="_blank">Sheep交流反馈</a></p>
                 </div>
             </div>
         </div>
@@ -161,11 +156,11 @@ function showProfile() {
                 <span class="arrow">▼</span>
             </div>
             <div class="user-collapsible-content">
-                <div>
-                    <h3 style="color: #f39c12; margin-top: 10px;">v1.0.0</h3>
+                <div class="user-content">
+                    <h3 class="version-title">v1.0.0</h3>
                     <p>更新时间: 2025-03-31</p>
                     <p>更新内容:</p>
-                    <ul style="padding-left: 20px;">
+                    <ul class="update-list">
                         <li>优化了页面布局</li>
                         <li>兼容Loon</li>
                     </ul>

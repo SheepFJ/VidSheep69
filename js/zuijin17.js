@@ -180,10 +180,21 @@ function closeRecentContainer() {
         // 移除可见性类，触发过渡效果
         recentContainer.classList.remove('visible');
         
-        // 显示主容器，而不是调整透明度
-        const mainContainer = document.getElementById("main-container");
-        if (mainContainer) {
-            mainContainer.style.display = 'block';
+        // 检查底部导航栏的激活按钮来决定显示哪个容器
+        const activeNavButton = document.querySelector('#bottom-nav .nav-active');
+        
+        if (activeNavButton && activeNavButton.id === 'profileBtn') {
+            // 如果是"我的"按钮激活，显示用户容器
+            const userContainer = document.getElementById('user-container');
+            if (userContainer) {
+                userContainer.style.display = 'block';
+            }
+        } else {
+            // 其他情况显示主容器
+            const mainContainer = document.getElementById("main-container");
+            if (mainContainer) {
+                mainContainer.style.display = 'block';
+            }
         }
         
         // 等待过渡完成后隐藏容器
