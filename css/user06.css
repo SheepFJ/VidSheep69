@@ -25,7 +25,7 @@
 
 .user-title {
     font-size: 24px;
-    margin: 28px 0 8px;
+    margin: 35px 0 8px;
     color: #f39c12;
     text-align: center;
 }
@@ -51,8 +51,10 @@
 .xiuGaiUserName {
     cursor: pointer;
     color: #f39c12;
-    font-size: 28px;
-    margin-left: 10px; /* 离用户名不要太远 */
+    font-size: 32px; /* 调大图标尺寸 */
+    margin-left: 10px;
+    display: flex; /* 添加flex布局 */
+    align-items: center; /* 垂直居中对齐 */
 }
 
 /* 折叠面板样式 */
