@@ -68,9 +68,17 @@ function showProfile() {
         recentContainer.style.display = 'none';
     }
     
+    // 隐藏主容器
     const mainContainer = document.getElementById("main-container");
-    mainContainer.innerHTML = `
-<div class="user-container">
+    if (mainContainer) {
+        mainContainer.style.display = 'none';
+    }
+    
+    // 使用用户容器而不是主容器
+    const userContainer = document.getElementById("user-container");
+    if (!userContainer) return;
+    
+    userContainer.innerHTML = `
     <div class="username-container">
         <h1 class="user-title">${username}</h1>
         <i class="iconfont icon-xiugai xiuGaiUserName"></i>
@@ -165,10 +173,9 @@ function showProfile() {
             </div>
         </div>
     </div>
-</div>
 `;
-    // 显示主容器
-    mainContainer.style.display = 'block';
+    // 显示用户容器
+    userContainer.style.display = 'block';
 }
 
 //发现
@@ -185,6 +192,12 @@ function disCover() {
     if (recentContainer) {
         recentContainer.classList.remove('visible');
         recentContainer.style.display = 'none';
+    }
+    
+    // 隐藏用户容器
+    const userContainer = document.getElementById('user-container');
+    if (userContainer) {
+        userContainer.style.display = 'none';
     }
     
     // 清空loading-results
@@ -223,6 +236,12 @@ function showSearch() {
     if (recentContainer) {
         recentContainer.classList.remove('visible');
         recentContainer.style.display = 'none';
+    }
+    
+    // 隐藏用户容器
+    const userContainer = document.getElementById('user-container');
+    if (userContainer) {
+        userContainer.style.display = 'none';
     }
     
     // 清空loading-results

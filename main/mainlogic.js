@@ -210,9 +210,10 @@ function finishScript() {
     <script>
         const username = "${username}";
     </script>   
-    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/main70.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/zuijin15.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/main71.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/zuijin16.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/faxian.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/user10.js"></script>
     </html>`;
 
     $done({

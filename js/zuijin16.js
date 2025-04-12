@@ -7,6 +7,12 @@ function showList() {
         playContainer.innerHTML = '';
     }
     
+    // 隐藏用户容器
+    const userContainer = document.getElementById('user-container');
+    if (userContainer) {
+        userContainer.style.display = 'none';
+    }
+    
     // 直接隐藏主容器，而不是调整不透明度
     const mainContainer = document.getElementById("main-container");
     if (mainContainer) {
