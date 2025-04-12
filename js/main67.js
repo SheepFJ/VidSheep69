@@ -7,36 +7,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
 //发现
 function disCover() {
-    // 隐藏播放容器
-    const playContainer = document.getElementById('play-container');
-    if (playContainer) {
-        playContainer.style.display = 'none';
-        playContainer.innerHTML = '';
-    }
-    
-    // 隐藏最近观看容器
-    const recentContainer = document.getElementById('recent-container');
-    if (recentContainer) {
-        recentContainer.classList.remove('visible');
-        recentContainer.style.display = 'none';
-    }
-
-    // 隐藏用户容器
-    const userContainer = document.getElementById('user-container');
-    if (userContainer) {
-        userContainer.style.display = 'none';
-    }
-    
-    // 清空loading-results
-    const loadingResults = document.getElementById("loading-results");
-    if (loadingResults) {
-        loadingResults.innerHTML = "";
-    }
+    // 隐藏所有容器
+    hideAllContainers();
     
     const mainContainer = document.getElementById("main-container");
     mainContainer.innerHTML = `hello world`;
-    // 显示主容器
+    
+    // 确保主容器可见
     mainContainer.style.display = 'block';
+    mainContainer.style.visibility = 'visible';
+    
+    // 防止页面滚动位置异常
+    window.scrollTo(0, 0);
 }
 
 // 等待动画加载
@@ -51,34 +33,15 @@ function loadAnimation(loadingResults) {
 
 // 搜素事件
 function showSearch() {
-    // 隐藏播放容器
-    const playContainer = document.getElementById('play-container');
-    if (playContainer) {
-        playContainer.style.display = 'none';
-        playContainer.innerHTML = '';
-    }
-    
-    // 隐藏最近观看容器
-    const recentContainer = document.getElementById('recent-container');
-    if (recentContainer) {
-        recentContainer.classList.remove('visible');
-        recentContainer.style.display = 'none';
-    }
-
-    // 隐藏用户容器
-    const userContainer = document.getElementById('user-container');
-    if (userContainer) {
-        userContainer.style.display = 'none';
-    }
-    
-    // 清空loading-results
-    const loadingResults = document.getElementById("loading-results");
-    if (loadingResults) {
-        loadingResults.innerHTML = "";
-    }
+    // 隐藏所有容器
+    hideAllContainers();
     
     // 获取主容器
     const mainContainer = document.getElementById("main-container");
+    
+    // 确保主容器可见
+    mainContainer.style.display = 'block';
+    mainContainer.style.visibility = 'visible';
     
     // 检查是否已经有搜索表单，如果有则不重新创建
     const existingSearchForm = mainContainer.querySelector('.search-form');
@@ -97,8 +60,8 @@ function showSearch() {
         `;
     }
     
-    // 显示主容器
-    mainContainer.style.display = 'block';
+    // 防止页面滚动位置异常
+    window.scrollTo(0, 0);
 }
 
 // 解析视频数据的通用函数
@@ -879,10 +842,50 @@ function addContainersStyle() {
             padding-bottom: 60px;
             display: none;
         }
+        
+        #main-container, #user-container, #recent-container, #discover-container {
+            transition: all 0.3s ease;
+        }
     `;
     
     // 添加到文档头部
     document.head.appendChild(style);
+}
+
+// 隐藏所有容器
+function hideAllContainers() {
+    // 隐藏播放容器
+    const playContainer = document.getElementById('play-container');
+    if (playContainer) {
+        playContainer.style.display = 'none';
+    }
+    
+    // 隐藏最近观看容器
+    const recentContainer = document.getElementById('recent-container');
+    if (recentContainer) {
+        recentContainer.classList.remove('visible');
+        recentContainer.style.display = 'none';
+    }
+    
+    // 隐藏主容器
+    const mainContainer = document.getElementById("main-container");
+    if (mainContainer) {
+        mainContainer.style.display = 'none';
+        // 确保主容器隐藏时，其内容也被正确处理
+        mainContainer.style.visibility = 'hidden';
+    }
+    
+    // 隐藏发现容器
+    const discoverContainer = document.getElementById('discover-container');
+    if (discoverContainer) {
+        discoverContainer.style.display = 'none';
+    }
+    
+    // 隐藏用户容器
+    const userContainer = document.getElementById('user-container');
+    if (userContainer) {
+        userContainer.style.display = 'none';
+    }
 }
 
 // 初始化函数，在DOMContentLoaded时执行
@@ -901,29 +904,14 @@ function initializeApp() {
         });
     });
     
+    // 先隐藏所有容器
+    hideAllContainers();
+    
     // 确保播放容器初始为空并隐藏
     const playContainer = document.getElementById('play-container');
     if (playContainer) {
         playContainer.innerHTML = '';
         playContainer.style.display = 'none';
-    }
-    
-    // 隐藏最近观看容器
-    const recentContainer = document.getElementById('recent-container');
-    if (recentContainer) {
-        recentContainer.style.display = 'none';
-    }
-    
-    // 隐藏用户容器
-    const userContainer = document.getElementById('user-container');
-    if (userContainer) {
-        userContainer.style.display = 'none';
-    }
-    
-    // 隐藏发现容器
-    const discoverContainer = document.getElementById('discover-container');
-    if (discoverContainer) {
-        discoverContainer.style.display = 'none';
     }
     
     // 清空loading-results容器
@@ -938,6 +926,9 @@ function initializeApp() {
     // 默认显示个人资料页 - 此函数现在在user.js中
     if (typeof showProfile === 'function') {
         showProfile();
+        
+        // 防止页面滚动位置异常
+        window.scrollTo(0, 0);
     }
 }
 

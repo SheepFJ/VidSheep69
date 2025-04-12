@@ -1,33 +1,41 @@
 // 最近
 function showList() {
-    // 隐藏播放容器
-    const playContainer = document.getElementById('play-container');
-    if (playContainer) {
-        playContainer.style.display = 'none';
-        playContainer.innerHTML = '';
-    }
-    
-    // 直接隐藏主容器，而不是调整不透明度
-    const mainContainer = document.getElementById("main-container");
-    if (mainContainer) {
-        mainContainer.style.display = 'none';
-    }
-    
-    // 隐藏用户容器
-    const userContainer = document.getElementById('user-container');
-    if (userContainer) {
-        userContainer.style.display = 'none';
-    }
-    
-    // 隐藏发现容器
-    const discoverContainer = document.getElementById('discover-container');
-    if (discoverContainer) {
-        discoverContainer.style.display = 'none';
+    // 隐藏所有容器，确保页面干净
+    if (typeof hideAllContainers === 'function') {
+        hideAllContainers();
+    } else {
+        // 隐藏播放容器
+        const playContainer = document.getElementById('play-container');
+        if (playContainer) {
+            playContainer.style.display = 'none';
+        }
+        
+        // 直接隐藏主容器，而不是调整不透明度
+        const mainContainer = document.getElementById("main-container");
+        if (mainContainer) {
+            mainContainer.style.display = 'none';
+            mainContainer.style.visibility = 'hidden';
+        }
+        
+        // 隐藏用户容器
+        const userContainer = document.getElementById('user-container');
+        if (userContainer) {
+            userContainer.style.display = 'none';
+        }
+        
+        // 隐藏发现容器
+        const discoverContainer = document.getElementById('discover-container');
+        if (discoverContainer) {
+            discoverContainer.style.display = 'none';
+        }
     }
     
     // 获取最近观看容器
     const recentContainer = document.getElementById('recent-container');
     if (!recentContainer) return;
+    
+    // 清空之前的内容，防止内容重叠
+    recentContainer.innerHTML = '';
     
     // 清空容器并创建基本结构（简单的标题）
     recentContainer.innerHTML = `
@@ -56,6 +64,9 @@ function showList() {
     if (listBtn) {
         listBtn.classList.add('nav-active');
     }
+    
+    // 防止页面滚动位置异常
+    window.scrollTo(0, 0);
     
     // 发送请求获取所有影片信息
     fetch('https://api.sheep.com/sheep/videoPolymerization/videolist/999')
@@ -189,12 +200,16 @@ function closeRecentContainer() {
         const mainContainer = document.getElementById("main-container");
         if (mainContainer) {
             mainContainer.style.display = 'block';
+            mainContainer.style.visibility = 'visible';
         }
         
         // 等待过渡完成后隐藏容器
         setTimeout(() => {
             recentContainer.style.display = 'none';
         }, 300); // 等待过渡完成
+        
+        // 防止页面滚动位置异常
+        window.scrollTo(0, 0);
     }
 }
 

@@ -64,6 +64,8 @@ function hideAllContainers() {
     const mainContainer = document.getElementById("main-container");
     if (mainContainer) {
         mainContainer.style.display = 'none';
+        // 确保主容器隐藏时，其内容也被正确处理
+        mainContainer.style.visibility = 'hidden';
     }
     
     // 隐藏发现容器
@@ -86,6 +88,17 @@ function showProfile() {
     
     // 获取并显示用户容器
     const userContainer = document.getElementById("user-container");
+    
+    // 防止内容重叠和页面漂移问题，先清空用户容器
+    userContainer.innerHTML = '';
+    
+    // 确保所有样式设置正确
+    userContainer.style.display = 'block';
+    userContainer.style.position = 'relative';
+    userContainer.style.top = '0';
+    userContainer.style.zIndex = '5';
+    
+    // 填充用户容器内容
     userContainer.innerHTML = `
 <div class="user-container">
     <div class="username-container">
@@ -182,11 +195,11 @@ function showProfile() {
     </div>
 </div>
 `;
-    // 显示用户容器
-    userContainer.style.display = 'block';
-    
     // 设置用户相关事件委托
     setupUserEventDelegation();
+    
+    // 防止页面滚动位置异常
+    window.scrollTo(0, 0);
 }
 
 // 显示用户名修改弹窗
@@ -267,29 +280,44 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchBtn = document.getElementById('searchBtn');
     const discoverBtn = document.getElementById('disCover');
     
+    // 为用户容器添加样式以防止页面漂移
+    addUserContainerStyle();
+    
     // 确保底部导航栏的"我的"按钮功能正确
     if (profileBtn) {
         // 覆盖原始点击事件以确保容器正确隐藏
-        profileBtn.onclick = function() {
+        profileBtn.onclick = function(event) {
+            // 阻止默认事件
+            event.preventDefault();
+            
+            // 确保所有容器先隐藏
+            hideAllContainers();
+            
+            // 显示用户界面
             showProfile();
+            
             // 更新导航栏按钮状态
             document.querySelectorAll('#bottom-nav .nav-button').forEach(btn => {
                 btn.classList.remove('nav-active');
             });
             profileBtn.classList.add('nav-active');
+            
+            // 防止页面滚动位置异常
+            window.scrollTo(0, 0);
+            
+            return false;
         };
     }
     
     // 修改其他导航按钮，确保它们在点击时隐藏用户容器
-    // 这些按钮已经有自己的处理函数，我们需要确保用户容器在其他按钮点击时被隐藏
     if (listBtn) {
         const originalListBtnClick = listBtn.onclick;
-        listBtn.onclick = function() {
-            // 隐藏用户容器
-            const userContainer = document.getElementById('user-container');
-            if (userContainer) {
-                userContainer.style.display = 'none';
-            }
+        listBtn.onclick = function(event) {
+            // 阻止默认事件
+            event.preventDefault();
+            
+            // 确保所有容器先隐藏
+            hideAllContainers();
             
             // 调用原始函数
             if (typeof originalListBtnClick === 'function') {
@@ -303,17 +331,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 btn.classList.remove('nav-active');
             });
             listBtn.classList.add('nav-active');
+            
+            return false;
         };
     }
     
     if (searchBtn) {
         const originalSearchBtnClick = searchBtn.onclick;
-        searchBtn.onclick = function() {
-            // 隐藏用户容器
-            const userContainer = document.getElementById('user-container');
-            if (userContainer) {
-                userContainer.style.display = 'none';
-            }
+        searchBtn.onclick = function(event) {
+            // 阻止默认事件
+            event.preventDefault();
+            
+            // 确保所有容器先隐藏
+            hideAllContainers();
             
             // 调用原始函数
             if (typeof originalSearchBtnClick === 'function') {
@@ -327,17 +357,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 btn.classList.remove('nav-active');
             });
             searchBtn.classList.add('nav-active');
+            
+            return false;
         };
     }
     
     if (discoverBtn) {
         const originalDiscoverBtnClick = discoverBtn.onclick;
-        discoverBtn.onclick = function() {
-            // 隐藏用户容器
-            const userContainer = document.getElementById('user-container');
-            if (userContainer) {
-                userContainer.style.display = 'none';
-            }
+        discoverBtn.onclick = function(event) {
+            // 阻止默认事件
+            event.preventDefault();
+            
+            // 确保所有容器先隐藏
+            hideAllContainers();
             
             // 调用原始函数
             if (typeof originalDiscoverBtnClick === 'function') {
@@ -351,6 +383,64 @@ document.addEventListener('DOMContentLoaded', function() {
                 btn.classList.remove('nav-active');
             });
             discoverBtn.classList.add('nav-active');
+            
+            return false;
         };
     }
 });
+
+// 添加用户容器样式，防止页面漂移问题
+function addUserContainerStyle() {
+    // 检查是否已存在样式
+    if (document.getElementById('user-container-style')) return;
+    
+    // 创建style元素
+    const style = document.createElement('style');
+    style.id = 'user-container-style';
+    style.textContent = `
+        #user-container {
+            position: relative;
+            top: 0;
+            left: 0;
+            width: 100%;
+            min-height: calc(100vh - 60px);
+            padding-bottom: 60px;
+            z-index: 5;
+            background-color: #121212;
+            overflow-y: auto;
+            display: none;
+        }
+        
+        #main-container, #user-container, #recent-container, #discover-container {
+            transition: all 0.3s ease;
+        }
+        
+        .user-container {
+            padding: 15px;
+        }
+        
+        .username-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+        
+        .user-title {
+            font-size: 1.5rem;
+            color: #f39c12;
+            margin: 0;
+        }
+        
+        .xiuGaiUserName {
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: #3498db;
+        }
+    `;
+    
+    // 添加到文档头部
+    document.head.appendChild(style);
+}
