@@ -48,19 +48,19 @@ function fetchWithCallback(options, callback) {
 const TimestampUtil = {
     // 获取当前时间戳
     getCurrent: function () {
-      return new Date().getTime();
+        return new Date().getTime();
     },
-  
+
     // 获取当前时间戳加 n 分钟后的时间戳
     addMinutes: function (timestamp, minutes) {
-      return timestamp + minutes * 60 * 1000;
+        return timestamp + minutes * 60 * 1000;
     },
-  
+
     // 比较时间戳，如果当前时间大于旧时间戳，返回 true 确认修改壁纸
     isValid: function (currentTimestamp, oldTimestamp) {
-      return currentTimestamp >= oldTimestamp;
+        return currentTimestamp >= oldTimestamp;
     }
-  };
+};
 
 // 获取当前时间戳
 const nowtime = TimestampUtil.getCurrent();
@@ -71,13 +71,13 @@ const defaultUserData = {
     "backgroundimage": "https://mfiles.alphacoders.com/853/853922.jpg",
     "username": "小羊羔子1009",
     "imageauto": "true", //是否自动更换背景
-    "time_up":"2025-04-07 10:00:00",
+    "time_up": "2025-04-07 10:00:00",
     "usersettingsimage": "false", //是否用户设置背景
     "statusbarcolor": "rgba(0,0,0,0.8)",
     "theme": "true",
-    "initial": "false",
-    "currentTimestamp":0,
-    "oldTimestamp":0,
+    "initial": "false", //是否初始化
+    "currentTimestamp": 0,
+    "oldTimestamp": 0,
     "historical_storage": {
         "current_index": 0,
         "max_storage": 20
@@ -105,7 +105,7 @@ if (!userData) {
 
 // 如果开启了自动更新壁纸且时间戳有效
 if (userData.imageauto === "true" && TimestampUtil.isValid(nowtime, userData.oldTimestamp)) {
-    
+
     userData.currentTimestamp = nowtime;
     userData.oldTimestamp = TimestampUtil.addMinutes(nowtime, 1440);
     storage.set("sheep_userdata", JSON.stringify(userData));
@@ -117,13 +117,13 @@ if (userData.imageauto === "true" && TimestampUtil.isValid(nowtime, userData.old
             'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Mobile/15E148 Safari/604.1'
         }
     };
-    
+
     // 使用回调方式处理异步
     fetchWithCallback(wallpaperRequest, (error, response, body) => {
         try {
             const responseData = typeof body === 'string' ? JSON.parse(body) : body;
             const imageUrl = responseData?.data?.phone_url;
-            
+
             if (imageUrl) {
                 userData.backgroundimage = imageUrl;
                 storage.set("sheep_userdata", JSON.stringify(userData));
@@ -144,7 +144,7 @@ if (userData.imageauto === "true" && TimestampUtil.isValid(nowtime, userData.old
 // 完成脚本的函数
 function finishScript() {
     const backgroundImage = userData.backgroundimage;
-    const username = userData.username;   
+    const username = userData.username;
 
     const html = `<!DOCTYPE html>
     <html lang="zh-CN">
@@ -158,7 +158,7 @@ function finishScript() {
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/videolist9.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/zuijin6.css">
         
-        <link rel="stylesheet" href="https://at.alicdn.com/t/c/font_4885201_gq1v7ppzkfi.css">
+        <link rel="stylesheet" href="https://at.alicdn.com/t/c/font_4885201_0s36898nkcq.css">
     </head>
     <style>
         body::before {
@@ -168,12 +168,12 @@ function finishScript() {
     </style>
     <body>
     
-        <div id="main-container">
-        </div>
+        <div id="main-container"></div>
 
-        <div id="play-container">
 
-        </div>
+        <div id="play-container"> </div>
+
+
         <div id="recent-container"></div>
 
         
@@ -181,6 +181,7 @@ function finishScript() {
 
         <div id="loading-results"></div>
 
+        <div id="user-container"></div>
 
         <div id="PopUpWindow"></div>
 
@@ -209,14 +210,15 @@ function finishScript() {
     <script>
         const username = "${username}";
     </script>   
-    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/main64.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/main65.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/zuijin11.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/faxian.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/user.js"></script>
     </html>`;
 
-    $done({ 
-        status: "HTTP/1.1 200 OK", 
-        headers: { "Content-Type": "text/html" }, 
-        body: html 
+    $done({
+        status: "HTTP/1.1 200 OK",
+        headers: { "Content-Type": "text/html" },
+        body: html
     });
 }
