@@ -908,6 +908,24 @@ function initializeApp() {
         playContainer.style.display = 'none';
     }
     
+    // 隐藏最近观看容器
+    const recentContainer = document.getElementById('recent-container');
+    if (recentContainer) {
+        recentContainer.style.display = 'none';
+    }
+    
+    // 隐藏用户容器
+    const userContainer = document.getElementById('user-container');
+    if (userContainer) {
+        userContainer.style.display = 'none';
+    }
+    
+    // 隐藏发现容器
+    const discoverContainer = document.getElementById('discover-container');
+    if (discoverContainer) {
+        discoverContainer.style.display = 'none';
+    }
+    
     // 清空loading-results容器
     const loadingResults = document.getElementById('loading-results');
     if (loadingResults) {

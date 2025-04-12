@@ -45,8 +45,8 @@ function confirmUsernameEdit() {
         });
 }
 
-// 我的页面--关于--历史版本
-function showProfile() {
+// 隐藏所有容器
+function hideAllContainers() {
     // 隐藏播放容器
     const playContainer = document.getElementById('play-container');
     if (playContainer) {
@@ -71,6 +71,18 @@ function showProfile() {
     if (discoverContainer) {
         discoverContainer.style.display = 'none';
     }
+    
+    // 隐藏用户容器
+    const userContainer = document.getElementById('user-container');
+    if (userContainer) {
+        userContainer.style.display = 'none';
+    }
+}
+
+// 我的页面--关于--历史版本
+function showProfile() {
+    // 先隐藏所有容器
+    hideAllContainers();
     
     // 获取并显示用户容器
     const userContainer = document.getElementById("user-container");
@@ -198,7 +210,14 @@ function showUsernamePopup() {
 // 设置用户界面事件委托
 function setupUserEventDelegation() {
     // 用户容器事件委托
-    document.getElementById('user-container').addEventListener('click', function(event) {
+    const userContainer = document.getElementById('user-container');
+    
+    // 移除可能存在的旧事件监听器，防止重复绑定
+    const oldUserContainer = userContainer.cloneNode(true);
+    userContainer.parentNode.replaceChild(oldUserContainer, userContainer);
+    
+    // 为新的容器添加事件监听
+    oldUserContainer.addEventListener('click', function(event) {
         const target = event.target;
         
         // 处理折叠面板点击
@@ -213,7 +232,14 @@ function setupUserEventDelegation() {
     });
     
     // 弹出窗口事件委托
-    document.getElementById('PopUpWindow').addEventListener('click', function(event) {
+    const popUpWindow = document.getElementById('PopUpWindow');
+    
+    // 移除可能存在的旧事件监听器，防止重复绑定
+    const oldPopUpWindow = popUpWindow.cloneNode(true);
+    popUpWindow.parentNode.replaceChild(oldPopUpWindow, popUpWindow);
+    
+    // 为新的弹窗添加事件监听
+    oldPopUpWindow.addEventListener('click', function(event) {
         const target = event.target;
         
         // 处理点击弹窗外部关闭
@@ -232,3 +258,99 @@ function setupUserEventDelegation() {
         }
     });
 }
+
+// 页面加载完成后，修改底部导航栏事件处理
+document.addEventListener('DOMContentLoaded', function() {
+    // 获取导航按钮
+    const profileBtn = document.getElementById('profileBtn');
+    const listBtn = document.getElementById('listBtn');
+    const searchBtn = document.getElementById('searchBtn');
+    const discoverBtn = document.getElementById('disCover');
+    
+    // 确保底部导航栏的"我的"按钮功能正确
+    if (profileBtn) {
+        // 覆盖原始点击事件以确保容器正确隐藏
+        profileBtn.onclick = function() {
+            showProfile();
+            // 更新导航栏按钮状态
+            document.querySelectorAll('#bottom-nav .nav-button').forEach(btn => {
+                btn.classList.remove('nav-active');
+            });
+            profileBtn.classList.add('nav-active');
+        };
+    }
+    
+    // 修改其他导航按钮，确保它们在点击时隐藏用户容器
+    // 这些按钮已经有自己的处理函数，我们需要确保用户容器在其他按钮点击时被隐藏
+    if (listBtn) {
+        const originalListBtnClick = listBtn.onclick;
+        listBtn.onclick = function() {
+            // 隐藏用户容器
+            const userContainer = document.getElementById('user-container');
+            if (userContainer) {
+                userContainer.style.display = 'none';
+            }
+            
+            // 调用原始函数
+            if (typeof originalListBtnClick === 'function') {
+                originalListBtnClick.call(this);
+            } else if (typeof showList === 'function') {
+                showList();
+            }
+            
+            // 更新导航栏按钮状态
+            document.querySelectorAll('#bottom-nav .nav-button').forEach(btn => {
+                btn.classList.remove('nav-active');
+            });
+            listBtn.classList.add('nav-active');
+        };
+    }
+    
+    if (searchBtn) {
+        const originalSearchBtnClick = searchBtn.onclick;
+        searchBtn.onclick = function() {
+            // 隐藏用户容器
+            const userContainer = document.getElementById('user-container');
+            if (userContainer) {
+                userContainer.style.display = 'none';
+            }
+            
+            // 调用原始函数
+            if (typeof originalSearchBtnClick === 'function') {
+                originalSearchBtnClick.call(this);
+            } else if (typeof showSearch === 'function') {
+                showSearch();
+            }
+            
+            // 更新导航栏按钮状态
+            document.querySelectorAll('#bottom-nav .nav-button').forEach(btn => {
+                btn.classList.remove('nav-active');
+            });
+            searchBtn.classList.add('nav-active');
+        };
+    }
+    
+    if (discoverBtn) {
+        const originalDiscoverBtnClick = discoverBtn.onclick;
+        discoverBtn.onclick = function() {
+            // 隐藏用户容器
+            const userContainer = document.getElementById('user-container');
+            if (userContainer) {
+                userContainer.style.display = 'none';
+            }
+            
+            // 调用原始函数
+            if (typeof originalDiscoverBtnClick === 'function') {
+                originalDiscoverBtnClick.call(this);
+            } else if (typeof disCover === 'function') {
+                disCover();
+            }
+            
+            // 更新导航栏按钮状态
+            document.querySelectorAll('#bottom-nav .nav-button').forEach(btn => {
+                btn.classList.remove('nav-active');
+            });
+            discoverBtn.classList.add('nav-active');
+        };
+    }
+});
