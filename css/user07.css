@@ -25,9 +25,12 @@
 
 .user-title {
     font-size: 24px;
-    margin: 35px 0 8px;
+    margin: 0; /* 移除上下边距 */
     color: #f39c12;
     text-align: center;
+    line-height: 1.2; /* 略微调整行高 */
+    display: inline-block; /* 行内块元素 */
+    vertical-align: middle; /* 垂直居中 */
 }
 
 .user-content {
@@ -40,21 +43,22 @@
 /* 用户名容器居中显示 */
 .username-container {
     display: flex;
-    align-items: center;
+    align-items: center; /* 居中对齐 */
     justify-content: center;
-    margin-bottom: 20px;
+    margin: 35px 0 20px; /* 将标题的上边距移至容器 */
     padding-bottom: 10px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    gap: 8px; /* 使用gap代替margin-left，更加统一 */
 }
 
 /* 修改用户名按钮位置 */
 .xiuGaiUserName {
     cursor: pointer;
     color: #f39c12;
-    font-size: 32px; /* 调大图标尺寸 */
-    margin-left: 10px;
-    display: flex; /* 添加flex布局 */
-    align-items: center; /* 垂直居中对齐 */
+    font-size: 24px; /* 与标题大小一致 */
+    line-height: 1.2; /* 与标题行高一致 */
+    display: inline-block; /* 行内块元素 */
+    vertical-align: middle; /* 垂直居中 */
 }
 
 /* 折叠面板样式 */

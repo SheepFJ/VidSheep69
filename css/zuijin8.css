@@ -215,11 +215,9 @@
 /* 最近观看简单标题样式 */
 .recent-simple-title {
     color: #f39c12;
-    font-size: 20px;
+    font-size: 24px;
     text-align: center;
-    margin: 35px 0 8px 0;
+    margin: 35px 0 5px 0;
     font-weight: bold;
-
     padding: 12px 0;
-
 }
