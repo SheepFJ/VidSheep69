@@ -229,49 +229,50 @@ function showAboutUs() {
 // 支持作者
 function showSupportAuthor() {
     const content = `
-        <div class="support-author-content">
-            <div class="support-header">
+        <div class="about-us-content">
+            <div class="about-us-logo">
                 <i class="iconfont icon-zhichi" style="font-size: 48px; color: #f39c12;"></i>
                 <h3>感谢您的支持</h3>
-                <p>当前版本还是有许多不便的地方，我也在持续更新中</p>
-                <p>如果喜欢，请给个Star，请作者喝杯柠檬水，谢谢~</p>
+            </div>
+            <div class="about-us-version">您的支持是我们持续更新的动力</div>
+            
+            <div class="about-us-update-info">
+                <h4 class="update-title">关于支持</h4>
+                <p style="color: #ddd; margin-bottom: 10px;">当前版本还是有许多不便的地方，我也在持续更新中</p>
+                <p style="color: #ddd;">如果您喜欢VidSheep这个项目，欢迎通过以下方式支持我的开发工作</p>
             </div>
             
-            <div class="support-message">
-                <p>如果您喜欢VidSheep这个项目，欢迎通过以下方式支持我的开发工作噢</p>
-            </div>
-            
-            <div class="donation-container">
-                <h4 class="donation-title">赞赏码</h4>
-                <div class="donation-qrcode">
-                    <img src="https://img.picgo.net/2025/04/13/d38d743ad92baf172119efa434ee8b1bb715a9edc0557147.jpeg" alt="收款码">
+            <div class="version-history-container" style="background-color: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 8px;">
+                <h4 class="history-title">赞赏码</h4>
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <div style="width: 200px; height: 200px; overflow: hidden; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 3px 15px rgba(0, 0, 0, 0.3);">
+                        <img src="https://img.picgo.net/2025/04/13/d38d743ad92baf172119efa434ee8b1bb715a9edc0557147.jpeg" alt="收款码" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <p style="color: #ccc; font-size: 14px; margin: 5px 0;">扫描上方二维码加速作者更新</p>
+                    <p style="color: #ccc; font-size: 14px; margin: 5px 0;">金额大于1块的扫码备注留言将出现在下方特别感谢中</p>
                 </div>
-                <p class="donation-tips">扫描上方二维码加速作者更新</p>
-                <p class="donation-tips">扫码备注的留言将出现在下方特别感谢中</p>
             </div>
             
-            <div class="support-other-ways">
-                <h4>其他支持方式</h4>
-                <ul class="support-list">
-                    <li>
-                        <i class="iconfont icon-fenxiang"></i>
-                        <span>向朋友推荐VidSheep</span>
-                    </li>
-                    <li>
-                        <i class="iconfont icon-github"></i>
-                        <span>在GitHub上为项目点亮Star</span>
-                    </li>
-                    <li>
-                        <i class="iconfont icon-fankui"></i>
-                        <span>提供宝贵的使用反馈和建议</span>
-                    </li>
-                </ul>
+            <div class="about-us-links" style="margin-top: 20px;">
+                <h4 style="color: #f39c12; margin-bottom: 15px; text-align: center;">其他支持方式</h4>
+                <div class="about-us-link" style="background-color: rgba(255, 255, 255, 0.05); border-radius: 8px; margin-bottom: 10px;">
+                    <i class="iconfont icon-yaoqinghaoyoupengyou" style="color: #f39c12;"></i>
+                    <span style="color: #ddd;">向朋友推荐VidSheep</span>
+                </div>
+                <div class="about-us-link" style="background-color: rgba(255, 255, 255, 0.05); border-radius: 8px; margin-bottom: 10px;">
+                    <i class="iconfont icon-star" style="color: #f39c12;"></i>
+                    <span style="color: #ddd;">在GitHub上为项目点亮<a href="https://github.com/SheepFJ/VidSheep" target="_blank">Star</a></span>
+                </div>
+                <div class="about-us-link" style="background-color: rgba(255, 255, 255, 0.05); border-radius: 8px; margin-bottom: 10px;">
+                    <i class="iconfont icon-fankuixinxi" style="color: #f39c12;"></i>
+                    <span style="color: #ddd;">提供宝贵的使用反馈和建议</span>
+                </div>
             </div>
             
-            <div class="support-thanks">
-                <h4>特别感谢</h4>
-                <p>增加自动跳过开头结尾的功能吧开头都是广告</p>
-                <p></p>
+            <div class="about-us-update-info" style="margin-top: 20px;">
+                <h4 class="update-title">特别感谢</h4>
+                <p style="color: #ddd; margin-bottom: 10px;">增加自动跳过开头结尾的功能吧开头都是广告</p>
+                <p style="color: #ddd;">感谢所有支持过VidSheep的用户，正是有了您的支持，我们才能不断进步！</p>
             </div>
         </div>
     `;

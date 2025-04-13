@@ -89,6 +89,7 @@
 
 /* 发现内容头部 */
 .discover-content-header {
+    margin-top: 28px;
     position: sticky;
     top: 0;
     display: flex;
