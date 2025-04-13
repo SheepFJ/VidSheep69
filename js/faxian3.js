@@ -73,10 +73,10 @@ function showDiscoverList() {
     const discoverItems = [
         
         // 我的收藏
-        { id: 'my-collection', title: '我的收藏', icon: 'icon-shoucang', handler: showMyCollection },
+        // { id: 'my-collection', title: '我的收藏', icon: 'icon-shoucang', handler: showMyCollection },
 
-        // 修改壁纸
-        { id: 'change-wallpaper', title: '修改壁纸', icon: 'icon-bi', handler: showChangeWallpaper },
+        // // 修改壁纸
+        // { id: 'change-wallpaper', title: '修改壁纸', icon: 'icon-bi', handler: showChangeWallpaper },
         
         // 支持作者
         { id: 'support-author', title: '支持作者', icon: 'icon-zhichi', handler: showSupportAuthor },
