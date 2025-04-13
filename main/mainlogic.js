@@ -208,10 +208,10 @@ function finishScript() {
                     <span>发现</span>
                 </div>
 
-               <!-- <div class="nav-button nav-active" id="profileBtn" onclick="showProfile()">
+               <div class="nav-button nav-active" id="profileBtn" onclick="showProfile()">
                     <i class="iconfont icon-wode"></i>
                     <span>我的</span>
-                </div> -->
+                </div> 
             </div>
         </footer>
     </body>
