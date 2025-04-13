@@ -1,0 +1,493 @@
+/* 发现页面样式 */
+
+/* 发现容器 */
+#discover-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 96%;
+    height: calc(100% - 60px); /* 减去底部导航栏的高度 */
+    overflow-y: auto;
+    z-index: 10;
+    display: none;
+    color: #fff;
+}
+
+/* 发现列表容器 */
+#discover-list {
+    padding: 15px;
+    margin-top: 35px;
+    box-sizing: border-box;
+}
+
+/* 发现内容容器 */
+#discover-content {
+    height: 100%;
+    display: none;
+}
+
+/* 发现页面标题 */
+.discover-title {
+    text-align: center;
+    color: #f39c12;
+    font-size: 24px;
+    margin: 30px 0 20px 0;
+    font-weight: bold;
+}
+
+/* 发现项目列表 */
+.discover-items {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* 发现项目 */
+.discover-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.discover-item:hover, .discover-item:active {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateX(5px);
+}
+
+/* 发现项目图标 */
+.discover-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(243, 156, 18, 0.8);
+    border-radius: 50%;
+    margin-right: 12px;
+}
+
+.discover-icon i {
+    font-size: 20px;
+    color: #fff;
+}
+
+/* 发现项目标题 */
+.discover-item-title {
+    flex: 1;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/* 发现项目箭头 */
+.discover-arrow {
+    color: #999;
+}
+
+/* 发现内容头部 */
+.discover-content-header {
+    position: sticky;
+    top: 0;
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.9) 70%, rgba(0,0,0,0));
+    z-index: 2;
+    margin-bottom: 15px;
+}
+
+/* 返回按钮 */
+.discover-back-button {
+    background: transparent;
+    border: none;
+    color: #f39c12;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 8px;
+    margin-right: 10px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.discover-back-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* 内容标题 */
+.discover-content-title {
+    flex: 1;
+    text-align: center;
+    color: #f39c12;
+    margin: 0;
+    font-size: 18px;
+    padding-right: 40px; /* 为了平衡返回按钮的位置，保持居中 */
+}
+
+/* 内容主体 */
+.discover-content-body {
+    padding: 0 15px 20px;
+}
+
+/* 加载中动画 */
+.discover-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 0;
+}
+
+.loading-animation {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    border-top-color: #f39c12;
+    animation: spin 1s linear infinite;
+    margin-bottom: 10px;
+}
+
+.loading-text {
+    color: #ccc;
+    font-size: 14px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 关于我们样式 */
+.about-us-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+    text-align: center;
+}
+
+.about-us-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.about-us-logo h3 {
+    margin-top: 10px;
+    color: #f39c12;
+    font-size: 24px;
+}
+
+.about-us-version {
+    color: #ccc;
+    margin-bottom: 20px;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.about-us-desc {
+    margin: 20px 0;
+    line-height: 1.6;
+    font-size: 14px;
+    padding: 0 15px;
+    color: #aaa;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 20px;
+    width: 90%;
+}
+
+.about-us-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 30px;
+    width: 100%;
+}
+
+.about-us-link {
+    display: flex;
+    align-items: center;
+    padding: 5px 15px;
+    gap: 10px;
+}
+
+.about-us-link i {
+    color: #f39c12;
+    font-size: 18px;
+    min-width: 20px;
+}
+
+.about-us-link a {
+    color: #3498db;
+    text-decoration: none;
+}
+
+.about-us-link a:hover {
+    text-decoration: underline;
+}
+
+.about-us-copyright {
+    color: #999;
+    font-size: 12px;
+}
+
+/* 历史版本样式 */
+.version-history-container {
+    width: calc(100% - 30px);
+    max-width: 400px;
+    margin: 0 15px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.history-title {
+    color: #f39c12;
+    margin: 0 0 15px;
+    text-align: left;
+    font-size: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 8px;
+}
+
+.version-item {
+    margin-bottom: 15px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+    text-align: left;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.version-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.version-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 15px;
+    background-color: rgba(243, 156, 18, 0.15);
+    align-items: center;
+}
+
+.version-number {
+    color: #f39c12;
+    font-weight: 500;
+    font-size: 15px;
+}
+
+.version-date {
+    color: #aaa;
+    font-size: 13px;
+}
+
+.version-changes {
+    margin: 0;
+    padding: 12px 15px 12px 35px;
+    line-height: 1.5;
+}
+
+.version-changes li {
+    margin-bottom: 8px;
+    color: #ddd;
+    font-size: 14px;
+}
+
+.version-changes li:last-child {
+    margin-bottom: 0;
+}
+
+/* 当前版本更新内容样式 */
+.about-us-update-info {
+    background-color: rgba(243, 156, 18, 0.1);
+    border-radius: 8px;
+    padding: 15px;
+    margin: 0 15px 25px;
+    width: calc(100% - 30px);
+    max-width: 400px;
+    border-left: 3px solid #f39c12;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.update-title {
+    color: #f39c12;
+    margin: 0 0 10px;
+    font-size: 16px;
+    text-align: left;
+    font-weight: 500;
+}
+
+.update-list {
+    margin: 0;
+    padding-left: 20px;
+    text-align: left;
+    line-height: 1.5;
+}
+
+.update-list li {
+    margin-bottom: 8px;
+    color: #ddd;
+    font-size: 14px;
+}
+
+.update-list li:last-child {
+    margin-bottom: 0;
+}
+
+@media (max-width: 375px) {
+    .version-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .version-date {
+        margin-top: 5px;
+        font-size: 12px;
+    }
+    
+    .version-changes {
+        padding-left: 25px;
+    }
+    
+    .about-us-update-info {
+        padding: 12px;
+    }
+}
+
+/* 支持作者页面样式 */
+.support-author-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.support-header {
+    margin-bottom: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.support-header h3 {
+    font-size: 22px;
+    margin: 15px 0 5px;
+    color: #333;
+}
+
+.support-header p {
+    color: #666;
+    margin: 5px 0;
+}
+
+.support-message {
+    margin-bottom: 25px;
+    text-align: left;
+    width: 100%;
+}
+
+.support-message p {
+    color: #555;
+    line-height: 1.6;
+    margin: 10px 0;
+}
+
+.donation-container {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto 30px;
+    padding: 15px;
+    border-radius: 12px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.donation-title {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.donation-qrcode {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+}
+
+.donation-qrcode img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.donation-tips {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #666;
+}
+
+.support-other-ways {
+    width: 100%;
+    margin-bottom: 25px;
+    text-align: left;
+}
+
+.support-other-ways h4 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.support-list {
+    list-style: none;
+    padding: 0;
+}
+
+.support-list li {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.support-list i {
+    margin-right: 15px;
+    font-size: 20px;
+    color: #f39c12;
+}
+
+.support-thanks {
+    width: 100%;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    margin-top: 10px;
+}
+
+.support-thanks h4 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.support-thanks p {
+    color: #555;
+    line-height: 1.6;
+    margin: 10px 0;
+}

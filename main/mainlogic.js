@@ -157,7 +157,7 @@ function finishScript() {
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/search12.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/videolist9.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/zuijin8.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/faxian1.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/faxian2.css">
         
         <link rel="stylesheet" href="https://at.alicdn.com/t/c/font_4885201_0s36898nkcq.css">
     </head>
@@ -207,10 +207,11 @@ function finishScript() {
                     <i class="iconfont icon-faxian"></i>
                     <span>发现</span>
                 </div>
-                <div class="nav-button nav-active" id="profileBtn" onclick="showProfile()">
+
+               <!-- <div class="nav-button nav-active" id="profileBtn" onclick="showProfile()">
                     <i class="iconfont icon-wode"></i>
                     <span>我的</span>
-                </div>
+                </div> -->
             </div>
         </footer>
     </body>
@@ -219,7 +220,7 @@ function finishScript() {
     </script>   
     <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/main73.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/zuijin18.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/faxian1.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/faxian2.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/user11.js"></script>
     </html>`;
 
