@@ -71,8 +71,9 @@
 }
 
 .discover-icon i {
-    font-size: 20px;
-    color: #fff;
+    font-size: 38px;
+    color: rgba(243, 156, 18,1);
+
 }
 
 /* 发现项目标题 */
@@ -89,7 +90,7 @@
 
 /* 发现内容头部 */
 .discover-content-header {
-    margin-top: 28px;
+    padding-top: 34px;
     position: sticky;
     top: 0;
     display: flex;

@@ -234,11 +234,10 @@ function showSupportAuthor() {
                 <i class="iconfont icon-zhichi" style="font-size: 48px; color: #f39c12;"></i>
                 <h3>感谢您的支持</h3>
             </div>
-            <div class="about-us-version">您的支持是我们持续更新的动力</div>
             
             <div class="about-us-update-info">
-                <h4 class="update-title">关于支持</h4>
-                <p style="color: #ddd; margin-bottom: 10px;">当前版本还是有许多不便的地方，我也在持续更新中</p>
+                <h4 class="update-title">自述</h4>
+                <p style="color: #ddd; margin-bottom: 10px;">当前版本还是有许多不便的地方，作者将持续更新调整</p>
                 <p style="color: #ddd;">如果您喜欢VidSheep这个项目，欢迎通过以下方式支持我的开发工作</p>
             </div>
             
@@ -249,7 +248,7 @@ function showSupportAuthor() {
                         <img src="https://img.picgo.net/2025/04/13/d38d743ad92baf172119efa434ee8b1bb715a9edc0557147.jpeg" alt="收款码" style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
                     <p style="color: #ccc; font-size: 14px; margin: 5px 0;">扫描上方二维码加速作者更新</p>
-                    <p style="color: #ccc; font-size: 14px; margin: 5px 0;">金额大于1块的扫码备注留言将出现在下方特别感谢中</p>
+                    <p style="color: #ccc; font-size: 14px; margin: 5px 0;">金额大于1块的扫码备注将出现在下方特别感谢中</p>
                 </div>
             </div>
             
@@ -271,8 +270,7 @@ function showSupportAuthor() {
             
             <div class="about-us-update-info" style="margin-top: 20px;">
                 <h4 class="update-title">特别感谢</h4>
-                <p style="color: #ddd; margin-bottom: 10px;">增加自动跳过开头结尾的功能吧开头都是广告</p>
-                <p style="color: #ddd;">感谢所有支持过VidSheep的用户，正是有了您的支持，我们才能不断进步！</p>
+                <p style="color: #ddd; margin-bottom: 10px;"><i class="iconfont icon-bg-label" style="color: #f39c12;"></i>增加自动跳过开头结尾的功能吧开头都是广告</p>               
             </div>
         </div>
     `;
