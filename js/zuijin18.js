@@ -13,6 +13,12 @@ function showList() {
         userContainer.style.display = 'none';
     }
     
+    // 隐藏发现容器
+    const discoverContainer = document.getElementById('discover-container');
+    if (discoverContainer) {
+        discoverContainer.style.display = 'none';
+    }
+    
     // 直接隐藏主容器，而不是调整不透明度
     const mainContainer = document.getElementById("main-container");
     if (mainContainer) {
@@ -183,14 +189,28 @@ function closeRecentContainer() {
         // 检查底部导航栏的激活按钮来决定显示哪个容器
         const activeNavButton = document.querySelector('#bottom-nav .nav-active');
         
-        if (activeNavButton && activeNavButton.id === 'profileBtn') {
-            // 如果是"我的"按钮激活，显示用户容器
-            const userContainer = document.getElementById('user-container');
-            if (userContainer) {
-                userContainer.style.display = 'block';
+        if (activeNavButton) {
+            if (activeNavButton.id === 'profileBtn') {
+                // 如果是"我的"按钮激活，显示用户容器
+                const userContainer = document.getElementById('user-container');
+                if (userContainer) {
+                    userContainer.style.display = 'block';
+                }
+            } else if (activeNavButton.id === 'disCover') {
+                // 如果是"发现"按钮激活，显示发现容器
+                const discoverContainer = document.getElementById('discover-container');
+                if (discoverContainer) {
+                    discoverContainer.style.display = 'block';
+                }
+            } else {
+                // 其他情况显示主容器
+                const mainContainer = document.getElementById("main-container");
+                if (mainContainer) {
+                    mainContainer.style.display = 'block';
+                }
             }
         } else {
-            // 其他情况显示主容器
+            // 没有激活按钮时默认显示主容器
             const mainContainer = document.getElementById("main-container");
             if (mainContainer) {
                 mainContainer.style.display = 'block';

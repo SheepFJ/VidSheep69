@@ -74,6 +74,12 @@ function showProfile() {
         mainContainer.style.display = 'none';
     }
     
+    // 隐藏发现容器
+    const discoverContainer = document.getElementById('discover-container');
+    if (discoverContainer) {
+        discoverContainer.style.display = 'none';
+    }
+    
     // 使用用户容器而不是主容器
     const userContainer = document.getElementById("user-container");
     if (!userContainer) return;
@@ -173,40 +179,6 @@ function showProfile() {
     userContainer.style.display = 'block';
 }
 
-//发现
-function disCover() {
-    // 隐藏播放容器
-    const playContainer = document.getElementById('play-container');
-    if (playContainer) {
-        playContainer.style.display = 'none';
-        playContainer.innerHTML = '';
-    }
-    
-    // 隐藏最近观看容器
-    const recentContainer = document.getElementById('recent-container');
-    if (recentContainer) {
-        recentContainer.classList.remove('visible');
-        recentContainer.style.display = 'none';
-    }
-    
-    // 隐藏用户容器
-    const userContainer = document.getElementById('user-container');
-    if (userContainer) {
-        userContainer.style.display = 'none';
-    }
-    
-    // 清空loading-results
-    const loadingResults = document.getElementById("loading-results");
-    if (loadingResults) {
-        loadingResults.innerHTML = "";
-    }
-    
-    const mainContainer = document.getElementById("main-container");
-    mainContainer.innerHTML = `hello world`;
-    // 显示主容器
-    mainContainer.style.display = 'block';
-}
-
 // 等待动画加载
 function loadAnimation(loadingResults) {
     loadingResults.innerHTML = `
@@ -237,6 +209,12 @@ function showSearch() {
     const userContainer = document.getElementById('user-container');
     if (userContainer) {
         userContainer.style.display = 'none';
+    }
+    
+    // 隐藏发现容器
+    const discoverContainer = document.getElementById('discover-container');
+    if (discoverContainer) {
+        discoverContainer.style.display = 'none';
     }
     
     // 清空loading-results
@@ -1011,8 +989,6 @@ function renderVideoPlayer(url, title, episodeName) {
     // 添加到播放容器
     playContainer.appendChild(detailPage);
 }
-
-// 最近
 
 // 添加容器样式操作函数
 function addContainersStyle() {

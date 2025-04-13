@@ -1,63 +1,72 @@
 <!DOCTYPE html>
-    <html lang="zh-CN">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-        <title>VidSheep</title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/main15.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/user02.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/search11.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/videolist9.css">
-        
-        <link rel="stylesheet" href="https://at.alicdn.com/t/c/font_4885201_gq1v7ppzkfi.css">
-    </head>
-    <style>
-        body::before {
-            background-image: url(${backgroundImage});
-        }
-        
-    </style>
-    <body>
-    
-        <div id="main-container"></div>
-        <div id="play-container"></div>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+    <title>VidSheep</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/main15.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/user02.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/search11.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/videolist9.css">
+
+    <link rel="stylesheet" href="https://at.alicdn.com/t/c/font_4885201_gq1v7ppzkfi.css">
+</head>
+<style>
+    body::before {
+        background-image: url(${backgroundImage});
+    }
+</style>
+
+<body>
+
+    <div id="main-container"></div>
+    <div id="play-container"></div>
 
 
-        <div id="recent-container"></div>
-
-        
-        <div id="discover-container"></div>
-        
-
-        <div id="loading-results"></div>
+    <div id="recent-container"></div>
 
 
-        <div id="PopUpWindow"></div>
+    <div id="discover-container">
+        <!-- 发现功能列表显示 -->
+        <div id="discover-list"></div>
+
+        <!-- 点击对应功能显示对应内容区域 -->
+        <div id="discover-content"></div>
+    </div>
 
 
-        <footer>
-            <div id="bottom-nav">
-                <div class="nav-button" id="searchBtn" onclick="showSearch()">
-                    <i class="iconfont icon-sousuo"></i>
-                    <span>搜索</span>
-                </div>
-                <div class="nav-button" id="listBtn" onclick="showList()">
-                    <i class="iconfont icon-zuijin"></i>
-                    <span>最近</span>
-                </div>
-                <div class="nav-button" id="disCover" onclick="disCover()">
-                    <i class="iconfont icon-faxian"></i>
-                    <span>发现</span>
-                </div>
-                <div class="nav-button nav-active" id="profileBtn" onclick="showProfile()">
-                    <i class="iconfont icon-wode"></i>
-                    <span>我的</span>
-                </div>
+    <div id="loading-results"></div>
+    <div id="user-container"></div>
+
+    <div id="PopUpWindow"></div>
+
+
+    <footer>
+        <div id="bottom-nav">
+            <div class="nav-button" id="searchBtn" onclick="showSearch()">
+                <i class="iconfont icon-sousuo"></i>
+                <span>搜索</span>
             </div>
-        </footer>
-    </body>
-    <script>
-        const username = "${username}";
-    </script>   
-    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/main54.js"></script>
-    </html>
+            <div class="nav-button" id="listBtn" onclick="showList()">
+                <i class="iconfont icon-zuijin"></i>
+                <span>最近</span>
+            </div>
+            <div class="nav-button" id="disCover" onclick="disCover()">
+                <i class="iconfont icon-faxian"></i>
+                <span>发现</span>
+            </div>
+            <div class="nav-button nav-active" id="profileBtn" onclick="showProfile()">
+                <i class="iconfont icon-wode"></i>
+                <span>我的</span>
+            </div>
+        </div>
+    </footer>
+</body>
+<script>
+    const username = "${username}";
+</script>
+<script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/main54.js"></script>
+
+</html>
