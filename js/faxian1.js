@@ -34,7 +34,7 @@ function disCover() {
         loadingResults.innerHTML = "";
     }
     
-    // 使用发现容器而不是主容器
+    // 使用发现容器
     const discoverContainer = document.getElementById('discover-container');
     if (!discoverContainer) return;
     

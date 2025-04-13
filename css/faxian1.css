@@ -8,7 +8,6 @@
     width: 100%;
     height: calc(100% - 60px); /* 减去底部导航栏的高度 */
     overflow-y: auto;
-    background-color: rgba(0, 0, 0, 0.7); /* 半透明背景 */
     z-index: 10;
     display: none;
     color: #fff;
@@ -17,6 +16,7 @@
 /* 发现列表容器 */
 #discover-list {
     padding: 15px;
+    margin-top: 35px;
     box-sizing: border-box;
 }
 
@@ -24,7 +24,6 @@
 #discover-content {
     height: 100%;
     display: none;
-    background-color: rgba(0, 0, 0, 0.8);
 }
 
 /* 发现页面标题 */
@@ -32,7 +31,7 @@
     text-align: center;
     color: #f39c12;
     font-size: 24px;
-    margin: 10px 0 20px;
+    margin: 38px 0 20px;
     font-weight: bold;
 }
 
@@ -108,10 +107,12 @@
     cursor: pointer;
     padding: 8px;
     margin-right: 10px;
+    padding-top: 38px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: #f39c12;
 }
 
 .discover-back-button:hover {
@@ -123,7 +124,7 @@
     flex: 1;
     text-align: center;
     color: #f39c12;
-    margin: 0;
+    margin: 38px 0 15px 0;
     font-size: 18px;
     padding-right: 40px; /* 为了平衡返回按钮的位置，保持居中 */
 }
