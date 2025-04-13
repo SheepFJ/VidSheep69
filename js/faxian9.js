@@ -290,59 +290,73 @@ function showChangeWallpaper() {
             <div class="about-us-update-info">
                 <h4 class="update-title">自定义壁纸</h4>
                 <p style="color: #ddd; margin-bottom: 10px;">您可以通过以下设置更改壁纸、调整亮度和模糊度</p>
+                <h4 class="update-title">推荐图床来获取url</h4>
+                <p style="color: #ddd; margin-bottom: 10px;">请勿上传涉及个人信息的图片以保护安全:<a href="https://www.picgo.net/login" target="_blank">picgo图床</a> </p>
                 
-                <div style="margin-top: 15px;">
-                    <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px;">
-                        <div style="display: flex; flex-direction: column; gap: 8px;">
-                            <label style="color: #ddd; font-size: 14px;">壁纸链接：</label>
-                            <input id="wallpaper-url" type="text" placeholder="请输入壁纸图片URL" style="padding: 10px; border-radius: 8px; background-color: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff;">
+                <div class="wallpaper-settings">
+                    <div class="wallpaper-form">
+                        <div class="wallpaper-input-group">
+                            <label class="wallpaper-label">壁纸链接：</label>
+                            <input id="wallpaper-url" class="wallpaper-url-input" type="text" placeholder="请输入壁纸图片URL" value="${backgroundImage}">
                         </div>
                         
-                        <div style="display: flex; gap: 15px;">
-                            <div style="flex: 1; flex-direction: column; gap: 8px;">
-                                <label style="color: #ddd; font-size: 14px;">亮度调整 (0-1)：</label>
-                                <div style="display: flex; align-items: center;">
-                                    <button id="brightness-down" style="width: 36px; height: 36px; border-radius: 4px 0 0 4px; background-color: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; cursor: pointer;">-</button>
-                                    <input id="brightness-value" type="text" value="0.5" style="flex: 1; text-align: center; padding: 8px 5px; border-left: none; border-right: none; background-color: rgba(255, 255, 255, 0.1); border-top: 1px solid rgba(255, 255, 255, 0.2); border-bottom: 1px solid rgba(255, 255, 255, 0.2); color: #fff;">
-                                    <button id="brightness-up" style="width: 36px; height: 36px; border-radius: 0 4px 4px 0; background-color: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; cursor: pointer;">+</button>
-                                </div>
-                            </div>
-                            
-                            <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
-                                <label style="color: #ddd; font-size: 14px;">模糊度 (0-10)：</label>
-                                <div style="display: flex; align-items: center;">
-                                    <button id="blur-down" style="width: 36px; height: 36px; border-radius: 4px 0 0 4px; background-color: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; cursor: pointer;">-</button>
-                                    <input id="blur-value" type="text" value="2" style="flex: 1; text-align: center; padding: 8px 5px; border-left: none; border-right: none; background-color: rgba(255, 255, 255, 0.1); border-top: 1px solid rgba(255, 255, 255, 0.2); border-bottom: 1px solid rgba(255, 255, 255, 0.2); color: #fff;">
-                                    <button id="blur-up" style="width: 36px; height: 36px; border-radius: 0 4px 4px 0; background-color: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; cursor: pointer;">+</button>
-                                </div>
+                        <div class="wallpaper-input-group">
+                            <label class="wallpaper-label">亮度调整 (0-1)：</label>
+                            <div class="adjust-controls">
+                                <button id="brightness-down" class="adjust-btn">-</button>
+                                <input id="brightness-value" class="adjust-input" type="text" value="${brightness}">
+                                <button id="brightness-up" class="adjust-btn right">+</button>
                             </div>
                         </div>
                         
-                        <button id="save-wallpaper" style="margin-top: 10px; padding: 12px; border-radius: 8px; background-color: #f39c12; border: none; color: #fff; font-weight: bold; cursor: pointer;">保存设置</button>
+                        <div class="wallpaper-input-group">
+                            <label class="wallpaper-label">模糊度 (0-10)：</label>
+                            <div class="adjust-controls">
+                                <button id="blur-down" class="adjust-btn">-</button>
+                                <input id="blur-value" class="adjust-input" type="text" value="${vague}">
+                                <button id="blur-up" class="adjust-btn right">+</button>
+                            </div>
+                        </div>
+                        
+                        <button id="save-wallpaper" class="save-wallpaper-btn">保存设置</button>
                     </div>
                 </div>
             </div>
             
             <div class="about-us-update-info" style="margin-top: 20px;">
                 <h4 class="update-title">精选壁纸</h4>
-                <p style="color: #ddd; margin-bottom: 15px;">点击下方壁纸即可应用</p>
+                <p style="color: #ddd; margin-bottom: 15px;">点击下方"应用"按钮使用预设壁纸</p>
                 
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px;">
-                    <div class="preset-wallpaper" data-url="https://mfiles.alphacoders.com/853/853922.jpg" data-brightness="0.5" data-blur="2" style="position: relative;">
-                        <img src="https://mfiles.alphacoders.com/853/853922.jpg" style="width: 100%; height: 100px; object-fit: cover; border-radius: 8px;">
-                        <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 8px; background: rgba(0,0,0,0.6); border-radius: 0 0 8px 8px; font-size: 12px; color: #fff; text-align: center;">默认壁纸</div>
+                <div class="preset-wallpapers-grid">
+                    <div class="preset-wallpaper-item" data-url="https://img.picgo.net/2025/04/11/vUIRPuYLKHeW_1700122638919535b1c4b7a7a4ba6.jpeg" data-brightness="${brightness}" data-blur="${vague}">
+                        <img src="https://img.picgo.net/2025/04/11/vUIRPuYLKHeW_1700122638919535b1c4b7a7a4ba6.jpeg" class="preset-wallpaper-img">
+                        <div class="preset-wallpaper-caption">壁纸1</div>
+                        <button class="preset-wallpaper-apply">应用</button>
                     </div>
-                    <div class="preset-wallpaper" data-url="https://images.alphacoders.com/128/1282436.png" data-brightness="0.6" data-blur="3" style="position: relative;">
-                        <img src="https://images.alphacoders.com/128/1282436.png" style="width: 100%; height: 100px; object-fit: cover; border-radius: 8px;">
-                        <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 8px; background: rgba(0,0,0,0.6); border-radius: 0 0 8px 8px; font-size: 12px; color: #fff; text-align: center;">动漫风格</div>
+                    <div class="preset-wallpaper-item" data-url="https://img.picgo.net/2025/04/11/GsWwJ8qQUAqD_1740639963384332315e3baafa765.jpeg" data-brightness="${brightness}" data-blur="${vague}">
+                        <img src="https://img.picgo.net/2025/04/11/GsWwJ8qQUAqD_1740639963384332315e3baafa765.jpeg" class="preset-wallpaper-img">
+                        <div class="preset-wallpaper-caption">壁纸2</div>
+                        <button class="preset-wallpaper-apply">应用</button>
                     </div>
-                    <div class="preset-wallpaper" data-url="https://images.alphacoders.com/130/1308797.png" data-brightness="0.5" data-blur="4" style="position: relative;">
-                        <img src="https://images.alphacoders.com/130/1308797.png" style="width: 100%; height: 100px; object-fit: cover; border-radius: 8px;">
-                        <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 8px; background: rgba(0,0,0,0.6); border-radius: 0 0 8px 8px; font-size: 12px; color: #fff; text-align: center;">城市夜景</div>
+                    <div class="preset-wallpaper-item" data-url="https://img.picgo.net/2025/04/11/i3pVGxLKGO1c_170684191840469d4113f72f0add2.jpeg" data-brightness="${brightness}" data-blur="${vague}">
+                        <img src="https://img.picgo.net/2025/04/11/i3pVGxLKGO1c_170684191840469d4113f72f0add2.jpeg" class="preset-wallpaper-img">
+                        <div class="preset-wallpaper-caption">壁纸3</div>
+                        <button class="preset-wallpaper-apply">应用</button>
                     </div>
-                    <div class="preset-wallpaper" data-url="https://images.alphacoders.com/130/1307284.png" data-brightness="0.4" data-blur="1" style="position: relative;">
-                        <img src="https://images.alphacoders.com/130/1307284.png" style="width: 100%; height: 100px; object-fit: cover; border-radius: 8px;">
-                        <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 8px; background: rgba(0,0,0,0.6); border-radius: 0 0 8px 8px; font-size: 12px; color: #fff; text-align: center;">科幻景观</div>
+                    <div class="preset-wallpaper-item" data-url="https://img.picgo.net/2025/04/11/PkKNT35Ufzvy_17070318020985ee9b67a8ea96c77.jpeg" data-brightness="${brightness}" data-blur="${vague}">
+                        <img src="https://img.picgo.net/2025/04/11/PkKNT35Ufzvy_17070318020985ee9b67a8ea96c77.jpeg" class="preset-wallpaper-img">
+                        <div class="preset-wallpaper-caption">壁纸4</div>
+                        <button class="preset-wallpaper-apply">应用</button>
+                    </div>
+                    <div class="preset-wallpaper-item" data-url="https://img.picgo.net/2025/04/11/HHbTWSI8EKdG_16560606983974b7c14937c5f3d5a.jpeg" data-brightness="${brightness}" data-blur="${vague}">
+                        <img src="https://img.picgo.net/2025/04/11/HHbTWSI8EKdG_16560606983974b7c14937c5f3d5a.jpeg" class="preset-wallpaper-img">
+                        <div class="preset-wallpaper-caption">壁纸5</div>
+                        <button class="preset-wallpaper-apply">应用</button>
+                    </div>
+                    <div class="preset-wallpaper-item" data-url="https://img.picgo.net/2025/04/11/da4YEBlDgsE5_17261284268934912e319fe1e7bd3.jpeg" data-brightness="${brightness}" data-blur="${vague}">
+                        <img src="https://img.picgo.net/2025/04/11/da4YEBlDgsE5_17261284268934912e319fe1e7bd3.jpeg" class="preset-wallpaper-img">
+                        <div class="preset-wallpaper-caption">壁纸6</div>
+                        <button class="preset-wallpaper-apply">应用</button>
                     </div>
                 </div>
             </div>
@@ -408,23 +422,24 @@ function showChangeWallpaper() {
             });
         }
         
-        // 预设壁纸点击事件
-        const presetWallpapers = document.querySelectorAll('.preset-wallpaper');
-        presetWallpapers.forEach(item => {
-            item.addEventListener('click', () => {
-                const url = item.getAttribute('data-url');
-                const brightness = item.getAttribute('data-brightness');
-                const blur = item.getAttribute('data-blur');
-                
-                // 预览效果（设置预览的背景样式）
-                updateWallpaperPreview(url);
+        // 预设壁纸应用按钮点击事件
+        const presetApplyBtns = document.querySelectorAll('.preset-wallpaper-apply');
+        presetApplyBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const parent = btn.closest('.preset-wallpaper-item');
+                const url = parent.getAttribute('data-url');
+                const brightness = parent.getAttribute('data-brightness');
+                const blur = parent.getAttribute('data-blur');
                 
                 // 更新输入框的值
                 document.getElementById('wallpaper-url').value = url;
                 document.getElementById('brightness-value').value = brightness;
                 document.getElementById('blur-value').value = blur;
                 
-                // 可选：直接保存设置
+                // 预览效果（设置预览的背景样式）
+                updateWallpaperPreview(url);
+                
+                // 保存设置
                 saveWallpaperSettings(url, brightness, blur);
             });
         });
