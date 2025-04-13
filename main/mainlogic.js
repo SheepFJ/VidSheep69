@@ -170,8 +170,8 @@ function finishScript() {
             background-image: url(${backgroundImage});
         }
 
-        #bottom-nav {
-            background: rgba(30, 30, 30, ${brightness});
+        body::after {
+            background: rgba(18, 18, 18, ${brightness});
             backdrop-filter: blur(${vague}px);
         }
 
