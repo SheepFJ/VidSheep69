@@ -147,6 +147,8 @@ if (userData.imageauto === "true" && TimestampUtil.isValid(nowtime, userData.old
 function finishScript() {
     const backgroundImage = userData.backgroundimage;
     const username = userData.username;
+    const brightness = userData.brightness;
+    const vague = userData.vague;
 
     const html = `<!DOCTYPE html>
     <html lang="zh-CN">
@@ -159,7 +161,7 @@ function finishScript() {
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/search12.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/videolist9.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/zuijin4.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/faxian6.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/faxian7.css">
         
         <link rel="stylesheet" href="https://at.alicdn.com/t/c/font_4885201_44u4aw4few2.css">
     </head>
@@ -167,6 +169,13 @@ function finishScript() {
         body::before {
             background-image: url(${backgroundImage});
         }
+
+        #bottom-nav {
+            background: rgba(30, 30, 30, ${brightness});
+            backdrop-filter: blur(${vague}px);
+        }
+
+
         
     </style>
     <body>
@@ -219,10 +228,13 @@ function finishScript() {
     </body>
     <script>
         const username = "${username}";
+        const backimage = "${backgroundImage}";
+        const brightness = "${brightness}";
+        const vague = "${vague}";
     </script>   
     <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/main73.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/zuijin18.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/faxian7.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/faxian8.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/user11.js"></script>
     </html>`;
 

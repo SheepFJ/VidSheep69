@@ -299,7 +299,7 @@ function showChangeWallpaper() {
                         </div>
                         
                         <div style="display: flex; gap: 15px;">
-                            <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
+                            <div style="flex: 1; flex-direction: column; gap: 8px;">
                                 <label style="color: #ddd; font-size: 14px;">亮度调整 (0-1)：</label>
                                 <div style="display: flex; align-items: center;">
                                     <button id="brightness-down" style="width: 36px; height: 36px; border-radius: 4px 0 0 4px; background-color: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; cursor: pointer;">-</button>
