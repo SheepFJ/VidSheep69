@@ -5,7 +5,7 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 96%;
+    width: 100%;
     height: calc(100% - 60px); /* 减去底部导航栏的高度 */
     overflow-y: auto;
     z-index: 10;
@@ -71,7 +71,7 @@
 }
 
 .discover-icon i {
-    font-size: 38px;
+    font-size: 22px;
     color: rgba(243, 156, 18,1);
 
 }
@@ -90,7 +90,6 @@
 
 /* 发现内容头部 */
 .discover-content-header {
-    padding-top: 34px;
     position: sticky;
     top: 0;
     display: flex;
@@ -133,6 +132,7 @@
 /* 内容主体 */
 .discover-content-body {
     padding: 0 15px 20px;
+    margin-top: 38px;
 }
 
 /* 加载中动画 */

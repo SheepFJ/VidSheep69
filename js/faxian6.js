@@ -141,13 +141,13 @@ function showDiscoverContent(title, content) {
     
     // 设置内容
     discoverContent.innerHTML = `
-        <div class="discover-content-header">
-            <button class="discover-back-button">
-                <i class="iconfont icon-fanhui"></i>
-            </button>
-            <h2 class="discover-content-title">${title}</h2>
-        </div>
         <div class="discover-content-body">
+            <div style="display: flex; align-items: center; margin-bottom: 15px; padding: 10px 0;">
+                <button class="discover-back-button">
+                    <i class="iconfont icon-fanhui"></i>
+                </button>
+                <h2 style="flex: 1; text-align: center; color: #f39c12; margin: 0; font-size: 18px; padding-right: 40px;">${title}</h2>
+            </div>
             ${content}
         </div>
     `;
