@@ -76,40 +76,86 @@ try {
 
 // 检查请求URL并处理
 const url = $request.url;
-log(`处理请求: ${url}`);
 
-// 处理 userinfo 相关请求
-if (url.includes('/userinfo/')) {
-    try {
-        // 处理 username 相关请求
-        if (url.includes('/username/')) {
-            // 修改用户名
-            const match = url.match(/\/videoPolymerization\/userinfo\/username\/([^\/\?]+)/);
-            if (match && match[1]) {
-                // url编码转换
-                const username = decodeURIComponent(match[1]);
-                userData.username = username;
-                const saved = storage.set("sheep_userdata", JSON.stringify(userData));
-                log(`保存用户名结果: ${saved ? '成功' : '失败'}`);
+// 路由处理器映射表
+const routeHandlers = {
+    // 用户信息相关路由
+    userInfo: {
+        // 检测是否匹配此路由组
+        // 检查URL是否包含'/userinfo/'路径,用于匹配用户信息相关的请求
+        match: (url) => url.includes('/userinfo/'),
+        // handlers对象包含所有用户信息相关的子路由处理器
+        handlers: {
+            // username子路由用于处理用户名相关的请求
+            username: {
+                // 检查URL是否包含'/username/'路径来匹配用户名请求 
+                match: (url) => url.includes('/username/'),
+                // 匹配成功后调用handleUsernameRequest处理器处理请求
+                handle: handleUsernameRequest
+            },
+            // 可以在这里添加更多用户信息相关子路由
+        },
+        // 默认处理器
+        defaultHandler: () => $done({})
+    },
+    // 视频搜索路由
+    videoSearch: {
+        match: (url) => url.includes('/videoword/'),
+        handle: handleSearchRequest
+    },
+    // 视频详情路由
+    videoDetail: {
+        match: (url) => url.includes('/videolist/'),
+        handle: handleVideoDetailRequest
+    },
+
+    // api路由
+    api: {
+        match: (url) => url.includes('/api/'),
+        handlers: {
+            backimage: {
+                match: (url) => url.includes('/backimage/'),
+                handle: handleBackimageRequest
             }
-            // 以json格式响应
-            $done({
-                body: JSON.stringify(userData)
-            });
-        } else {
-            $done({});
-        }
-    } catch (e) {
-        log(`处理userinfo请求失败: ${e.message}`);
-        $done({ body: JSON.stringify({ error: e.message }) });
+        },
+        // 没有匹配的子路由时使用默认处理器
+        defaultHandler: () => $done({ body: JSON.stringify({ error: "无效的API请求" }) })
     }
-} else if (url.includes('/videoword/')) {
-    handleSearchRequest();
-} else if (url.includes('/videolist/')) {
-    handleVideoDetailRequest();
-} else {
-    $done({});
+};
+
+// 路由分发函数
+function routeRequest(url, routeMap) {
+    // 查找匹配的顶级路由
+    for (const routeKey in routeMap) {
+        const route = routeMap[routeKey];
+        
+        // 检查是否匹配当前路由组
+        if (route.match(url)) {
+            // 如果有子路由处理器，尝试匹配子路由
+            if (route.handlers) {
+                for (const subRouteKey in route.handlers) {
+                    const subRoute = route.handlers[subRouteKey];
+                    if (subRoute.match(url)) {
+                        return subRoute.handle();
+                    }
+                }
+                // 没有匹配的子路由，使用默认处理器
+                return route.defaultHandler ? route.defaultHandler() : $done({});
+            }
+            
+            // 没有子路由，直接调用处理器
+            if (route.handle) {
+                return route.handle();
+            }
+        }
+    }
+    
+    // 没有匹配的路由，返回空响应
+    return $done({});
 }
+
+// 启动路由分发
+routeRequest(url, routeHandlers);
 
 // 搜索获取数据
 function handleSearchRequest() {
@@ -422,5 +468,86 @@ function handleVideoDetailRequest() {
     } catch (e) {
         log(`处理详情请求失败: ${e.message}`);
         $done({ body: JSON.stringify({ error: "处理详情请求失败", message: e.message }) });
+    }
+}
+
+// 处理用户名请求
+function handleUsernameRequest() {
+    try {
+        const match = url.match(/\/videoPolymerization\/userinfo\/username\/([^\/\?]+)/);
+        if (match && match[1]) {
+            // url编码转换
+            const username = decodeURIComponent(match[1]);
+            userData.username = username;
+            const saved = storage.set("sheep_userdata", JSON.stringify(userData));
+            log(`保存用户名结果: ${saved ? '成功' : '失败'}`);
+        }
+        // 以json格式响应
+        $done({
+            body: JSON.stringify(userData)
+        });
+    } catch (e) {
+        log(`处理用户名请求失败: ${e.message}`);
+        $done({ body: JSON.stringify({ error: e.message }) });
+    }
+}
+
+// 处理壁纸设置请求
+function handleBackimageRequest() {
+    try {
+        log(`处理壁纸设置请求: ${url}`);
+        
+        // 解析URL中的参数
+        const urlObj = new URL(url);
+        const params = urlObj.searchParams;
+        
+        // 获取壁纸URL、亮度和模糊度参数
+        const wallpaperUrl = params.get('url');
+        const brightness = params.get('mingdu');
+        const blur = params.get('mohu');
+        
+        log(`壁纸参数: URL=${wallpaperUrl}, 亮度=${brightness}, 模糊度=${blur}`);
+        
+        // 验证参数
+        if (!wallpaperUrl) {
+            log('壁纸URL参数缺失');
+            $done({ body: JSON.stringify({ error: "壁纸URL参数缺失" }) });
+            return;
+        }
+        
+        // 解析亮度和模糊度值，并应用默认值（如果参数无效）
+        const parsedBrightness = parseFloat(brightness);
+        const parsedBlur = parseInt(blur);
+        
+        // 更新用户数据
+        userData.backgroundimage = wallpaperUrl;
+        userData.brightness = !isNaN(parsedBrightness) ? Math.min(1, Math.max(0, parsedBrightness)) : 0.5;
+        userData.vague = !isNaN(parsedBlur) ? Math.min(10, Math.max(0, parsedBlur)) : 2;
+        userData.imageauto = "false";             // 禁用自动更新壁纸
+        userData.usersettingsimage = "true";      // 标记为用户设置的壁纸
+        
+        // 保存更新后的用户数据
+        const saved = storage.set("sheep_userdata", JSON.stringify(userData));
+        
+        if (saved) {
+            log('壁纸设置已保存');
+            $done({ 
+                body: JSON.stringify({ 
+                    success: true, 
+                    message: "壁纸设置已保存",
+                    data: {
+                        url: wallpaperUrl,
+                        brightness: userData.brightness,
+                        blur: userData.vague
+                    }
+                }) 
+            });
+        } else {
+            log('保存壁纸设置失败');
+            $done({ body: JSON.stringify({ error: "保存设置失败" }) });
+        }
+    } catch (e) {
+        log(`处理壁纸设置请求失败: ${e.message}`);
+        $done({ body: JSON.stringify({ error: `处理请求失败: ${e.message}` }) });
     }
 }

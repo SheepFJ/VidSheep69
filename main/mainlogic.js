@@ -81,7 +81,9 @@ const defaultUserData = {
     "historical_storage": {
         "current_index": 0,
         "max_storage": 20
-    }
+    },
+    "brightness": 0.5, //亮度0-1
+    "vague": 2, //模糊1-10
 };
 
 // 获取用户数据，初始化信息
@@ -220,7 +222,7 @@ function finishScript() {
     </script>   
     <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/main73.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/zuijin18.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/faxian6.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/faxian7.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/user11.js"></script>
     </html>`;
 
