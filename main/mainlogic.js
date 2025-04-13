@@ -169,6 +169,10 @@ function finishScript() {
         body::before {
             background-image: url(${backgroundImage});
         }
+        body::after {
+    background: rgba(18, 18, 18, ${brightness});
+    backdrop-filter: blur(${vague}px);
+}
         
     </style>
     <body>
