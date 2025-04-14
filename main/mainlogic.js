@@ -231,7 +231,7 @@ function finishScript() {
     </script>   
     <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/main80.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/zuijin18.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/faxian12.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/faxian13.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/user11.js"></script>
     </html>`;
 

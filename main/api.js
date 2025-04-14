@@ -118,16 +118,12 @@ const routeHandlers = {
                 handle: handleBackimageRequest
             },
             collect: {
-                match: (url) => url.includes('/collect/exhibit'),
-                handlers: {
-                    exhibit: {
-                        match: (url) => url.includes('/collect/'),
-                        handle:  handleCollectRequest
-                    }
-                },
-                // 默认处理器处理收藏请求
-                handle:handleCollectExhibitRequest ,
-                defaultHandler: handleCollectExhibitRequest
+                match: (url) => url.includes('/collect/'),
+                handle: handleCollectRequest,
+            },
+            exhibit:{
+                match: (url) => url.includes('/exhibit'),
+                handle: handleCollectExhibitRequest
             }
         },
         // 没有匹配的子路由时使用默认处理器
