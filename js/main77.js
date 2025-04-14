@@ -608,66 +608,9 @@ function renderVideoDetail(detailData) {
     shareButton.innerHTML = '<i class="iconfont icon-fenxiang"></i>';
     shareButton.title = '复制播放地址';
     
-    // 创建收藏按钮
-    const collectButton = document.createElement('button');
-    collectButton.className = 'collect-button';
-    collectButton.innerHTML = '<i class="iconfont icon-shoucang"></i>';
-    collectButton.title = '收藏';
-    
-    // 添加收藏按钮点击事件
-    collectButton.addEventListener('click', function() {
-        // 防止重复点击
-        if (collectButton.disabled) {
-            return;
-        }
-        
-        // 从localStorage获取当前播放项的索引
-        const movieIndex = localStorage.getItem('currentMovieActualIndex') || localStorage.getItem('currentMovieIndex');
-        if (!movieIndex) {
-            alert('无法识别当前视频信息');
-            return;
-        }
-        
-        // 构建videoInfoId
-        const videoInfoId = `sheep_vod_info_${movieIndex}`;
-        
-        // 更改按钮状态为加载中
-        collectButton.innerHTML = '<i class="iconfont icon-loading rotating"></i>';
-        collectButton.disabled = true;
-        
-        // 发送收藏请求
-        fetch(`https://api.sheep.com/sheep/videoPolymerization/api/collect/${videoInfoId}`)
-            .then(response => response.json())
-            .then(data => {
-                // 收藏成功，改变按钮颜色
-                collectButton.innerHTML = '<i class="iconfont icon-shoucang1" style="color: #f39c12;"></i>';
-                collectButton.title = '已收藏';
-                collectButton.classList.add('collected');
-                
-                // 3秒后恢复按钮状态
-                setTimeout(() => {
-                    collectButton.disabled = false;
-                }, 3000);
-            })
-            .catch(error => {
-                console.error('收藏请求失败:', error);
-                
-                // 请求失败也改变按钮颜色，简化用户体验
-                collectButton.innerHTML = '<i class="iconfont icon-shoucang1" style="color: #f39c12;"></i>';
-                collectButton.title = '已收藏';
-                collectButton.classList.add('collected');
-                
-                // 3秒后恢复按钮状态
-                setTimeout(() => {
-                    collectButton.disabled = false;
-                }, 3000);
-            });
-    });
-    
     // 添加到播放信息容器
     nowPlayingContainer.appendChild(nowPlaying);
     nowPlayingContainer.appendChild(shareButton);
-    nowPlayingContainer.appendChild(collectButton);
     
     // 创建复制成功提示
     const copyToast = document.createElement('div');
@@ -1007,13 +950,7 @@ function renderVideoPlayer(url, title, episodeName) {
     shareButton.className = 'share-button';
     shareButton.innerHTML = '<i class="iconfont icon-fenxiang"></i>';
     shareButton.title = '复制播放地址';
-
-    // 创建收藏按钮
-    const collectButton = document.createElement('button');
-    collectButton.className = 'collect-button';
-    collectButton.innerHTML = '<i class="iconfont icon-shoucang"></i>';
-    collectButton.title = '收藏';
-
+    
     // 创建复制成功提示
     const copyToast = document.createElement('div');
     copyToast.className = 'copy-toast';
@@ -1037,60 +974,9 @@ function renderVideoPlayer(url, title, episodeName) {
         }
     });
     
-    // 添加收藏按钮点击事件
-    collectButton.addEventListener('click', function() {
-        // 防止重复点击
-        if (collectButton.disabled) {
-            return;
-        }
-        
-        // 从localStorage获取当前播放项的索引
-        const movieIndex = localStorage.getItem('currentMovieActualIndex') || localStorage.getItem('currentMovieIndex');
-        if (!movieIndex) {
-            alert('无法识别当前视频信息');
-            return;
-        }
-        
-        // 构建videoInfoId
-        const videoInfoId = `sheep_vod_info_${movieIndex}`;
-        
-        // 更改按钮状态为加载中
-        collectButton.innerHTML = '<i class="iconfont icon-loading rotating"></i>';
-        collectButton.disabled = true;
-        
-        // 发送收藏请求
-        fetch(`https://api.sheep.com/sheep/videoPolymerization/api/collect/${videoInfoId}`)
-            .then(response => response.json())
-            .then(data => {
-                // 收藏成功，改变按钮颜色
-                collectButton.innerHTML = '<i class="iconfont icon-shoucang1" style="color: #f39c12;"></i>';
-                collectButton.title = '已收藏';
-                collectButton.classList.add('collected');
-                
-                // 3秒后恢复按钮状态
-                setTimeout(() => {
-                    collectButton.disabled = false;
-                }, 3000);
-            })
-            .catch(error => {
-                console.error('收藏请求失败:', error);
-                
-                // 请求失败也改变按钮颜色，简化用户体验
-                collectButton.innerHTML = '<i class="iconfont icon-shoucang1" style="color: #f39c12;"></i>';
-                collectButton.title = '已收藏';
-                collectButton.classList.add('collected');
-                
-                // 3秒后恢复按钮状态
-                setTimeout(() => {
-                    collectButton.disabled = false;
-                }, 3000);
-            });
-    });
-    
     // 添加到播放信息容器
     nowPlayingContainer.appendChild(nowPlaying);
     nowPlayingContainer.appendChild(shareButton);
-    nowPlayingContainer.appendChild(collectButton);
     
     // 将播放器添加到内容区域
     contentArea.appendChild(playerContainer);
