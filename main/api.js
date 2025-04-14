@@ -116,6 +116,18 @@ const routeHandlers = {
             backimage: {
                 match: (url) => url.includes('/backimage/'),
                 handle: handleBackimageRequest
+            },
+            collect: {
+                match: (url) => url.includes('/collect/'),
+                handlers: {
+                    exhibit: {
+                        match: (url) => url.includes('/collect/exhibit'),
+                        handle: handleCollectExhibitRequest
+                    }
+                },
+                // 默认处理器处理收藏请求
+                handle: handleCollectRequest,
+                defaultHandler: handleCollectRequest
             }
         },
         // 没有匹配的子路由时使用默认处理器
@@ -549,5 +561,115 @@ function handleBackimageRequest() {
     } catch (e) {
         log(`处理壁纸设置请求失败: ${e.message}`);
         $done({ body: JSON.stringify({ error: `处理请求失败: ${e.message}` }) });
+    }
+}
+
+// 处理收藏请求
+function handleCollectRequest() {
+    try {
+        log(`处理收藏请求: ${url}`);
+        
+        // 从URL中提取要收藏的视频ID
+        const match = url.match(/\/collect\/([^\/\?]+)/);
+        if (!match || !match[1]) {
+            log('无效的收藏请求：未指定视频ID');
+            $done({ body: JSON.stringify({ error: "请指定要收藏的视频ID" }) });
+            return;
+        }
+        
+        const videoId = match[1];
+        log(`收藏视频ID: ${videoId}`);
+        
+        // 从本地存储中读取该视频信息
+        const videoInfo = storage.get(videoId);
+        if (!videoInfo) {
+            log(`未找到视频信息: ${videoId}`);
+            $done({ body: JSON.stringify({ error: "未找到指定视频信息" }) });
+            return;
+        }
+        
+        // 初始化收藏计数器
+        if (!userData.collect_count) {
+            userData.collect_count = 0;
+        }
+        
+        // 生成收藏ID
+        const collectId = `sheep_collect_${userData.collect_count}`;
+        userData.collect_count++;
+        
+        // 保存收藏信息
+        const saved = storage.set(collectId, videoInfo);
+        if (!saved) {
+            log(`保存收藏失败: ${collectId}`);
+            $done({ body: JSON.stringify({ error: "保存收藏失败" }) });
+            return;
+        }
+        
+        // 更新用户数据
+        storage.set("sheep_userdata", JSON.stringify(userData));
+        
+        log(`收藏成功: ${collectId}`);
+        $done({ 
+            body: JSON.stringify({ 
+                success: true, 
+                message: "收藏成功",
+                data: {
+                    collect_id: collectId,
+                    video_id: videoId
+                }
+            }) 
+        });
+    } catch (e) {
+        log(`处理收藏请求失败: ${e.message}`);
+        $done({ body: JSON.stringify({ error: `处理收藏请求失败: ${e.message}` }) });
+    }
+}
+
+// 处理收藏展示请求
+function handleCollectExhibitRequest() {
+    try {
+        log(`处理收藏展示请求`);
+        
+        // 获取收藏计数器
+        const collectCount = userData.collect_count || 0;
+        if (collectCount === 0) {
+            log('没有收藏记录');
+            $done({ 
+                body: JSON.stringify({ 
+                    success: true,
+                    message: "没有收藏记录",
+                    total: 0,
+                    data: {}
+                }) 
+            });
+            return;
+        }
+        
+        // 获取所有收藏
+        const collects = {};
+        let validCount = 0;
+        
+        for (let i = 0; i < collectCount; i++) {
+            const collectId = `sheep_collect_${i}`;
+            const collectInfo = storage.get(collectId);
+            
+            if (collectInfo) {
+                collects[collectId] = collectInfo;
+                validCount++;
+            }
+        }
+        
+        log(`找到${validCount}条收藏记录`);
+        $done({ 
+            body: JSON.stringify({ 
+                success: true,
+                message: `找到${validCount}条收藏记录`,
+                total: validCount,
+                data: collects
+            }) 
+        });
+    } catch (e) {
+        log(`处理收藏展示请求失败: ${e.message}`);
+        $done({ body: JSON.stringify({ error: `处理收藏展示请求失败: ${e.message}` }) });
     }
 }

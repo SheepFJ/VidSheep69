@@ -73,7 +73,7 @@ function showDiscoverList() {
     const discoverItems = [
         
         // 我的收藏
-        // { id: 'my-collection', title: '我的收藏', icon: 'icon-shoucang', handler: showMyCollection },
+        { id: 'my-collection', title: '我的收藏', icon: 'icon-shoucang', handler: showMyCollection },
 
         // 修改壁纸
         { id: 'change-wallpaper', title: '修改壁纸', icon: 'icon-tupian', handler: showChangeWallpaper },
@@ -490,4 +490,347 @@ function saveWallpaperSettings(url, brightness, blur) {
                 saveBtn.disabled = false;
             }
         });
+}
+
+// 我的收藏页面
+function showMyCollection() {
+    // 首先显示一个加载中的内容
+    const loadingContent = `
+        <div class="collection-content">
+            <div class="loading-container">
+                <div class="loading-spinner"></div>
+                <p>正在加载收藏内容...</p>
+            </div>
+        </div>
+    `;
+    
+    showDiscoverContent('我的收藏', loadingContent);
+    
+    // 发送请求获取所有收藏数据
+    fetch('https://api.sheep.com/sheep/videoPolymerization/api/collect/exhibit')
+        .then(response => response.json())
+        .then(data => {
+            if (!data.success) {
+                throw new Error(data.error || '获取收藏失败');
+            }
+            
+            // 检查是否有收藏
+            if (data.total === 0) {
+                renderEmptyCollection();
+                return;
+            }
+            
+            // 渲染收藏列表
+            renderCollectionList(data.data);
+        })
+        .catch(error => {
+            console.error('加载收藏失败:', error);
+            renderCollectionError(error.message);
+        });
+}
+
+// 渲染空收藏页面
+function renderEmptyCollection() {
+    const emptyContent = `
+        <div class="collection-content">
+            <div class="empty-collection">
+                <i class="iconfont icon-shoucang" style="font-size: 48px; color: #666;"></i>
+                <p>您还没有收藏任何内容</p>
+                <button id="go-search-btn" class="go-search-btn">去搜索内容</button>
+            </div>
+        </div>
+    `;
+    
+    const discoverContent = document.getElementById('discover-content');
+    if (discoverContent) {
+        const contentBody = discoverContent.querySelector('.discover-content-body');
+        if (contentBody) {
+            contentBody.innerHTML = contentBody.innerHTML.replace(/<div class="collection-content">.*?<\/div>/s, emptyContent);
+            
+            // 添加搜索按钮点击事件
+            setTimeout(() => {
+                const goSearchBtn = document.getElementById('go-search-btn');
+                if (goSearchBtn) {
+                    goSearchBtn.addEventListener('click', () => {
+                        // 切换到搜索页面
+                        document.getElementById('searchBtn')?.click();
+                    });
+                }
+            }, 100);
+        }
+    }
+}
+
+// 渲染收藏错误页面
+function renderCollectionError(errorMessage) {
+    const errorContent = `
+        <div class="collection-content">
+            <div class="collection-error">
+                <i class="iconfont icon-error" style="font-size: 48px; color: #f44336;"></i>
+                <p>加载收藏失败</p>
+                <p class="error-message">${errorMessage || '未知错误'}</p>
+                <button id="retry-collection-btn" class="retry-btn">重试</button>
+            </div>
+        </div>
+    `;
+    
+    const discoverContent = document.getElementById('discover-content');
+    if (discoverContent) {
+        const contentBody = discoverContent.querySelector('.discover-content-body');
+        if (contentBody) {
+            contentBody.innerHTML = contentBody.innerHTML.replace(/<div class="collection-content">.*?<\/div>/s, errorContent);
+            
+            // 添加重试按钮点击事件
+            setTimeout(() => {
+                const retryBtn = document.getElementById('retry-collection-btn');
+                if (retryBtn) {
+                    retryBtn.addEventListener('click', showMyCollection);
+                }
+            }, 100);
+        }
+    }
+}
+
+// 渲染收藏列表
+function renderCollectionList(collectionData) {
+    // 创建收藏列表内容
+    let collectionItemsHTML = '';
+    
+    // 遍历收藏数据
+    Object.keys(collectionData).forEach(key => {
+        try {
+            const collectionItem = collectionData[key];
+            const itemData = parseCollectionItem(collectionItem, key);
+            
+            if (itemData) {
+                collectionItemsHTML += `
+                    <div class="collection-item" data-key="${key}">
+                        <div class="collection-item-poster" style="background-image: url('${itemData.poster}');">
+                            <div class="collection-item-overlay">
+                                <button class="play-button" data-key="${key}">
+                                    <i class="iconfont icon-bofang"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="collection-item-info">
+                            <h3 class="collection-item-title">${itemData.title}</h3>
+                            <p class="collection-item-desc">${itemData.description}</p>
+                            <div class="collection-item-episodes">
+                                <span>共 ${itemData.episodes.length} 集</span>
+                                <button class="show-episodes-btn" data-key="${key}">
+                                    <i class="iconfont icon-liebiao"></i> 选集
+                                </button>
+                                <button class="uncollect-btn" data-key="${key}">
+                                    <i class="iconfont icon-shoucang1"></i> 取消收藏
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="episodes-${key}" class="episodes-container" style="display: none;">
+                        <div class="episodes-list">
+                            ${renderEpisodesList(itemData.episodes, key)}
+                        </div>
+                    </div>
+                `;
+            }
+        } catch (e) {
+            console.error(`解析收藏项 ${key} 失败:`, e);
+        }
+    });
+    
+    // 创建完整的收藏列表HTML
+    const collectionContent = `
+        <div class="collection-content">
+            <div class="collection-list">
+                ${collectionItemsHTML || '<div class="no-collection-items">未能解析任何收藏项</div>'}
+            </div>
+        </div>
+    `;
+    
+    // 更新内容
+    const discoverContent = document.getElementById('discover-content');
+    if (discoverContent) {
+        const contentBody = discoverContent.querySelector('.discover-content-body');
+        if (contentBody) {
+            contentBody.innerHTML = contentBody.innerHTML.replace(/<div class="collection-content">.*?<\/div>/s, collectionContent);
+            
+            // 添加事件监听
+            setTimeout(addCollectionEvents, 100);
+        }
+    }
+}
+
+// 解析收藏项数据
+function parseCollectionItem(itemData, key) {
+    try {
+        // 检查是否是字符串，如果是则进行分割
+        if (typeof itemData === 'string') {
+            const parts = itemData.split(',');
+            if (parts.length < 3) {
+                console.error(`收藏项 ${key} 数据不完整`);
+                return null;
+            }
+            
+            const title = parts[0];
+            const poster = parts[1] || 'https://via.placeholder.com/150x200?text=No+Image';
+            const description = parts[2] || '无描述';
+            
+            // 提取剧集信息
+            const episodes = [];
+            for (let i = 3; i < parts.length; i++) {
+                const episodeParts = parts[i].split(': ');
+                if (episodeParts.length === 2) {
+                    episodes.push({
+                        title: episodeParts[0],
+                        url: episodeParts[1]
+                    });
+                }
+            }
+            
+            return {
+                title,
+                poster,
+                description,
+                episodes
+            };
+        }
+        
+        return null;
+    } catch (e) {
+        console.error(`解析收藏项数据失败:`, e);
+        return null;
+    }
+}
+
+// 渲染剧集列表
+function renderEpisodesList(episodes, itemKey) {
+    if (!episodes || episodes.length === 0) {
+        return '<div class="no-episodes">无剧集信息</div>';
+    }
+    
+    let episodesHTML = '';
+    episodes.forEach((episode, index) => {
+        episodesHTML += `
+            <div class="episode-item" data-key="${itemKey}" data-index="${index}">
+                <span class="episode-title">${episode.title}</span>
+            </div>
+        `;
+    });
+    
+    return episodesHTML;
+}
+
+// 添加收藏项交互事件
+function addCollectionEvents() {
+    // 选集按钮点击事件
+    document.querySelectorAll('.show-episodes-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const key = this.getAttribute('data-key');
+            const episodesContainer = document.getElementById(`episodes-${key}`);
+            
+            if (episodesContainer) {
+                const isVisible = episodesContainer.style.display !== 'none';
+                
+                // 先隐藏所有的剧集容器
+                document.querySelectorAll('.episodes-container').forEach(container => {
+                    container.style.display = 'none';
+                });
+                
+                // 如果当前是隐藏的，则显示它
+                if (!isVisible) {
+                    episodesContainer.style.display = 'block';
+                    
+                    // 滚动到可见位置
+                    setTimeout(() => {
+                        episodesContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }, 100);
+                }
+            }
+        });
+    });
+    
+    // 剧集项点击事件
+    document.querySelectorAll('.episode-item').forEach(item => {
+        item.addEventListener('click', function() {
+            const key = this.getAttribute('data-key');
+            const index = parseInt(this.getAttribute('data-index'));
+            
+            try {
+                // 获取视频数据
+                fetch(`https://api.sheep.com/sheep/videoPolymerization/api/collect/exhibit`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success && data.data[key]) {
+                            const videoInfo = parseCollectionItem(data.data[key], key);
+                            if (videoInfo && videoInfo.episodes[index]) {
+                                const episode = videoInfo.episodes[index];
+                                
+                                // 使用主文件中的播放功能播放视频
+                                renderVideoPlayer(episode.url, videoInfo.title, episode.title);
+                            } else {
+                                alert('获取剧集信息失败');
+                            }
+                        } else {
+                            alert('获取视频信息失败');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('获取视频数据失败:', error);
+                        alert('获取视频数据失败');
+                    });
+            } catch (e) {
+                console.error('播放视频失败:', e);
+                alert('播放视频失败');
+            }
+        });
+    });
+    
+    // 播放按钮点击事件
+    document.querySelectorAll('.play-button').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const key = this.getAttribute('data-key');
+            
+            try {
+                // 获取视频数据
+                fetch(`https://api.sheep.com/sheep/videoPolymerization/api/collect/exhibit`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success && data.data[key]) {
+                            const videoInfo = parseCollectionItem(data.data[key], key);
+                            if (videoInfo && videoInfo.episodes.length > 0) {
+                                const episode = videoInfo.episodes[0]; // 默认播放第一集
+                                
+                                // 使用主文件中的播放功能播放视频
+                                renderVideoPlayer(episode.url, videoInfo.title, episode.title);
+                            } else {
+                                alert('获取剧集信息失败');
+                            }
+                        } else {
+                            alert('获取视频信息失败');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('获取视频数据失败:', error);
+                        alert('获取视频数据失败');
+                    });
+            } catch (e) {
+                console.error('播放视频失败:', e);
+                alert('播放视频失败');
+            }
+        });
+    });
+    
+    // 取消收藏按钮点击事件
+    // 注意: 实际应该发送请求删除服务端的收藏，这里简化处理
+    document.querySelectorAll('.uncollect-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const key = this.getAttribute('data-key');
+            const confirmRemove = confirm('确定要取消收藏该视频吗？');
+            
+            if (confirmRemove) {
+                alert('该功能暂未实现，敬请期待');
+                // 实际实现应该发送请求取消收藏，然后刷新列表
+            }
+        });
+    });
 }

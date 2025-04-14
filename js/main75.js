@@ -608,9 +608,67 @@ function renderVideoDetail(detailData) {
     shareButton.innerHTML = '<i class="iconfont icon-fenxiang"></i>';
     shareButton.title = '复制播放地址';
     
+    // 创建收藏按钮
+    const collectButton = document.createElement('button');
+    collectButton.className = 'collect-button';
+    collectButton.innerHTML = '<i class="iconfont icon-shoucang"></i>';
+    collectButton.title = '收藏';
+    
+    // 添加收藏按钮点击事件
+    collectButton.addEventListener('click', function() {
+        // 获取当前视频的id
+        const videoInfoId = videoInfo.key;
+        if (!videoInfoId) {
+            alert('无法识别当前视频信息');
+            return;
+        }
+        
+        // 更改按钮状态为加载中
+        collectButton.innerHTML = '<i class="iconfont icon-loading rotating"></i>';
+        collectButton.disabled = true;
+        
+        // 发送收藏请求
+        fetch(`https://api.sheep.com/sheep/videoPolymerization/api/collect/${videoInfoId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // 收藏成功
+                    collectButton.innerHTML = '<i class="iconfont icon-shoucang1" style="color: #f39c12;"></i>';
+                    collectButton.title = '已收藏';
+                    collectButton.classList.add('collected');
+                    
+                    // 显示成功提示
+                    const toast = document.createElement('div');
+                    toast.className = 'toast-message';
+                    toast.textContent = '收藏成功';
+                    document.body.appendChild(toast);
+                    
+                    // 2秒后移除提示
+                    setTimeout(() => {
+                        toast.classList.add('toast-hide');
+                        setTimeout(() => {
+                            document.body.removeChild(toast);
+                        }, 300);
+                    }, 2000);
+                } else {
+                    // 收藏失败
+                    collectButton.innerHTML = '<i class="iconfont icon-shoucang"></i>';
+                    collectButton.disabled = false;
+                    alert('收藏失败: ' + (data.error || '未知错误'));
+                }
+            })
+            .catch(error => {
+                console.error('收藏请求失败:', error);
+                collectButton.innerHTML = '<i class="iconfont icon-shoucang"></i>';
+                collectButton.disabled = false;
+                alert('收藏请求失败，请稍后重试');
+            });
+    });
+    
     // 添加到播放信息容器
     nowPlayingContainer.appendChild(nowPlaying);
     nowPlayingContainer.appendChild(shareButton);
+    nowPlayingContainer.appendChild(collectButton);
     
     // 创建复制成功提示
     const copyToast = document.createElement('div');
@@ -950,7 +1008,13 @@ function renderVideoPlayer(url, title, episodeName) {
     shareButton.className = 'share-button';
     shareButton.innerHTML = '<i class="iconfont icon-fenxiang"></i>';
     shareButton.title = '复制播放地址';
-    
+
+    // 创建收藏按钮
+    const collectButton = document.createElement('button');
+    collectButton.className = 'collect-button';
+    collectButton.innerHTML = '<i class="iconfont icon-shoucang"></i>';
+    collectButton.title = '收藏';
+
     // 创建复制成功提示
     const copyToast = document.createElement('div');
     copyToast.className = 'copy-toast';
@@ -974,9 +1038,61 @@ function renderVideoPlayer(url, title, episodeName) {
         }
     });
     
+    // 添加收藏按钮点击事件
+    collectButton.addEventListener('click', function() {
+        // 获取当前视频的id
+        const videoInfoId = videoInfo.key;
+        if (!videoInfoId) {
+            alert('无法识别当前视频信息');
+            return;
+        }
+        
+        // 更改按钮状态为加载中
+        collectButton.innerHTML = '<i class="iconfont icon-loading rotating"></i>';
+        collectButton.disabled = true;
+        
+        // 发送收藏请求
+        fetch(`https://api.sheep.com/sheep/videoPolymerization/api/collect/${videoInfoId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // 收藏成功
+                    collectButton.innerHTML = '<i class="iconfont icon-shoucang1" style="color: #f39c12;"></i>';
+                    collectButton.title = '已收藏';
+                    collectButton.classList.add('collected');
+                    
+                    // 显示成功提示
+                    const toast = document.createElement('div');
+                    toast.className = 'toast-message';
+                    toast.textContent = '收藏成功';
+                    document.body.appendChild(toast);
+                    
+                    // 2秒后移除提示
+                    setTimeout(() => {
+                        toast.classList.add('toast-hide');
+                        setTimeout(() => {
+                            document.body.removeChild(toast);
+                        }, 300);
+                    }, 2000);
+                } else {
+                    // 收藏失败
+                    collectButton.innerHTML = '<i class="iconfont icon-shoucang"></i>';
+                    collectButton.disabled = false;
+                    alert('收藏失败: ' + (data.error || '未知错误'));
+                }
+            })
+            .catch(error => {
+                console.error('收藏请求失败:', error);
+                collectButton.innerHTML = '<i class="iconfont icon-shoucang"></i>';
+                collectButton.disabled = false;
+                alert('收藏请求失败，请稍后重试');
+            });
+    });
+    
     // 添加到播放信息容器
     nowPlayingContainer.appendChild(nowPlaying);
     nowPlayingContainer.appendChild(shareButton);
+    nowPlayingContainer.appendChild(collectButton);
     
     // 将播放器添加到内容区域
     contentArea.appendChild(playerContainer);
