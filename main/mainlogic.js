@@ -229,7 +229,7 @@ function finishScript() {
         const brightness = ${brightness};
         const vague = ${vague};
     </script>   
-    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/main75.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/main76.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/zuijin18.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/faxian11.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/user11.js"></script>
