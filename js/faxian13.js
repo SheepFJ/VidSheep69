@@ -507,7 +507,7 @@ function showMyCollection() {
     showDiscoverContent('我的收藏', loadingContent);
     
     // 发送请求获取所有收藏数据
-    fetch('https://api.sheep.com/sheep/videoPolymerization/api/collect/exhibit')
+    fetch('https://api.sheep.com/sheep/videoPolymerization/api/exhibit')
         .then(response => response.json())
         .then(data => {
             if (!data.success) {
