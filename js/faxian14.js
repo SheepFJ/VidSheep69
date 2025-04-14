@@ -677,33 +677,65 @@ function renderCollectionList(collectionData) {
             // 添加电影容器的点击事件
             container.addEventListener('click', function() {
                 try {
-                    // 获取播放容器并显示它
-                    const playContainer = document.getElementById('play-container');
-                    if (playContainer) {
-                        playContainer.style.display = 'block';
-                    }
-                    
                     // 隐藏发现容器
                     const discoverContainer = document.getElementById('discover-container');
                     if (discoverContainer) {
                         discoverContainer.style.display = 'none';
                     }
                     
-                    // 判断是否有剧集信息
-                    if (videoData.episodes && videoData.episodes.length > 0) {
-                        // 默认播放第一集
-                        const firstEpisode = videoData.episodes[0].split(': ');
-                        const episodeTitle = firstEpisode[0];
-                        const episodeUrl = firstEpisode[1];
-                        
-                        if (episodeUrl) {
-                            // 调用主文件中的播放器函数
-                            renderVideoPlayer(episodeUrl, videoData.title, episodeTitle);
-                        } else {
-                            alert('该视频没有可播放的地址');
+                    // 获取播放容器并显示它
+                    const playContainer = document.getElementById('play-container');
+                    if (playContainer) {
+                        playContainer.style.display = 'block';
+                    }
+                    
+                    // 显示加载动画
+                    const loadingResults = document.getElementById('loading-results');
+                    if (loadingResults) {
+                        loadingResults.innerHTML = `
+                            <div class="loading-all">
+                                <div class="loading-animation"></div>
+                                <div class="loading-text">加载中...</div>
+                            </div>
+                        `;
+                    }
+                    
+                    // 从key中提取索引
+                    const collectIndex = key.split('_').pop();
+                    
+                    // 保存当前实际索引到localStorage，用于收藏功能
+                    const videoIdMatch = key.match(/sheep_collect_(\d+)/);
+                    if (videoIdMatch && videoIdMatch[1]) {
+                        localStorage.setItem('currentMovieActualIndex', collectIndex);
+                    }
+                    
+                    // 简单处理数据并直接使用main80.js中的renderVideoDetail函数
+                    if (typeof renderVideoDetail === 'function') {
+                        // 清除加载动画
+                        if (loadingResults) {
+                            loadingResults.innerHTML = '';
                         }
+                        
+                        // 调用main80.js中的renderVideoDetail函数处理数据
+                        renderVideoDetail({ [key]: value });
                     } else {
-                        alert('该视频没有剧集信息');
+                        console.error('renderVideoDetail函数不存在');
+                        
+                        // 判断是否有剧集信息
+                        if (videoData.episodes && videoData.episodes.length > 0) {
+                            // 使用第一集信息
+                            const firstEpisode = videoData.episodes[0].split(': ');
+                            const episodeTitle = firstEpisode[0];
+                            const episodeUrl = firstEpisode[1];
+                            
+                            if (episodeUrl && typeof renderVideoPlayer === 'function') {
+                                renderVideoPlayer(episodeUrl, videoData.title, episodeTitle);
+                            } else {
+                                alert('无法播放该视频，请稍后重试');
+                            }
+                        } else {
+                            alert('该视频没有可播放的内容');
+                        }
                     }
                 } catch (e) {
                     console.error('播放视频时出错:', e);

@@ -29,7 +29,7 @@
 .recent-header {
     display: flex;
     align-items: center;
-    padding: 25px 15px 15px 15px; /* 增加顶部padding，避免被系统状态栏遮挡 */
+    padding: 25px 15px 2px 15px; /* 增加顶部padding，避免被系统状态栏遮挡 */
     position: sticky;
     top: 0;
     z-index: 2; /* 降低z-index */
