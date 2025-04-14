@@ -588,14 +588,20 @@ function handleCollectRequest() {
             return;
         }
         
-        // 初始化收藏计数器
-        if (!userData.collect_count) {
-            userData.collect_count = 0;
+        // 查找最大的收藏索引并生成新的收藏ID
+        let maxIndex = -1;
+        for (let i = 0; i < 100; i++) { // 设置一个合理的上限以避免无限循环
+            const testKey = `sheep_collect_${i}`;
+            if (storage.get(testKey)) {
+                maxIndex = i;
+            } else if (i > maxIndex + 1) { // 如果超过已知的最大索引+1，停止查找
+                break;
+            }
         }
         
-        // 生成收藏ID
-        const collectId = `sheep_collect_${userData.collect_count}`;
-        userData.collect_count++;
+        // 新的收藏ID使用 maxIndex + 1
+        const newIndex = maxIndex + 1;
+        const collectId = `sheep_collect_${newIndex}`;
         
         // 保存收藏信息
         const saved = storage.set(collectId, videoInfo);
@@ -604,9 +610,6 @@ function handleCollectRequest() {
             $done({ body: JSON.stringify({ error: "保存收藏失败" }) });
             return;
         }
-        
-        // 更新用户数据
-        storage.set("sheep_userdata", JSON.stringify(userData));
         
         log(`收藏成功: ${collectId}`);
         $done({ 
@@ -630,9 +633,26 @@ function handleCollectExhibitRequest() {
     try {
         log(`处理收藏展示请求`);
         
-        // 获取收藏计数器
-        const collectCount = userData.collect_count || 0;
-        if (collectCount === 0) {
+        // 直接搜索所有可能的收藏记录
+        const collects = {};
+        let validCount = 0;
+        
+        // 设置一个合理的上限以避免无限循环
+        for (let i = 0; i < 1000; i++) {
+            const collectId = `sheep_collect_${i}`;
+            const collectInfo = storage.get(collectId);
+            
+            if (collectInfo) {
+                collects[collectId] = collectInfo;
+                validCount++;
+            } else if (validCount > 0 && i > validCount + 10) {
+                // 如果已找到一些记录，且当前索引远大于找到的记录数，可以提前结束搜索
+                // 这里+10是留出一些空间，避免因为删除的记录导致提前结束
+                break;
+            }
+        }
+        
+        if (validCount === 0) {
             log('没有收藏记录');
             $done({ 
                 body: JSON.stringify({ 
@@ -643,20 +663,6 @@ function handleCollectExhibitRequest() {
                 }) 
             });
             return;
-        }
-        
-        // 获取所有收藏
-        const collects = {};
-        let validCount = 0;
-        
-        for (let i = 0; i < collectCount; i++) {
-            const collectId = `sheep_collect_${i}`;
-            const collectInfo = storage.get(collectId);
-            
-            if (collectInfo) {
-                collects[collectId] = collectInfo;
-                validCount++;
-            }
         }
         
         log(`找到${validCount}条收藏记录`);
