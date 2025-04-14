@@ -608,16 +608,9 @@ function renderVideoDetail(detailData) {
     shareButton.innerHTML = '<i class="iconfont icon-fenxiang"></i>';
     shareButton.title = '复制播放地址';
     
-    // 创建收藏按钮
-    const collectButton = document.createElement('button');
-    collectButton.className = 'collect-button';
-    collectButton.innerHTML = '<i class="iconfont icon-shoucang"></i>';
-    collectButton.title = '收藏视频';
-    
     // 添加到播放信息容器
     nowPlayingContainer.appendChild(nowPlaying);
     nowPlayingContainer.appendChild(shareButton);
-    nowPlayingContainer.appendChild(collectButton);
     
     // 创建复制成功提示
     const copyToast = document.createElement('div');
@@ -690,24 +683,6 @@ function renderVideoDetail(detailData) {
                     alert('复制链接失败，请手动复制');
                 }
             });
-        }
-    });
-    
-    // 获取当前电影实际索引
-    const currentMovieActualIndex = localStorage.getItem('currentMovieActualIndex');
-    
-    // 添加收藏按钮事件
-    collectButton.addEventListener('click', function() {
-        if (currentMovieActualIndex) {
-            // 发送收藏请求
-            fetch(`https://api.sheep.com/sheep/videoPolymerization/api/collect/sheep_vod_info_${currentMovieActualIndex}`)
-                .then(response => {
-                    // 更改按钮样式表示已收藏
-                    collectButton.classList.toggle('active');
-                })
-                .catch(error => {
-                    console.error('收藏请求失败:', error);
-                });
         }
     });
     
@@ -976,12 +951,6 @@ function renderVideoPlayer(url, title, episodeName) {
     shareButton.innerHTML = '<i class="iconfont icon-fenxiang"></i>';
     shareButton.title = '复制播放地址';
     
-    // 创建收藏按钮
-    const collectButton = document.createElement('button');
-    collectButton.className = 'collect-button';
-    collectButton.innerHTML = '<i class="iconfont icon-shoucang"></i>';
-    collectButton.title = '收藏视频';
-    
     // 创建复制成功提示
     const copyToast = document.createElement('div');
     copyToast.className = 'copy-toast';
@@ -1005,28 +974,9 @@ function renderVideoPlayer(url, title, episodeName) {
         }
     });
     
-    // 获取当前电影实际索引
-    const currentMovieActualIndex = localStorage.getItem('currentMovieActualIndex');
-    
-    // 添加收藏按钮事件
-    collectButton.addEventListener('click', function() {
-        if (currentMovieActualIndex) {
-            // 发送收藏请求
-            fetch(`https://api.sheep.com/sheep/videoPolymerization/api/collect/sheep_vod_info_${currentMovieActualIndex}`)
-                .then(response => {
-                    // 更改按钮样式表示已收藏
-                    collectButton.classList.toggle('active');
-                })
-                .catch(error => {
-                    console.error('收藏请求失败:', error);
-                });
-        }
-    });
-    
     // 添加到播放信息容器
     nowPlayingContainer.appendChild(nowPlaying);
     nowPlayingContainer.appendChild(shareButton);
-    nowPlayingContainer.appendChild(collectButton);
     
     // 将播放器添加到内容区域
     contentArea.appendChild(playerContainer);
