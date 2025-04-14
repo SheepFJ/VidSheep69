@@ -168,6 +168,9 @@ function showList() {
             // 替换加载动画为结果
             recentContent.innerHTML = '';
             recentContent.appendChild(resultsContainer);
+            
+            // 确保滚动位置重置到顶部
+            recentContainer.scrollTop = 0;
         })
         .catch(err => {
             console.error("获取最近观看记录失败", err);

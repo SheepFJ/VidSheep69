@@ -6,13 +6,13 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: calc(100% - 60px); /* 减去底部导航栏高度 */
+    height: 100%; /* 修改为100%确保占满全屏 */
     z-index: 950; /* 增加z-index值，确保显示在详情页上方 */
-    background-color: rgba(0, 0, 0, 0); /* 添加半透明黑色背景，让背景图可见但不影响内容辨识 */
-    overflow-y: auto;
+    background-color: rgba(0, 0, 0, 0.95); /* 调整背景透明度使内容更清晰 */
+    overflow-y: auto; /* 保持纵向滚动 */
+    overflow-x: hidden; /* 防止横向滚动 */
     display: none;
-    padding: 15px;
-    padding-bottom: 80px; /* 为底部导航栏预留空间 */
+    padding: 15px 20px 80px 20px; /* 增加左右内边距 */
     box-sizing: border-box;
     opacity: 0;
     transition: opacity 0.3s ease;
@@ -64,8 +64,10 @@
 
 /* 最近观看内容区域样式 */
 .recent-content {
-    padding: 10px 0; /* 减少内边距 */
+    padding: 15px 0; /* 增加内边距 */
     margin-top: 10px; /* 添加顶部边距 */
+    overflow-y: auto; /* 确保内容可滚动 */
+    max-height: calc(100vh - 150px); /* 设置最大高度 */
 }
 
 /* 没有观看记录的提示样式 */
@@ -87,6 +89,10 @@
     grid-template-columns: repeat(3, 1fr); /* 固定三列 */
     gap: 15px;
     margin-top: 15px;
+    width: 100%; /* 确保宽度100% */
+    max-width: 100%; /* 最大宽度100% */
+    box-sizing: border-box; /* 确保padding计入宽度 */
+    padding: 0 5px; /* 添加左右内边距 */
 }
 
 /* 电影容器样式 */
@@ -179,6 +185,7 @@
     .results-grid {
         grid-template-columns: repeat(3, 1fr); /* 保持移动端也是3列 */
         gap: 10px;
+        padding: 0 5px; /* 调整移动端的左右内边距 */
     }
     
     .movie-title {
@@ -189,6 +196,10 @@
     .recent-header {
         padding-top: 20px; /* 调整移动端的顶部内边距 */
     }
+    
+    #recent-container {
+        padding: 10px 15px 70px 15px; /* 调整移动端容器内边距 */
+    }
 }
 
 /* 平板和中等屏幕 */
@@ -196,6 +207,11 @@
     .results-grid {
         grid-template-columns: repeat(3, 1fr); /* 保持3列布局 */
         gap: 15px;
+        padding: 0 10px; /* 调整平板端的左右内边距 */
+    }
+    
+    #recent-container {
+        padding: 15px 20px 80px 20px; /* 调整平板端容器内边距 */
     }
 }
 
@@ -204,11 +220,18 @@
     .results-grid {
         grid-template-columns: repeat(3, 1fr); /* 保持3列布局 */
         gap: 20px;
+        padding: 0 15px; /* 调整大屏端的左右内边距 */
+        max-width: 1200px; /* 限制最大宽度 */
+        margin: 15px auto; /* 居中显示 */
     }
     
     .movie-title {
         font-size: 15px;
         padding: 12px;
+    }
+    
+    #recent-container {
+        padding: 20px 25px 90px 25px; /* 调整大屏端容器内边距 */
     }
 }
 
@@ -217,7 +240,7 @@
     color: #f39c12;
     font-size: 24px;
     text-align: center;
-    margin: 35px 0 5px 0;
+    margin: 35px 0 25px 0; /* 增加底部边距 */
     font-weight: bold;
     padding: 12px 0;
 }
