@@ -1058,7 +1058,7 @@ function initializeApp() {
     setupEventDelegation();
     
     // 默认显示个人资料页
-    showProfile();
+    disCover();
 }
 
 // 设置事件委托

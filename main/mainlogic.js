@@ -207,15 +207,15 @@ function finishScript() {
                     <i class="iconfont icon-zuijin"></i>
                     <span>最近</span>
                 </div>
-                <div class="nav-button" id="disCover" onclick="disCover()">
+                <div class="nav-button nav-active" id="disCover" onclick="disCover()">
                     <i class="iconfont icon-faxian"></i>
                     <span>发现</span>
                 </div>
 
-               <div class="nav-button nav-active" id="profileBtn" onclick="showProfile()">
+              <!-- <div class="nav-button " id="profileBtn" onclick="showProfile()">
                     <i class="iconfont icon-wode"></i>
                     <span>我的</span>
-                </div> 
+                </div>  -->
             </div>
         </footer>
     </body>
@@ -225,9 +225,9 @@ function finishScript() {
         const brightness = ${brightness};
         const vague = ${vague};
     </script>   
-    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/main73.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/main74.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/zuijin18.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/faxian9.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/faxian10.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/user11.js"></script>
     </html>`;
 

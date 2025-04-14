@@ -76,7 +76,7 @@ function showDiscoverList() {
         // { id: 'my-collection', title: '我的收藏', icon: 'icon-shoucang', handler: showMyCollection },
 
         // 修改壁纸
-        { id: 'change-wallpaper', title: '修改壁纸', icon: 'icon-bi', handler: showChangeWallpaper },
+        { id: 'change-wallpaper', title: '修改壁纸', icon: 'icon-tupian', handler: showChangeWallpaper },
         
         // 支持作者
         { id: 'support-author', title: '支持作者', icon: 'icon-zhichi', handler: showSupportAuthor },
