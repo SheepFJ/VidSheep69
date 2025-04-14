@@ -147,8 +147,10 @@ function routeRequest(url, routeMap) {
             if (route.handlers) {
                 for (const subRouteKey in route.handlers) {
                     const subRoute = route.handlers[subRouteKey];
-                    if (subRoute.match(url)) {
-                        return subRoute.handle();
+                    // 更精确地检查url是否匹配子路由
+                    if (subRoute.match && subRoute.match(url)) {
+                        log(`匹配到子路由: ${subRouteKey}, URL: ${url}`);
+                        return subRoute.handle ? subRoute.handle() : $done({});
                     }
                 }
                 // 没有匹配的子路由，使用默认处理器
@@ -568,6 +570,12 @@ function handleBackimageRequest() {
 function handleCollectRequest() {
     try {
         log(`处理收藏请求: ${url}`);
+        
+        // 检查是否是收藏展示请求，如果是，直接调用展示处理函数
+        if (url.includes('/collect/exhibit')) {
+            log(`检测到收藏展示请求，转向handleCollectExhibitRequest处理`);
+            return handleCollectExhibitRequest();
+        }
         
         // 从URL中提取要收藏的视频ID
         const match = url.match(/\/collect\/([^\/\?]+)/);
