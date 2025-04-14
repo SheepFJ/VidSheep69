@@ -255,8 +255,7 @@
     align-items: center;
 }
 
-/* 关闭剧集按钮 */
-.close-episodes {
+/* 关闭剧集按钮 */.close-episodes {
     background: none;
     border: none;
     color: #f39c12;
@@ -389,6 +388,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: rgba(0, 0, 0, 0);
 }
 
 .collect-button:hover {

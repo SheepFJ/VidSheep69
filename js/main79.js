@@ -1012,7 +1012,7 @@ function renderVideoPlayer(url, title, episodeName) {
     collectButton.addEventListener('click', function() {
         if (currentMovieActualIndex) {
             // 发送收藏请求
-            fetch(`https://api.sheep.com/sheep/videoPolymerization/api/collect/${currentMovieActualIndex}`)
+            fetch(`https://api.sheep.com/sheep/videoPolymerization/api/collect/sheep_vod_info_${currentMovieActualIndex}`)
                 .then(response => {
                     // 更改按钮样式表示已收藏
                     collectButton.classList.toggle('active');
