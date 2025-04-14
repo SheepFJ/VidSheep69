@@ -376,6 +376,35 @@
     transform: scale(1.1);
 }
 
+/* 收藏按钮样式 */
+.collect-button {
+    background: none;
+    border: none;
+    color: #f39c12;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 5px 10px;
+    margin-left: 10px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.collect-button:hover {
+    color: #e67e22;
+    transform: scale(1.1);
+}
+
+/* 收藏按钮激活状态 */
+.collect-button.active {
+    color: #e74c3c; /* 红色表示已收藏 */
+}
+
+.collect-button.active:hover {
+    color: #c0392b; /* 深红色悬停效果 */
+}
+
 /* 复制成功提示 */
 .copy-toast {
     position: fixed;
