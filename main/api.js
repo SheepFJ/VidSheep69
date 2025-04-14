@@ -118,16 +118,16 @@ const routeHandlers = {
                 handle: handleBackimageRequest
             },
             collect: {
-                match: (url) => url.includes('/collect/'),
+                match: (url) => url.includes('/collect/exhibit'),
                 handlers: {
                     exhibit: {
-                        match: (url) => url.includes('/collect/exhibit'),
-                        handle: handleCollectExhibitRequest
+                        match: (url) => url.includes('/collect/'),
+                        handle:  handleCollectRequest
                     }
                 },
                 // 默认处理器处理收藏请求
-                handle: handleCollectRequest,
-                defaultHandler: handleCollectRequest
+                handle:handleCollectExhibitRequest ,
+                defaultHandler: handleCollectExhibitRequest
             }
         },
         // 没有匹配的子路由时使用默认处理器
@@ -147,10 +147,8 @@ function routeRequest(url, routeMap) {
             if (route.handlers) {
                 for (const subRouteKey in route.handlers) {
                     const subRoute = route.handlers[subRouteKey];
-                    // 更精确地检查url是否匹配子路由
-                    if (subRoute.match && subRoute.match(url)) {
-                        log(`匹配到子路由: ${subRouteKey}, URL: ${url}`);
-                        return subRoute.handle ? subRoute.handle() : $done({});
+                    if (subRoute.match(url)) {
+                        return subRoute.handle();
                     }
                 }
                 // 没有匹配的子路由，使用默认处理器
@@ -570,12 +568,6 @@ function handleBackimageRequest() {
 function handleCollectRequest() {
     try {
         log(`处理收藏请求: ${url}`);
-        
-        // 检查是否是收藏展示请求，如果是，直接调用展示处理函数
-        if (url.includes('/collect/exhibit')) {
-            log(`检测到收藏展示请求，转向handleCollectExhibitRequest处理`);
-            return handleCollectExhibitRequest();
-        }
         
         // 从URL中提取要收藏的视频ID
         const match = url.match(/\/collect\/([^\/\?]+)/);
