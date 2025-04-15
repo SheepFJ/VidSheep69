@@ -233,8 +233,8 @@ function finishScript() {
         const source = ${source};
     </script>   
     <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/main84.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/zuijin21.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/faxian18.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/zuijin22.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/faxian19.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/user11.js"></script>
     </html>`;
 
