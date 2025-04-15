@@ -636,7 +636,7 @@ function renderVideoDetail(detailData) {
         if (currentEpisodeUrl) {
             // 构建SenPlayer URL方案
             const senPlayerUrl = `SenPlayer://x-callback-url/play?url=${encodeURIComponent(currentEpisodeUrl)}`;
-            
+            alert(senPlayerUrl)
             // 跳转到SenPlayer
             window.location.href = senPlayerUrl;
         } else {
