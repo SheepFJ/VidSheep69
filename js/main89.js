@@ -634,9 +634,15 @@ function renderVideoDetail(detailData) {
     // 添加外部播放按钮点击事件
     externalPlayButton.addEventListener('click', function() {
         if (currentEpisodeUrl) {
+            // 检查URL是否以.m3u8结尾，如果没有则添加
+            let finalUrl = currentEpisodeUrl;
+            if (!finalUrl.toLowerCase().endsWith('.m3u8')) {
+                finalUrl += '.m3u8';
+            }
+            
             // 构建SenPlayer URL方案
-            const senPlayerUrl = `SenPlayer://x-callback-url/play?url=${encodeURIComponent(currentEpisodeUrl)}`;
-            alert(senPlayerUrl)
+            const senPlayerUrl = `SenPlayer://x-callback-url/play?url=${encodeURIComponent(finalUrl)}`;
+            alert(senPlayerUrl);
             // 跳转到SenPlayer
             window.location.href = senPlayerUrl;
         } else {
@@ -1022,8 +1028,14 @@ function renderVideoPlayer(url, title, episodeName) {
     // 添加外部播放按钮点击事件
     externalPlayButton.addEventListener('click', function() {
         if (url) {
+            // 检查URL是否以.m3u8结尾，如果没有则添加
+            let finalUrl = url;
+            if (!finalUrl.toLowerCase().endsWith('.m3u8')) {
+                finalUrl += '.m3u8';
+            }
+            
             // 构建SenPlayer URL方案
-            const senPlayerUrl = `SenPlayer://x-callback-url/play?url=${encodeURIComponent(url)}`;
+            const senPlayerUrl = `SenPlayer://x-callback-url/play?url=${encodeURIComponent(finalUrl)}`;
             
             // 跳转到SenPlayer
             window.location.href = senPlayerUrl;
