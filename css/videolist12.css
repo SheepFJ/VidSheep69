@@ -405,6 +405,27 @@
     color: #c0392b; /* 深红色悬停效果 */
 }
 
+/* 外部播放按钮样式 */
+.external-play-button {
+    background: none;
+    border: none;
+    color: #2ecc71; /* 绿色表示外部播放 */
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 5px 10px;
+    margin-left: 10px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.external-play-button:hover {
+    color: #27ae60; /* 深绿色悬停效果 */
+    transform: scale(1.1);
+}
+
 /* 复制成功提示 */
 .copy-toast {
     position: fixed;

@@ -625,10 +625,30 @@ function renderVideoDetail(detailData) {
     collectButton.innerHTML = '<i class="iconfont icon-shoucang"></i>';
     collectButton.title = '收藏视频';
     
+    // 创建外部播放按钮
+    const externalPlayButton = document.createElement('button');
+    externalPlayButton.className = 'external-play-button';
+    externalPlayButton.innerHTML = '<i class="iconfont icon-sanfangxieyi"></i>';
+    externalPlayButton.title = '使用SenPlayer播放';
+    
+    // 添加外部播放按钮点击事件
+    externalPlayButton.addEventListener('click', function() {
+        if (currentEpisodeUrl) {
+            // 构建SenPlayer URL方案
+            const senPlayerUrl = `SenPlayer://x-callback-url/play?url=${encodeURIComponent(currentEpisodeUrl)}`;
+            
+            // 跳转到SenPlayer
+            window.location.href = senPlayerUrl;
+        } else {
+            alert('无法获取当前播放资源链接');
+        }
+    });
+    
     // 添加到播放信息容器
     nowPlayingContainer.appendChild(nowPlaying);
     nowPlayingContainer.appendChild(shareButton);
     nowPlayingContainer.appendChild(collectButton);
+    nowPlayingContainer.appendChild(externalPlayButton);
     
     // 创建复制成功提示
     const copyToast = document.createElement('div');
@@ -993,6 +1013,25 @@ function renderVideoPlayer(url, title, episodeName) {
     collectButton.innerHTML = '<i class="iconfont icon-shoucang"></i>';
     collectButton.title = '收藏视频';
     
+    // 创建外部播放按钮
+    const externalPlayButton = document.createElement('button');
+    externalPlayButton.className = 'external-play-button';
+    externalPlayButton.innerHTML = '<i class="iconfont icon-sanfangxieyi"></i>';
+    externalPlayButton.title = '使用SenPlayer播放';
+    
+    // 添加外部播放按钮点击事件
+    externalPlayButton.addEventListener('click', function() {
+        if (url) {
+            // 构建SenPlayer URL方案
+            const senPlayerUrl = `SenPlayer://x-callback-url/play?url=${encodeURIComponent(url)}`;
+            
+            // 跳转到SenPlayer
+            window.location.href = senPlayerUrl;
+        } else {
+            alert('无法获取当前播放资源链接');
+        }
+    });
+    
     // 创建复制成功提示
     const copyToast = document.createElement('div');
     copyToast.className = 'copy-toast';
@@ -1038,6 +1077,7 @@ function renderVideoPlayer(url, title, episodeName) {
     nowPlayingContainer.appendChild(nowPlaying);
     nowPlayingContainer.appendChild(shareButton);
     nowPlayingContainer.appendChild(collectButton);
+    nowPlayingContainer.appendChild(externalPlayButton);
     
     // 将播放器添加到内容区域
     contentArea.appendChild(playerContainer);
