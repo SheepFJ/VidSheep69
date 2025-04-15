@@ -474,6 +474,15 @@ function saveWallpaperSettings(url, brightness, blur) {
                 document.body.style.setProperty('--bg-brightness', brightness);
                 document.body.style.setProperty('--bg-blur', `${blur}px`);
                 
+                // 更新CSS变量
+                document.documentElement.style.setProperty('--bg-image', `url(${url})`);
+                document.documentElement.style.setProperty('--bg-brightness', brightness);
+                document.documentElement.style.setProperty('--bg-blur', `${blur}px`);
+                
+                // 更新body的背景样式
+                document.body.style.backgroundImage = `url(${url})`;
+                document.body.style.filter = `brightness(${brightness}) blur(${blur}px)`;
+                
                 // 显示成功消息
                 alert('壁纸设置已保存');
             } else {
