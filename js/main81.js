@@ -234,8 +234,19 @@ function showSearch() {
             <div class="search-form">
                 <input class="search-input" type="text" id="searchInput" placeholder="输入影视名称">
                 <select class="search-select" id="sourceSelect">
-                    <option value="1">源1</option>
-                    <option value="2">源2</option>
+                    <option value="1" ${source === 1 ? 'selected' : ''}>急速资源</option>
+                    <option value="2" ${source === 2 ? 'selected' : ''}>魔都资源</option>
+                    <option value="3" ${source === 3 ? 'selected' : ''}>索尼资源</option>
+                    <option value="4" ${source === 4 ? 'selected' : ''}>速播资源</option>
+                    <option value="5" ${source === 5 ? 'selected' : ''}>量子资源</option>
+                    <option value="6" ${source === 6 ? 'selected' : ''}>量子资源1</option>
+                    <option value="7" ${source === 7 ? 'selected' : ''}>飘零资源</option>
+                    <option value="8" ${source === 8 ? 'selected' : ''}>苹果资源</option>
+                    <option value="9" ${source === 9 ? 'selected' : ''}>360资源</option>
+                    <option value="10" ${source === 10 ? 'selected' : ''}>光束资源</option>
+                    <option value="11" ${source === 11 ? 'selected' : ''}>卧龙资源</option>
+                    <option value="12" ${source === 12 ? 'selected' : ''}>暴风资源</option>
+                    <option value="13" ${source === 13 ? 'selected' : ''}>最大资源</option>
                 </select>
                 <button class="search-button">搜索</button>
             </div>

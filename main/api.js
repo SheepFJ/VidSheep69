@@ -124,6 +124,10 @@ const routeHandlers = {
             exhibit:{
                 match: (url) => url.includes('/exhibit'),
                 handle: handleCollectExhibitRequest
+            },
+            source: {
+                match: (url) => url.includes('/source/'),
+                handle: handleSourceRequest
             }
         },
         // 没有匹配的子路由时使用默认处理器
@@ -181,8 +185,19 @@ function handleSearchRequest() {
 
         // 定义不同 source 对应的 API 地址
         const apiSources = {
-            "1": "https://caiji.moduapi.cc/api.php/provide/vod?ac=detail&wd=",
-            "2": "https://cj.lziapi.com/api.php/provide/vod/from/lzm3u8/?ac=detail&wd="
+            "1": "https://jszyapi.com/api.php/provide/vod?ac=detail&wd=",//急速资源
+            "2": "https://caiji.moduapi.cc/api.php/provide/vod?ac=detail&wd=",//魔都资源
+            "3": "https://suoniapi.com/api.php/provide/vod?ac=detail&wd=",//索尼资源
+            "4": "https://subocaiji.com/api.php/provide/vod?ac=detail&wd=",//速播资源
+            "5": "https://cj.lziapi.com/api.php/provide/vod?ac=detail&wd=",//量子资源
+            "6": "https://cj.lziapi.com/api.php/provide/vod/from/lzm3u8/?ac=detail&wd=",//量子资源1
+            "7": "https://p2100.net/api.php/provide/vod?ac=detail&wd=",//飘零资源
+            "8": "https://img.smdyw.top/api.php/provide/vod?ac=detail&wd=",//苹果资源
+            "9": "https://360zy.com/api.php/seaxml/vod?ac=detail&wd=",//360资源
+            "10": "https://api.guangsuapi.com/api.php/provide/vod/from/gsm3u8/?ac=detail&wd=",//光束资源
+            "11": "https://collect.wolongzyw.com/api.php/provide/vod?ac=detail&wd=",//卧龙资源
+            "12": "https://bfzyapi.com/api.php/provide/vod?ac=detail&wd=",//暴风资源
+            "13": "https://api.zuidapi.com/api.php/provide/vod/?ac=detail&wd=",//最大
         };
 
         // 获取对应 API 地址
@@ -673,5 +688,56 @@ function handleCollectExhibitRequest() {
     } catch (e) {
         log(`处理收藏展示请求失败: ${e.message}`);
         $done({ body: JSON.stringify({ error: `处理收藏展示请求失败: ${e.message}` }) });
+    }
+}
+
+// 处理默认源设置请求
+function handleSourceRequest() {
+    try {
+        log(`处理默认源设置请求: ${url}`);
+        
+        // 从URL中提取要设置的源ID
+        const match = url.match(/\/source\/([^\/\?]+)/);
+        if (!match || !match[1]) {
+            log('无效的源设置请求：未指定源ID');
+            $done({ body: JSON.stringify({ error: "请指定要设置的源ID" }) });
+            return;
+        }
+        
+        const sourceId = match[1];
+        log(`设置默认源ID: ${sourceId}`);
+        
+        // 验证源ID是否有效（在1-13之间）
+        const sourceNum = parseInt(sourceId);
+        if (isNaN(sourceNum) || sourceNum < 1 || sourceNum > 13) {
+            log(`无效的源ID: ${sourceId}`);
+            $done({ body: JSON.stringify({ error: "无效的源ID，请提供1-13之间的数字" }) });
+            return;
+        }
+        
+        // 更新用户数据中的源设置
+        userData.source = sourceId;
+        
+        // 保存更新后的用户数据
+        const saved = storage.set("sheep_userdata", JSON.stringify(userData));
+        
+        if (saved) {
+            log(`默认源已更新为: ${sourceId}`);
+            $done({ 
+                body: JSON.stringify({ 
+                    success: true, 
+                    message: "默认源设置已保存",
+                    data: {
+                        source: sourceId
+                    }
+                }) 
+            });
+        } else {
+            log('保存默认源设置失败');
+            $done({ body: JSON.stringify({ error: "保存设置失败" }) });
+        }
+    } catch (e) {
+        log(`处理默认源设置请求失败: ${e.message}`);
+        $done({ body: JSON.stringify({ error: `处理请求失败: ${e.message}` }) });
     }
 }

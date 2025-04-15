@@ -240,7 +240,7 @@
     color: #f39c12;
     font-size: 24px;
     text-align: center;
-    margin: 35px 0 25px 0; /* 增加底部边距 */
+    margin: 35px 0 10px 0; /* 增加底部边距 */
     font-weight: bold;
     padding: 12px 0;
 }

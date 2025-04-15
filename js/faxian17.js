@@ -77,7 +77,8 @@ function showDiscoverList() {
 
         // 修改壁纸
         { id: 'change-wallpaper', title: '修改壁纸', icon: 'icon-tupian', handler: showChangeWallpaper },
-        
+        // 选择默认源
+        { id: 'select-default-source', title: '选择默认源', icon: 'icon-ziyuan', handler: showSelectDefaultSource },
         // 支持作者
         { id: 'support-author', title: '支持作者', icon: 'icon-zhichi', handler: showSupportAuthor },
         // 关于我们
@@ -809,4 +810,213 @@ function parseVideoData(dataString) {
             episodes: []
         };
     }
+}
+
+// 选择默认源
+function showSelectDefaultSource() {
+    // 获取当前默认源
+    let currentSource = "1"; // 默认值
+    try {
+        const userData = localStorage.getItem("sheep_userdata");
+        if (userData) {
+            const userDataObj = JSON.parse(userData);
+            if (userDataObj.source) {
+                currentSource = userDataObj.source;
+            }
+        }
+    } catch (e) {
+        console.error("获取默认源失败:", e);
+    }
+    
+    // 源数据数组
+    const sourceOptions = [
+        { id: "1", name: "急速资源" },
+        { id: "2", name: "魔都资源" },
+        { id: "3", name: "索尼资源" },
+        { id: "4", name: "速播资源" },
+        { id: "5", name: "量子资源" },
+        { id: "6", name: "量子资源1" },
+        { id: "7", name: "飘零资源" },
+        { id: "8", name: "苹果资源" },
+        { id: "9", name: "360资源" },
+        { id: "10", name: "光束资源" },
+        { id: "11", name: "卧龙资源" },
+        { id: "12", name: "暴风资源" },
+        { id: "13", name: "最大资源" }
+    ];
+
+    // 生成源选择界面
+    let sourceOptionsHTML = "";
+    sourceOptions.forEach(source => {
+        const isChecked = source.id === currentSource ? 'checked' : '';
+        sourceOptionsHTML += `
+            <div class="source-option">
+                <input type="radio" name="default-source" id="source-${source.id}" value="${source.id}" ${isChecked}>
+                <label for="source-${source.id}">${source.name}</label>
+            </div>
+        `;
+    });
+
+    const content = `
+        <div class="about-us-content">
+            <div class="about-us-logo">
+                <i class="iconfont icon-ziyuan" style="font-size: 48px; color: #f39c12;"></i>
+                <h3>选择默认源</h3>
+            </div>
+            
+            <div class="about-us-update-info">
+                <h4 class="update-title">说明</h4>
+                <p style="color: #ddd; margin-bottom: 15px;">请选择您喜欢的默认视频源。搜索时将优先使用此源搜索内容。</p>
+                
+                <style>
+                    .source-options-container {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 12px;
+                        margin-bottom: 20px;
+                        padding: 15px;
+                        border-radius: 8px;
+                        background-color: rgba(255, 255, 255, 0.05);
+                    }
+                    .source-option {
+                        display: flex;
+                        align-items: center;
+                        padding: 8px 10px;
+                        border-radius: 6px;
+                        background-color: rgba(255, 255, 255, 0.02);
+                        transition: background-color 0.2s;
+                    }
+                    .source-option:hover {
+                        background-color: rgba(255, 255, 255, 0.08);
+                    }
+                    .source-option input[type="radio"] {
+                        margin-right: 10px;
+                        accent-color: #f39c12;
+                    }
+                    .source-option label {
+                        color: #eee;
+                        cursor: pointer;
+                    }
+                    .save-source-btn {
+                        width: 100%;
+                        padding: 12px;
+                        background-color: #f39c12;
+                        color: #fff;
+                        border: none;
+                        border-radius: 6px;
+                        font-size: 16px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: background-color 0.2s;
+                    }
+                    .save-source-btn:hover {
+                        background-color: #e67e22;
+                    }
+                    .save-source-btn:disabled {
+                        background-color: #95a5a6;
+                        cursor: not-allowed;
+                    }
+                    .save-result {
+                        text-align: center;
+                        background-color: rgba(46, 204, 113, 0.2);
+                        padding: 10px;
+                        border-radius: 6px;
+                        margin-top: 15px;
+                    }
+                </style>
+                
+                <div class="source-options-container">
+                    ${sourceOptionsHTML}
+                </div>
+                
+                <button id="save-source-setting" class="save-source-btn">保存设置</button>
+                
+                <div id="save-result" class="save-result" style="margin-top: 10px; color: #4cd964; display: none;">
+                    <i class="iconfont icon-success"></i> 设置已保存
+                </div>
+            </div>
+        </div>
+    `;
+    
+    showDiscoverContent('选择默认源', content);
+    
+    // 添加保存按钮事件监听
+    setTimeout(() => {
+        const saveButton = document.getElementById('save-source-setting');
+        if (saveButton) {
+            saveButton.addEventListener('click', function() {
+                const selectedSource = document.querySelector('input[name="default-source"]:checked');
+                if (selectedSource) {
+                    const sourceId = selectedSource.value;
+                    
+                    // 显示保存按钮为加载状态
+                    saveButton.textContent = '保存中...';
+                    saveButton.disabled = true;
+                    
+                    // 发送请求保存默认源设置
+                    fetch(`https://api.sheep.com/sheep/videoPolymerization/api/source/${sourceId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // 显示成功消息
+                                const saveResult = document.getElementById('save-result');
+                                if (saveResult) {
+                                    saveResult.style.display = 'block';
+                                    setTimeout(() => {
+                                        saveResult.style.display = 'none';
+                                    }, 3000);
+                                }
+                                
+                                // 更新本地存储中的默认源
+                                try {
+                                    const userData = localStorage.getItem("sheep_userdata");
+                                    if (userData) {
+                                        const userDataObj = JSON.parse(userData);
+                                        userDataObj.source = sourceId;
+                                        localStorage.setItem("sheep_userdata", JSON.stringify(userDataObj));
+                                    }
+                                } catch (e) {
+                                    console.error("更新本地默认源设置失败:", e);
+                                }
+                                
+                                // 更新搜索页面的下拉选择框
+                                const sourceSelect = document.getElementById('sourceSelect');
+                                if (sourceSelect) {
+                                    sourceSelect.value = sourceId;
+                                }
+                            } else {
+                                alert('设置失败: ' + (data.error || '未知错误'));
+                            }
+                        })
+                        .catch(error => {
+                            console.error('保存默认源设置失败:', error);
+                            alert('保存失败，请稍后重试');
+                        })
+                        .finally(() => {
+                            // 恢复按钮状态
+                            saveButton.textContent = '保存设置';
+                            saveButton.disabled = false;
+                        });
+                } else {
+                    alert('请选择一个默认源');
+                }
+            });
+        }
+        
+        // 添加点击整个选项行选择源的功能
+        const sourceOptions = document.querySelectorAll('.source-option');
+        sourceOptions.forEach(option => {
+            const radio = option.querySelector('input[type="radio"]');
+            const label = option.querySelector('label');
+            
+            // 点击整个选项行时，选中对应的单选按钮
+            option.addEventListener('click', function(e) {
+                // 如果点击的是单选按钮本身，不需要额外处理
+                if (e.target === radio) return;
+                
+                // 将对应的单选按钮设为选中
+                radio.checked = true;
+            });
+        });
+    }, 100);
 }

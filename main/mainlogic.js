@@ -84,6 +84,7 @@ const defaultUserData = {
     },
     "brightness": 0.5, //亮度0-1
     "vague": 2, //模糊1-10
+    "source": 1, //默认源
 };
 
 // 获取用户数据，初始化信息
@@ -149,6 +150,7 @@ function finishScript() {
     const username = userData.username;
     const brightness = userData.brightness;
     const vague = userData.vague;
+    const source = userData.source;
 
     const html = `<!DOCTYPE html>
     <html lang="zh-CN">
@@ -160,10 +162,10 @@ function finishScript() {
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/user07.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/search12.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/videolist11.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/zuijin12.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/zuijin13.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/css/faxian12.css">
         
-        <link rel="stylesheet" href="https://at.alicdn.com/t/c/font_4885201_44u4aw4few2.css">
+        <link rel="stylesheet" href="https://at.alicdn.com/t/c/font_4885201_umrf3rtclnb.css">
     </head>
     <style>
         body::before {
@@ -228,10 +230,11 @@ function finishScript() {
         const backgroundImage = "${backgroundImage}";
         const brightness = ${brightness};
         const vague = ${vague};
+        const source = ${source};
     </script>   
-    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/main80.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/main81.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/zuijin20.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/faxian16.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/faxian17.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/SheepFJ/VidSheep69/js/user11.js"></script>
     </html>`;
 
