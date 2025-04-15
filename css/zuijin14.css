@@ -12,7 +12,7 @@
     overflow-y: auto; /* 保持纵向滚动 */
     overflow-x: hidden; /* 防止横向滚动 */
     display: none;
-    padding: 15px 20px 80px 20px; /* 增加左右内边距 */
+    padding: 15px 10px 80px 10px; /* 减少左右内边距，确保更多空间给内容 */
     box-sizing: border-box;
     opacity: 0;
     transition: opacity 0.3s ease;
@@ -29,7 +29,7 @@
 .recent-header {
     display: flex;
     align-items: center;
-    padding: 25px 15px 2px 15px; /* 增加顶部padding，避免被系统状态栏遮挡 */
+    padding: 25px 10px 2px 10px; /* 减少左右内边距 */
     position: sticky;
     top: 0;
     z-index: 2; /* 降低z-index */
@@ -51,7 +51,7 @@
     color: #fff;
     font-size: 24px;
     cursor: pointer;
-    padding: 5px 10px;
+    padding: 5px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -87,30 +87,30 @@
 .results-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr); /* 固定三列 */
-    gap: 15px;
+    gap: 8px; /* 减小间隙，确保在小屏幕上能容纳3个项目 */
     margin-top: 15px;
     width: 100%; /* 确保宽度100% */
     max-width: 100%; /* 最大宽度100% */
     box-sizing: border-box; /* 确保padding计入宽度 */
-    padding: 0 5px; /* 添加左右内边距 */
+    padding: 0 2px; /* 减少左右内边距，让内容有更多空间 */
 }
 
 /* 电影容器样式 */
 .movie-container {
     cursor: pointer;
-    border-radius: 10px;
+    border-radius: 8px; /* 稍微减小圆角 */
     overflow: hidden;
     background-color: rgba(20, 20, 20, 0.9); /* 半透明深色背景 */
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
     position: relative;
     width: 100%; /* 确保宽度占满网格单元 */
-    margin-bottom: 10px;
+    margin-bottom: 8px; /* 减少底部边距 */
     border: 1px solid rgba(80, 80, 80, 0.5);
 }
 
 .movie-container:hover {
-    transform: translateY(-5px) scale(1.02);
+    transform: translateY(-3px) scale(1.02);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
     border-color: rgba(243, 156, 18, 0.8);
 }
@@ -121,15 +121,15 @@
     aspect-ratio: 2/3;
     object-fit: cover;
     display: block;
-    min-height: 180px; /* 设置最小高度 */
+    min-height: 140px; /* 减小最小高度，让较小屏幕也能显示 */
 }
 
 /* 电影标题样式 */
 .movie-title {
-    font-size: 15px;
+    font-size: 12px; /* 减小字体大小，确保在小屏幕上完整显示 */
     color: #fff;
     text-align: center;
-    padding: 12px 8px;
+    padding: 8px 4px; /* 减少内边距 */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -180,17 +180,27 @@
     grid-column: 1 / -1;
 }
 
-/* 响应式设计调整 */
+/* 响应式设计调整 - 重点修改这部分确保在所有设备上显示3列 */
 @media (max-width: 480px) {
     .results-grid {
         grid-template-columns: repeat(3, 1fr); /* 保持移动端也是3列 */
-        gap: 10px;
-        padding: 0 5px; /* 调整移动端的左右内边距 */
+        gap: 6px; /* 进一步减小间隙 */
+        padding: 0; /* 移除内边距，确保最大空间 */
     }
     
     .movie-title {
-        font-size: 12px;
-        padding: 8px;
+        font-size: 11px;
+        padding: 6px 2px;
+        line-height: 1.2;
+    }
+    
+    .movie-container {
+        border-radius: 6px;
+        margin-bottom: 6px;
+    }
+    
+    .movie-container img {
+        min-height: 120px; /* 为小屏幕进一步减小最小高度 */
     }
     
     .recent-header {
@@ -198,7 +208,7 @@
     }
     
     #recent-container {
-        padding: 10px 15px 70px 15px; /* 调整移动端容器内边距 */
+        padding: 10px 5px 70px 5px; /* 调整移动端容器内边距，减少左右边距 */
     }
 }
 
@@ -206,12 +216,17 @@
 @media (min-width: 481px) and (max-width: 768px) {
     .results-grid {
         grid-template-columns: repeat(3, 1fr); /* 保持3列布局 */
-        gap: 15px;
-        padding: 0 10px; /* 调整平板端的左右内边距 */
+        gap: 10px;
+        padding: 0 5px; /* 减少平板端的左右内边距 */
+    }
+    
+    .movie-title {
+        font-size: 13px;
+        padding: 8px 4px;
     }
     
     #recent-container {
-        padding: 15px 20px 80px 20px; /* 调整平板端容器内边距 */
+        padding: 15px 10px 80px 10px; /* 调整平板端容器内边距 */
     }
 }
 
@@ -243,4 +258,25 @@
     margin: 35px 0 10px 0; /* 增加底部边距 */
     font-weight: bold;
     padding: 12px 0;
+}
+
+/* 特别针对iPhone 11和类似尺寸设备的优化 */
+@media (min-width: 375px) and (max-width: 420px) {
+    .results-grid {
+        grid-template-columns: repeat(3, 1fr); /* 确保在iPhone 11上也显示3列 */
+        gap: 6px; /* 最小间隙 */
+    }
+    
+    .movie-container {
+        border-radius: 6px;
+    }
+    
+    .movie-title {
+        font-size: 10px; /* 进一步缩小字体 */
+        padding: 6px 2px;
+    }
+    
+    .movie-container img {
+        min-height: 115px; /* 为iPhone 11减小图片高度 */
+    }
 }

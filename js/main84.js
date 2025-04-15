@@ -628,7 +628,7 @@ function renderVideoDetail(detailData) {
     // 创建外部播放按钮
     const externalPlayButton = document.createElement('button');
     externalPlayButton.className = 'external-play-button';
-    externalPlayButton.innerHTML = '<i class="iconfont icon-sanfangxieyi"></i>';
+    externalPlayButton.innerHTML = '<i class="iconfont icon-Gc_85_face-Skip"></i>';
     externalPlayButton.title = '使用SenPlayer播放';
     
     // 添加外部播放按钮点击事件
