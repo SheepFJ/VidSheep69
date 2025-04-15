@@ -243,7 +243,7 @@ function handleSearchRequest() {
                 // 存储视频数据并获取存储的数据对象
                 const storedResult = storeVodData(json.list || []);
                 log(`数据解析成功, 共找到 ${json.list.length} 个结果`);
-                notify("数据解析成功", "", `共找到 ${json.list.length} 个结果`);
+                // notify("数据解析成功", "", `共找到 ${json.list.length} 个结果`);
                 
                 // 返回存储的数据对象
                 $done({ 
@@ -256,7 +256,7 @@ function handleSearchRequest() {
                 });
             } catch (e) {
                 log(`解析失败: ${e.message}`);
-                notify("解析失败", "", e.message);
+                // notify("解析失败", "", e.message);
                 $done({ body: JSON.stringify({ error: "解析失败", message: e.message }) });
             }
         });

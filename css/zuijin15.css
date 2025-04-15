@@ -100,11 +100,11 @@
     cursor: pointer;
     border-radius: 8px; /* 稍微减小圆角 */
     overflow: hidden;
-    background-color: rgba(20, 20, 20, 0); /* 半透明深色背景 */
+    background-color: rgba(20, 20, 20, 0.9); /* 半透明深色背景 */
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
     position: relative;
-    width: 96%; /* 确保宽度占满网格单元 */
+    width: 100%; /* 确保宽度占满网格单元 */
     margin-bottom: 8px; /* 减少底部边距 */
     border: 1px solid rgba(80, 80, 80, 0.5);
 }
@@ -117,7 +117,7 @@
 
 /* 电影图片样式 */
 .movie-container img {
-    width: 96%;
+    width: 100%;
     aspect-ratio: 2/3;
     object-fit: cover;
     display: block;
