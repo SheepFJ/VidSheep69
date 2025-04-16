@@ -168,14 +168,70 @@ function finishScript() {
         <link rel="stylesheet" href="https://at.alicdn.com/t/c/font_4885201_i2n2iwmepf.css">
     </head>
     <style>
-        body::before {
-            background-image: url(${backgroundImage});
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
         }
-        body::after {
-    background: rgba(18, 18, 18, ${brightness});
-    backdrop-filter: blur(${vague}px);
-}
         
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url(${backgroundImage});
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: -2;
+            /* 适配刘海屏 */
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+            margin-top: calc(-1 * env(safe-area-inset-top));
+            margin-bottom: calc(-1 * env(safe-area-inset-bottom));
+            margin-left: calc(-1 * env(safe-area-inset-left));
+            margin-right: calc(-1 * env(safe-area-inset-right));
+        }
+        
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(18, 18, 18, ${brightness});
+            backdrop-filter: blur(${vague}px);
+            z-index: -1;
+            /* 适配刘海屏 */
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+            margin-top: calc(-1 * env(safe-area-inset-top));
+            margin-bottom: calc(-1 * env(safe-area-inset-bottom));
+            margin-left: calc(-1 * env(safe-area-inset-left));
+            margin-right: calc(-1 * env(safe-area-inset-right));
+        }
+        
+        /* 确保内容区域正确显示在安全区域内 */
+        #main-container,
+        #play-container,
+        #recent-container,
+        #discover-container,
+        #user-container,
+        #PopUpWindow {
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+        }
     </style>
     <body>
     
