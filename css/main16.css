@@ -45,10 +45,12 @@ body::after {
 /* 底部导航栏 */
 #bottom-nav {
     position: fixed;
-    bottom: -35px;
+    bottom: -25px;
+    /* 向上移动10px */
     left: 0;
     width: 100%;
-    height: calc(45px + env(safe-area-inset-bottom, 0px));
+    height: calc(55px + env(safe-area-inset-bottom, 0px));
+    /* 增加10px高度 */
     /* 适配 iPhone X 及以上 */
     background: rgba(30, 30, 30, 0.4);
     /* 可调透明度 */
@@ -74,7 +76,7 @@ body::after {
     justify-content: center;
     color: #aaa;
     font-size: 12px;
-    padding: 5px 0;
+    padding: 2px 0;
     cursor: pointer;
     transition: all 0.3s;
 }
@@ -158,4 +160,3 @@ body::after {
     font-size: 16px;
     font-weight: 500;
 }
-
