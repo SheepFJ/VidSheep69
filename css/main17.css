@@ -79,6 +79,7 @@ body::after {
     padding: 2px 0;
     cursor: pointer;
     transition: all 0.3s;
+    padding-bottom: 10px;
 }
 
 .nav-button i {
